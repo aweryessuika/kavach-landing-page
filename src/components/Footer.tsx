@@ -1,6 +1,4 @@
 export function Footer() {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer className="relative bg-[#030504] border-t border-white/[0.06] pt-16 pb-12 overflow-hidden text-[#9BA598]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -80,7 +78,18 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[#626D60]">
-          <div>© {currentYear} Kavach Labs. All rights reserved.</div>
+          <div className="space-y-1 text-center sm:text-left">
+            <p className="text-[#9BA598]">© 2026 Kavach Lock Technologies Pvt. Ltd. · Bengaluru, India</p>
+            <p>
+              Inquiries:{' '}
+              <a
+                href="mailto:pranjay@kavachlock.tech"
+                className="text-[#C7FF3D] hover:underline transition-colors font-medium"
+              >
+                pranjay@kavachlock.tech
+              </a>
+            </p>
+          </div>
           <div className="text-[11px]">SOC 2 Type II / Audit Log / Indian Data Residency</div>
         </div>
       </div>
