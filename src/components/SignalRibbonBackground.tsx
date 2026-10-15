@@ -13,12 +13,13 @@ export function SignalRibbonBackground() {
     let width = 0;
     let height = 0;
 
-    // Pointer tracking with spring inertia
+    // Smooth spring-damped pointer & scroll state
     let mouseX = 0;
     let mouseY = 0;
     let targetMouseX = 0;
     let targetMouseY = 0;
-    let scrollY = window.scrollY;
+    let currentScrollY = window.scrollY;
+    let targetScrollY = window.scrollY;
 
     const handlePointerMove = (e: PointerEvent) => {
       targetMouseX = e.clientX;
@@ -26,7 +27,7 @@ export function SignalRibbonBackground() {
     };
 
     const handleScroll = () => {
-      scrollY = window.scrollY;
+      targetScrollY = window.scrollY;
     };
 
     const handleResize = () => {
@@ -40,7 +41,7 @@ export function SignalRibbonBackground() {
       ctx.scale(dpr, dpr);
 
       if (mouseX === 0 && mouseY === 0) {
-        mouseX = targetMouseX = width * 0.45;
+        mouseX = targetMouseX = width * 0.5;
         mouseY = targetMouseY = height * 0.45;
       }
     };
@@ -52,255 +53,285 @@ export function SignalRibbonBackground() {
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // 1. Build the filament bundle (48 distinct curving fiber strands)
-    const FILAMENT_COUNT = 44;
-    const filaments = Array.from({ length: FILAMENT_COUNT }, (_, i) => {
-      const t = i / (FILAMENT_COUNT - 1);
+    // 64 ultra-fine silk strands that twist in 3D cross-section around the parabolic spine
+    const STRAND_COUNT = 64;
+    const strands = Array.from({ length: STRAND_COUNT }, (_, i) => {
+      const norm = i / (STRAND_COUNT - 1); // 0 to 1 across the ribbon width
+      const centered = (norm - 0.5) * 2; // -1 to 1
+
+      // Chromatic dispersion matching frame_002.png and frame_012.png:
+      // Inner fold = blazing yellow-lime, middle = olive/emerald lime, outer wing = subtle cyan-teal
+      let color = '#B8FF2C';
+      if (norm < 0.25) {
+        color = '#EEFF99'; // Blazing warm white-lime caustic edge
+      } else if (norm < 0.65) {
+        color = '#B6F52A'; // Signature Relay electric lime
+      } else if (norm < 0.85) {
+        color = '#4ADE80'; // Muted emerald
+      } else {
+        color = '#38BDF8'; // Subtle cyan-blue dispersion on outer threads
+      }
+
       return {
-        id: i,
-        color:
-          t > 0.4 && t < 0.65
-            ? '#EEFFAA' // White-hot core highlight
-            : t < 0.5
-            ? '#C7FF3D' // Electric acid lime
-            : t < 0.8
-            ? '#84CC16' // Vibrant green-lime
-            : '#00F5D4', // Cyan-emerald trailing tail
-        width: t > 0.35 && t < 0.65 ? 2.2 + Math.random() * 1.6 : 1.0 + Math.random() * 1.2,
-        alpha: t > 0.35 && t < 0.65 ? 0.75 + Math.random() * 0.25 : 0.35 + Math.random() * 0.35,
-        phase: Math.random() * Math.PI * 2,
-        // Visible, silky wave speed (20x faster than previous static speed)
-        speed: 0.014 + (i % 5) * 0.004,
-        frequency: 0.8 + (i % 3) * 0.3,
-        amplitude: 18 + (i % 4) * 8,
-        spreadOffset: (t - 0.5) * 110,
-        loopRadiusOffset: (t - 0.5) * 80,
-        isStreamer: i % 3 === 0, // Streaming dashed line
+        index: i,
+        norm,
+        centered,
+        color,
+        // Strands near the caustic core are slightly thicker; outer wings are gossamer thin
+        lineWidth: norm < 0.3 ? 1.35 : 0.65 + (1 - Math.abs(centered)) * 0.5,
+        // Low individual alpha so additive 'lighter' blending naturally creates the bright vertex where they cross
+        baseAlpha: norm < 0.25 ? 0.14 : 0.06 + (1 - Math.abs(centered)) * 0.07,
+        twistPhase: centered * Math.PI * 0.95,
+        waveSpeed: 0.008 + (i % 7) * 0.0018,
+        waveOffset: i * 0.23,
       };
     });
 
-    // 2. High-speed traveling energy packets (photons streaming along the path)
-    const PACKET_COUNT = 24;
-    const packets = Array.from({ length: PACKET_COUNT }, (_, i) => ({
-      progress: (i / PACKET_COUNT),
-      // Fast, silky streaming flow
-      speed: 0.0035 + (i % 4) * 0.0015,
-      size: 2.5 + (i % 3) * 1.5,
-      filamentIndex: i % filaments.length,
-      tailLength: 18 + (i % 3) * 10,
-    }));
-
-    // 3. Floating luminous bokeh particles around the vortex
-    const PARTICLE_COUNT = 32;
-    const particles = Array.from({ length: PARTICLE_COUNT }, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      vx: (Math.random() - 0.5) * 0.6,
-      vy: (Math.random() - 0.5) * 0.6,
-      size: 1.2 + Math.random() * 2.4,
-      alpha: 0.2 + Math.random() * 0.5,
-      color: Math.random() > 0.4 ? '#C7FF3D' : '#00F5D4',
+    // Subtle floating dust motes / bokeh sparks around the light field
+    const SPARK_COUNT = 38;
+    const sparks = Array.from({ length: SPARK_COUNT }, (_, i) => ({
+      u: Math.random(),
+      v: (Math.random() - 0.5) * 220,
+      speed: 0.0006 + (i % 5) * 0.00035,
+      size: 0.9 + (i % 3) * 0.75,
+      alpha: 0.18 + Math.random() * 0.42,
+      color: i % 4 === 0 ? '#38BDF8' : i % 2 === 0 ? '#EEFFAA' : '#C8FF2E',
+      phase: Math.random() * Math.PI * 2,
     }));
 
     let time = 0;
 
-    // Helper: calculate cubic bezier point at t (0 to 1)
-    const getBezierPoint = (t: number, p0: number, p1: number, p2: number, p3: number) => {
-      const u = 1 - t;
-      const tt = t * t;
-      const uu = u * u;
-      const uuu = uu * u;
-      const ttt = tt * t;
-      return uuu * p0 + 3 * uu * t * p1 + 3 * u * tt * p2 + ttt * p3;
+    // Evaluate a 4-point cubic Bezier at parameter s in [0, 1]
+    const evalCubic = (s: number, p0: number, p1: number, p2: number, p3: number) => {
+      const inv = 1 - s;
+      return (
+        inv * inv * inv * p0 +
+        3 * inv * inv * s * p1 +
+        3 * inv * s * s * p2 +
+        s * s * s * p3
+      );
     };
 
     const render = () => {
-      // Damped pointer follow
-      mouseX += (targetMouseX - mouseX) * 0.05;
-      mouseY += (targetMouseY - mouseY) * 0.05;
+      // Smooth spring damping for pointer and scroll
+      mouseX += (targetMouseX - mouseX) * 0.04;
+      mouseY += (targetMouseY - mouseY) * 0.04;
+      currentScrollY += (targetScrollY - currentScrollY) * 0.08;
 
-      const normX = (mouseX / width - 0.5);
-      const normY = (mouseY / height - 0.5);
+      const ptrX = (mouseX / Math.max(width, 1) - 0.5) * 2; // -1 to 1
+      const ptrY = (mouseY / Math.max(height, 1) - 0.5) * 2;
 
       ctx.clearRect(0, 0, width, height);
 
-      // The intense glowing pinch point sits at ~46% X and ~48% Y
-      const coreX = width * 0.44 + normX * 60;
-      const coreY = height * 0.48 + normY * 45 - scrollY * 0.35;
+      // Parallax shift based on scroll so the ribbon glides through the page
+      const scrollShift = currentScrollY * 0.22;
+      // Periodic vertical wrap so the ribbon continues gracefully down the entire long page
+      const pageCycle = (currentScrollY / Math.max(height, 800)) % 2;
 
-      // 1. Volumetric Radial Bloom Layers
-      const breathe = Math.sin(time * 0.035) * 0.04;
-      const radialCore = ctx.createRadialGradient(coreX, coreY, 5, coreX, coreY, Math.min(width, height) * 0.45);
-      radialCore.addColorStop(0, `rgba(238, 255, 170, ${0.25 + breathe})`);
-      radialCore.addColorStop(0.2, `rgba(199, 255, 61, ${0.18 + breathe * 0.5})`);
-      radialCore.addColorStop(0.45, 'rgba(16, 185, 129, 0.09)');
-      radialCore.addColorStop(0.75, 'rgba(6, 214, 160, 0.02)');
-      radialCore.addColorStop(1, 'transparent');
+      // =========================================================================
+      // SPINE GEOMETRY (Matches frame_002.png & frame_012.png C-shaped parabolic arc)
+      // Starts top-right -> sweeps down-left to the bright C-vertex at ~35.5% X, 54% Y
+      // -> sweeps down-right into the lower sections
+      // =========================================================================
+      const vertexX = width * 0.355 + ptrX * 28 + Math.sin(time * 0.012) * 14;
+      const vertexY = height * 0.54 + ptrY * 22 - (scrollShift % (height * 0.9));
 
-      ctx.fillStyle = radialCore;
+      // Top entry (upper right behind header/card)
+      const topX = width * 0.94 + ptrX * 18;
+      const topY = -height * 0.08;
+
+      // Upper control points pulling the curve through the hero card
+      const cp1X = width * 0.62 + Math.cos(time * 0.01) * 20;
+      const cp1Y = height * 0.14 + ptrY * 15;
+
+      // C1-smooth vertical tangent control points at the C-vertex (no pinch or kink)
+      const cp2X = vertexX;
+      const cp2Y = vertexY - height * 0.22;
+
+      const cp3X = vertexX;
+      const cp3Y = vertexY + height * 0.22;
+
+      // Lower sweep control point & bottom exit (flowing into Section 2 / OEM bar)
+      const cp4X = width * 0.68 + Math.sin(time * 0.011) * 24;
+      const cp4Y = height * 0.78 - (scrollShift % (height * 0.4)) * 0.3;
+
+      const botX = width * 0.74 - ptrX * 20;
+      const botY = height * 1.18;
+
+      // =========================================================================
+      // 1. VOLUMETRIC ATMOSPHERIC NEBULA UNDERGLOW
+      // =========================================================================
+      // Bright caustic glow right at the C-vertex (where the ribbon folds)
+      const vertexGlow = ctx.createRadialGradient(
+        vertexX + 12,
+        vertexY,
+        2,
+        vertexX + 25,
+        vertexY,
+        Math.min(width, height) * 0.46
+      );
+      vertexGlow.addColorStop(0, 'rgba(245, 255, 180, 0.38)');
+      vertexGlow.addColorStop(0.12, 'rgba(205, 255, 55, 0.22)');
+      vertexGlow.addColorStop(0.38, 'rgba(115, 185, 35, 0.08)');
+      vertexGlow.addColorStop(0.75, 'rgba(20, 80, 45, 0.025)');
+      vertexGlow.addColorStop(1, 'transparent');
+
+      ctx.fillStyle = vertexGlow;
       ctx.fillRect(0, 0, width, height);
 
-      // 2. Render Dense Luminous Filament Bundle
+      // Secondary upper-right olive-lime ambient light behind the Hero glass card
+      const cardBacklight = ctx.createRadialGradient(
+        width * 0.68,
+        height * 0.34,
+        20,
+        width * 0.68,
+        height * 0.34,
+        width * 0.44
+      );
+      cardBacklight.addColorStop(0, 'rgba(180, 245, 40, 0.11)');
+      cardBacklight.addColorStop(0.5, 'rgba(70, 140, 40, 0.04)');
+      cardBacklight.addColorStop(1, 'transparent');
+
+      ctx.fillStyle = cardBacklight;
+      ctx.fillRect(0, 0, width, height);
+
+      // =========================================================================
+      // 2. RENDER 3D TWISTED SILK RIBBON STRANDS (Additive Caustic Interference)
+      // =========================================================================
       ctx.save();
-      ctx.globalCompositeOperation = 'screen';
+      ctx.globalCompositeOperation = 'lighter';
 
-      filaments.forEach((f) => {
+      const SEGMENTS = 68;
+
+      strands.forEach((strand) => {
+        const phase = prefersReducedMotion
+          ? strand.waveOffset
+          : time * strand.waveSpeed + strand.waveOffset;
+
         ctx.beginPath();
-        ctx.strokeStyle = f.color;
-        ctx.lineWidth = f.width;
-        ctx.globalAlpha = f.alpha;
+        ctx.strokeStyle = strand.color;
+        ctx.lineWidth = strand.lineWidth;
+        ctx.globalAlpha = strand.baseAlpha;
 
-        const currentPhase = prefersReducedMotion ? f.phase : f.phase + time * f.speed;
-        const wave = Math.sin(currentPhase * f.frequency) * f.amplitude;
-        const waveX = Math.cos(currentPhase * f.frequency * 0.7) * (f.amplitude * 0.5);
+        for (let step = 0; step <= SEGMENTS; step++) {
+          const t = step / SEGMENTS; // 0 (top-right) -> 0.5 (C-vertex) -> 1 (bottom-right)
 
-        // Streaming effect for select strands
-        if (f.isStreamer && !prefersReducedMotion) {
-          ctx.setLineDash([14, 22]);
-          ctx.lineDashOffset = -time * (2.5 + (f.id % 3) * 1.5);
-        } else {
-          ctx.setLineDash([]);
+          // Evaluate base spine position (two joined cubic segments at t = 0.5)
+          let sx = 0;
+          let sy = 0;
+          if (t <= 0.5) {
+            const u = t * 2;
+            sx = evalCubic(u, topX, cp1X, cp2X, vertexX);
+            sy = evalCubic(u, topY, cp1Y, cp2Y, vertexY);
+          } else {
+            const u = (t - 0.5) * 2;
+            sx = evalCubic(u, vertexX, cp3X, cp4X, botX);
+            sy = evalCubic(u, vertexY, cp3Y, cp4Y, botY);
+          }
+
+          // Ribbon width envelope:
+          // Wide and fanned-out at top-right (t=0) and bottom-right (t=1),
+          // pinched and twisted tightly at the parabolic C-vertex (t=0.5)!
+          const distFromVertex = Math.abs(t - 0.48) * 2; // 0 at vertex, ~1 at ends
+          const ribbonWidth = 26 + Math.pow(distFromVertex, 1.35) * 185;
+
+          // 3D helical twist angle along the spine
+          const twistAngle =
+            t * Math.PI * 2.15 +
+            strand.twistPhase +
+            Math.sin(phase) * 0.35;
+
+          // Project 3D ribbon cross-section onto 2D screen normal
+          const offsetN = Math.sin(twistAngle) * ribbonWidth * 0.5;
+          const offsetOrtho = Math.cos(twistAngle) * (14 + distFromVertex * 35);
+
+          // Harmonic silk ripple traveling along the strand
+          const silkWave =
+            Math.sin(t * 10 - time * 0.022 + strand.index * 0.15) *
+            (4 + distFromVertex * 12);
+
+          const px = sx + offsetN * 0.78 + silkWave;
+          const py = sy + offsetOrtho * 0.65 + silkWave * 0.4;
+
+          if (step === 0) {
+            ctx.moveTo(px, py);
+          } else {
+            ctx.lineTo(px, py);
+          }
         }
 
-        // Geometry:
-        // Entrance from bottom-left
-        const x0 = -width * 0.08 + waveX;
-        const y0 = height * 0.72 + f.spreadOffset * 0.6 + wave - scrollY * 0.35;
-
-        // Control Point 1
-        const cx1 = width * 0.22 + waveX * 0.5;
-        const y1 = height * 0.62 + f.spreadOffset * 0.4 - scrollY * 0.35;
-
-        // Pinch vortex loop center with living harmonic undulation
-        const pinchX = coreX + Math.sin(currentPhase * 0.9) * 14 + f.spreadOffset * 0.15;
-        const pinchY = coreY + Math.cos(currentPhase * 0.9) * 12 + f.spreadOffset * 0.15;
-
-        // Loop arc control points
-        const loopTopX = pinchX - 85 - f.loopRadiusOffset * 0.3 + waveX;
-        const loopTopY = pinchY - 60 - f.loopRadiusOffset * 0.4 + wave;
-
-        const loopBottomX = pinchX - 70;
-        const loopBottomY = pinchY + 65 + f.loopRadiusOffset * 0.4;
-
-        // Exit sweeping upward towards top-right
-        const cx2 = width * 0.75 + f.spreadOffset * 0.5 + waveX;
-        const cy2 = height * 0.28 + wave * 0.5 - scrollY * 0.35;
-
-        const xEnd = width * 1.12;
-        const yEnd = height * 0.42 + f.spreadOffset * 0.8 - scrollY * 0.35;
-
-        // Draw primary sweeping curve
-        ctx.moveTo(x0, y0);
-        ctx.bezierCurveTo(cx1, y1, loopTopX, loopTopY, pinchX, pinchY);
-        ctx.bezierCurveTo(pinchX + 70, pinchY + 20, cx2, cy2, xEnd, yEnd);
         ctx.stroke();
 
-        // Second under-loop pass
-        ctx.beginPath();
-        ctx.moveTo(x0 + 40, y0 + 30);
-        ctx.bezierCurveTo(cx1 - 20, y1 + 50, loopBottomX, loopBottomY, pinchX, pinchY);
-        ctx.stroke();
+        // Add soft wide volumetric pass on every 8th strand to create the velvety glow
+        if (strand.index % 8 === 0) {
+          ctx.lineWidth = 14;
+          ctx.globalAlpha = 0.018;
+          ctx.stroke();
+        }
       });
 
-      // Reset dashed lines
-      ctx.setLineDash([]);
-
-      // 3. Render Traveling Energy Packets (Live Data Flowing in Fiber)
-      if (!prefersReducedMotion) {
-        packets.forEach((p) => {
-          p.progress += p.speed;
-          if (p.progress > 1) {
-            p.progress = 0;
-          }
-
-          const f = filaments[p.filamentIndex];
-          const currentPhase = f.phase + time * f.speed;
-          const wave = Math.sin(currentPhase * f.frequency) * f.amplitude;
-
-          const x0 = -width * 0.08;
-          const y0 = height * 0.72 + f.spreadOffset * 0.6 + wave - scrollY * 0.35;
-          const cx1 = width * 0.22;
-          const y1 = height * 0.62 + f.spreadOffset * 0.4 - scrollY * 0.35;
-          const pinchX = coreX + f.spreadOffset * 0.15;
-          const pinchY = coreY + f.spreadOffset * 0.15;
-          const loopTopX = pinchX - 85;
-          const loopTopY = pinchY - 60;
-          const cx2 = width * 0.75;
-          const cy2 = height * 0.28 - scrollY * 0.35;
-          const xEnd = width * 1.12;
-          const yEnd = height * 0.42 - scrollY * 0.35;
-
-          let px = 0;
-          let py = 0;
-
-          // Split bezier path into two halves
-          if (p.progress < 0.5) {
-            const localT = p.progress / 0.5;
-            px = getBezierPoint(localT, x0, cx1, loopTopX, pinchX);
-            py = getBezierPoint(localT, y0, y1, loopTopY, pinchY);
-          } else {
-            const localT = (p.progress - 0.5) / 0.5;
-            px = getBezierPoint(localT, pinchX, pinchX + 70, cx2, xEnd);
-            py = getBezierPoint(localT, pinchY, pinchY + 20, cy2, yEnd);
-          }
-
-          // Draw radiant light pulse with head and tail
+      // =========================================================================
+      // 3. LOWER HORIZONTAL WAVE RIBBON (Visible when scrolling to Pricing & CTA)
+      // Matches frame_030.png & frame_035.png flowing horizontal green-cyan waves
+      // =========================================================================
+      if (pageCycle > 0.15) {
+        const waveBaseY = height * 0.32;
+        for (let w = 0; w < 22; w++) {
+          const wNorm = w / 21;
           ctx.beginPath();
-          ctx.arc(px, py, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = '#FFFFFF';
-          ctx.globalAlpha = 0.95;
-          ctx.fill();
+          ctx.strokeStyle = wNorm > 0.75 ? '#38BDF8' : wNorm < 0.3 ? '#EEFFAA' : '#C8FF2E';
+          ctx.lineWidth = wNorm < 0.3 ? 1.2 : 0.75;
+          ctx.globalAlpha = 0.045 + (1 - Math.abs(wNorm - 0.5) * 2) * 0.055;
 
-          // Outer glowing aura
-          ctx.beginPath();
-          ctx.arc(px, py, p.size * 3.5, 0, Math.PI * 2);
-          ctx.fillStyle = f.color;
-          ctx.globalAlpha = 0.4;
-          ctx.fill();
-        });
+          for (let xStep = 0; xStep <= 48; xStep++) {
+            const xRatio = xStep / 48;
+            const wx = xRatio * width;
+            const wy =
+              waveBaseY +
+              Math.sin(xRatio * Math.PI * 2.2 + time * 0.014 + w * 0.18) * (42 + w * 3.2) +
+              Math.cos(xRatio * Math.PI * 1.1 - time * 0.01 + w * 0.12) * 28 +
+              (w - 11) * 5.5;
+
+            if (xStep === 0) ctx.moveTo(wx, wy);
+            else ctx.lineTo(wx, wy);
+          }
+          ctx.stroke();
+        }
       }
 
-      // 4. Ultra-Bright White-Hot Focal Ring (Pulsing dynamically)
-      ctx.beginPath();
-      const pulseRate = Math.sin(time * 0.04);
-      const ringRx = 44 + pulseRate * 6;
-      const ringRy = 68 + pulseRate * 7;
-
-      ctx.ellipse(coreX - 25, coreY, ringRx, ringRy, -Math.PI / 5, 0, Math.PI * 2);
-      ctx.strokeStyle = '#EEFFAA';
-      ctx.lineWidth = 4 + pulseRate * 0.8;
-      ctx.globalAlpha = 0.95;
-      ctx.stroke();
-
-      // Soft glow halos around the loop
-      ctx.lineWidth = 16;
-      ctx.strokeStyle = '#C7FF3D';
-      ctx.globalAlpha = 0.45;
-      ctx.stroke();
-
-      ctx.lineWidth = 36;
-      ctx.strokeStyle = '#10B981';
-      ctx.globalAlpha = 0.2;
-      ctx.stroke();
-
-      // 5. Floating Ambient Bokeh Dust Motes
-      particles.forEach((pt) => {
+      // =========================================================================
+      // 4. FLOATING MICRO-SPARKS & BOKEH MOTES ALONG THE CAUSTIC FOLD
+      // =========================================================================
+      sparks.forEach((sp) => {
         if (!prefersReducedMotion) {
-          pt.x += pt.vx / width;
-          pt.y += pt.vy / height;
-          if (pt.x < 0) pt.x = 1;
-          if (pt.x > 1) pt.x = 0;
-          if (pt.y < 0) pt.y = 1;
-          if (pt.y > 1) pt.y = 0;
+          sp.u += sp.speed;
+          if (sp.u > 1) sp.u = 0;
         }
 
-        const px = pt.x * width + normX * 30;
-        const py = pt.y * height + normY * 30 - scrollY * 0.2;
+        const t = sp.u;
+        let sx = 0;
+        let sy = 0;
+        if (t <= 0.5) {
+          const u = t * 2;
+          sx = evalCubic(u, topX, cp1X, cp2X, vertexX);
+          sy = evalCubic(u, topY, cp1Y, cp2Y, vertexY);
+        } else {
+          const u = (t - 0.5) * 2;
+          sx = evalCubic(u, vertexX, cp3X, cp4X, botX);
+          sy = evalCubic(u, vertexY, cp3Y, cp4Y, botY);
+        }
+
+        const driftX = Math.sin(time * 0.015 + sp.phase) * 28 + sp.v * 0.65;
+        const driftY = Math.cos(time * 0.013 + sp.phase) * 24 + sp.v * 0.45;
+        const px = sx + driftX;
+        const py = sy + driftY;
+
+        const twinkle = 0.5 + 0.5 * Math.sin(time * 0.04 + sp.phase);
 
         ctx.beginPath();
-        ctx.arc(px, py, pt.size, 0, Math.PI * 2);
-        ctx.fillStyle = pt.color;
-        ctx.globalAlpha = pt.alpha * (0.8 + Math.sin(time * 0.05 + pt.size) * 0.2);
+        ctx.arc(px, py, sp.size, 0, Math.PI * 2);
+        ctx.fillStyle = sp.color;
+        ctx.globalAlpha = sp.alpha * twinkle;
         ctx.fill();
       });
 
@@ -323,27 +354,24 @@ export function SignalRibbonBackground() {
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#030604]">
-      {/* Background canvas */}
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050705]">
+      {/* Volumetric 3D Silk Ribbon Canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
 
-      {/* Subtle fine technical grid with low opacity */}
-      <div className="absolute inset-0 bg-tech-grid opacity-20 pointer-events-none" />
+      {/* Subtle fine dot matrix across the upper field (matching Video-6454.mp4) */}
+      <div className="absolute inset-0 bg-dot-pattern opacity-[0.14] pointer-events-none" />
 
-      {/* Subtle fine dot matrix across upper canvas */}
-      <div className="absolute inset-0 bg-dot-pattern opacity-12 pointer-events-none" />
-
-      {/* Soft vignette frame to keep typography readable */}
+      {/* Soft radial vignette so headlines pop with effortless contrast */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse 90% 80% at 50% 40%, transparent 45%, rgba(3, 6, 4, 0.65) 75%, rgba(3, 6, 4, 0.95) 100%)',
+            'radial-gradient(ellipse 95% 85% at 48% 42%, transparent 48%, rgba(5, 7, 5, 0.55) 78%, rgba(5, 7, 5, 0.92) 100%)',
         }}
       />
 
-      {/* Subtle micro noise texture */}
-      <div className="absolute inset-0 noise-overlay pointer-events-none opacity-30" />
+      {/* Film grain overlay */}
+      <div className="absolute inset-0 noise-overlay pointer-events-none opacity-35" />
     </div>
   );
 }

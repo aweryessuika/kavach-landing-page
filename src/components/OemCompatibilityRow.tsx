@@ -1,49 +1,69 @@
+import { useState } from 'react';
+
 export function OemCompatibilityRow() {
+  const [hoveredIdx, setHoveredIdx] = useState<number>(2);
+
   const brands = [
-    { code: 'SM', name: 'Samsung Knox', highlight: true },
-    { code: 'XI', name: 'Xiaomi / HyperOS', highlight: false },
-    { code: 'VV', name: 'Vivo / iQOO', highlight: false },
-    { code: 'OP', name: 'Oppo / ColorOS', highlight: false },
-    { code: 'RM', name: 'Realme', highlight: false },
-    { code: 'MT', name: 'MediaTek Dimensity', highlight: false },
-    { code: 'QC', name: 'Qualcomm Snapdragon', highlight: false },
-    { code: 'RZ', name: 'Razorpay / UPI', highlight: true },
+    { code: 'SM', label: 'samsung' },
+    { code: 'XM', label: 'xiaomi' },
+    { code: 'VV', label: 'vivo' },
+    { code: 'OP', label: 'oppo' },
+    { code: 'RM', label: 'realme' },
+    { code: 'MT', label: 'motorola' },
+    { code: 'IQ', label: 'iqoo' },
+    { code: '+', label: '120+ more' },
   ];
 
   return (
-    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 z-10">
-      <div className="text-center sm:text-left mb-6">
-        <span className="text-xs font-mono text-[#626D60] tracking-wide">
-          connects to every Android OEM chipset, and whatever device you stock
-        </span>
-      </div>
+    <section className="relative py-12 lg:py-16 z-10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <div className="mb-7">
+          <span className="text-[12px] font-mono text-[#6E786B] tracking-tight">
+            works on every Android brand you sell, right out of the box
+          </span>
+        </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        {brands.map((b) => (
+        {/* Connected Squircle Row (Matching frame_007.png & frame_012.png) */}
+        <div className="relative flex items-center justify-between gap-3 overflow-x-auto pb-2">
+          {/* Subtle dotted horizontal line running behind the squircles */}
           <div
-            key={b.code}
-            className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#090F0B]/80 border border-white/[0.08] hover:border-[#C7FF3D]/30 transition-all duration-200 group cursor-default"
-          >
-            <div
-              className={`w-9 h-9 rounded-xl flex items-center justify-center font-mono font-bold text-xs transition-colors ${
-                b.highlight
-                  ? 'bg-[#C7FF3D]/15 text-[#C7FF3D] border border-[#C7FF3D]/30 group-hover:bg-[#C7FF3D] group-hover:text-[#070A08]'
-                  : 'bg-white/[0.05] text-[#9BA598] group-hover:text-[#F5F7F4]'
-              }`}
-            >
-              {b.code}
-            </div>
-            <span className="text-xs font-mono text-[#9BA598] group-hover:text-[#F5F7F4] transition-colors">
-              {b.name}
-            </span>
-          </div>
-        ))}
+            className="hidden sm:block absolute top-[26px] left-6 right-6 h-[1px] pointer-events-none -z-10"
+            style={{
+              backgroundImage:
+                'linear-gradient(to right, rgba(255,255,255,0.12) 2px, transparent 2px)',
+              backgroundSize: '10px 1px',
+            }}
+          />
 
-        {/* Counter Badge */}
-        <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] text-xs font-mono text-[#626D60]">
-          <span>+ 28 OEM brands</span>
+          {brands.map((item, idx) => {
+            const isHighlighted = hoveredIdx === idx;
+            return (
+              <div
+                key={item.label}
+                onMouseEnter={() => setHoveredIdx(idx)}
+                className="flex flex-col items-center gap-3 min-w-[68px] cursor-default group"
+              >
+                <div
+                  className={`w-[52px] h-[52px] rounded-[15px] flex items-center justify-center font-mono text-[12px] transition-all duration-200 ${
+                    isHighlighted
+                      ? 'bg-[#1D2614]/90 border border-[#C8FF2E]/40 text-[#C8FF2E] shadow-[0_0_24px_rgba(200,255,46,0.18)]'
+                      : 'bg-[#0C100C]/90 border border-white/[0.08] text-[#9CA698] group-hover:border-white/[0.18] group-hover:text-[#F4F6F0]'
+                  }`}
+                >
+                  {item.code}
+                </div>
+                <span
+                  className={`text-[11.5px] font-mono transition-colors ${
+                    isHighlighted ? 'text-[#D2D8CE]' : 'text-[#6E786B]'
+                  }`}
+                >
+                  {item.label}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

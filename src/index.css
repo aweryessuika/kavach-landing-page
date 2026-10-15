@@ -6,26 +6,26 @@
   --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  --color-pitch: #070A08;
-  --color-pitch-deep: #050706;
-  --color-surface-dark: #0B100D;
-  --color-surface-glass: rgba(13, 19, 15, 0.65);
-  --color-surface-card: rgba(16, 24, 19, 0.6);
-  --color-surface-highlight: rgba(22, 33, 26, 0.7);
+  --color-pitch: #050705;
+  --color-pitch-deep: #030503;
+  --color-surface-dark: #0A0D0A;
+  --color-surface-glass: rgba(14, 18, 14, 0.72);
+  --color-surface-card: rgba(16, 20, 16, 0.68);
+  --color-surface-highlight: rgba(24, 30, 24, 0.75);
 
-  --color-lime-accent: #C7FF3D;
-  --color-lime-glow: #D4FF33;
-  --color-lime-dim: rgba(199, 255, 61, 0.15);
-  --color-lime-border: rgba(199, 255, 61, 0.2);
+  --color-lime-accent: #C8FF2E;
+  --color-lime-glow: #D4FF4D;
+  --color-lime-dim: rgba(200, 255, 46, 0.14);
+  --color-lime-border: rgba(200, 255, 46, 0.22);
 
   --color-signal-green: #10B981;
-  --color-signal-cyan: #00F5D4;
+  --color-signal-cyan: #38BDF8;
   --color-signal-amber: #F59E0B;
   --color-signal-danger: #EF4444;
 
-  --color-text-primary: #F5F7F4;
-  --color-text-secondary: #9BA598;
-  --color-text-muted: #626D60;
+  --color-text-primary: #F4F6F0;
+  --color-text-secondary: #9CA698;
+  --color-text-muted: #5E685B;
 }
 
 :root {
@@ -35,15 +35,21 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   html, body {
     width: 100%;
     min-height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #070A08;
-    color: #F5F7F4;
+    background-color: #050705;
+    color: #F4F6F0;
     font-family: var(--font-sans);
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   #root {
@@ -60,7 +66,7 @@
 
   .font-serif {
     font-family: 'Newsreader', Georgia, serif;
-    font-feature-settings: 'cv01', 'cv02';
+    font-feature-settings: 'cv01', 'cv02', 'liga' 1;
   }
 
   .font-mono {
@@ -69,99 +75,146 @@
   }
 }
 
-/* Custom Tactical Scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #070A08;
+  background: #050705;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(199, 255, 61, 0.2);
+  background: rgba(200, 255, 46, 0.22);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(199, 255, 61, 0.45);
+  background: rgba(200, 255, 46, 0.45);
 }
 
-/* Glass Card & Border Light - Emil Kowalski & Apple Design principles */
+/* Luxury Dark Glass Surface — Matching Relay Video-6454.mp4 */
 .dark-glass {
-  background: rgba(11, 16, 13, 0.72);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(199, 255, 61, 0.12);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(199, 255, 61, 0.15);
+  background: rgba(13, 17, 13, 0.72);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 24px 60px -15px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
 }
 
 .dark-glass-interactive {
-  background: rgba(11, 16, 13, 0.72);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(199, 255, 61, 0.12);
-  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(199, 255, 61, 0.12);
-  transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 240ms ease,
-              box-shadow 240ms ease;
+  background: rgba(13, 17, 13, 0.72);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 20px 50px -12px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition:
+    transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 280ms ease,
+    box-shadow 280ms ease,
+    background-color 280ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .dark-glass-interactive:hover {
     transform: translateY(-2px);
-    border-color: rgba(199, 255, 61, 0.28);
-    box-shadow: 0 22px 45px -12px rgba(0, 0, 0, 0.8),
-                0 0 25px -5px rgba(199, 255, 61, 0.15),
-                inset 0 1px 0 rgba(199, 255, 61, 0.25);
+    background: rgba(16, 22, 16, 0.8);
+    border-color: rgba(200, 255, 46, 0.22);
+    box-shadow:
+      0 28px 60px -12px rgba(0, 0, 0, 0.9),
+      0 0 32px -8px rgba(200, 255, 46, 0.12),
+      inset 0 1px 0 rgba(200, 255, 46, 0.2);
   }
 }
 
-/* Tactile button press feedback */
+/* Emil Kowalski & Apple Tactile Button Physics */
 .btn-press {
-  transition: transform 140ms cubic-bezier(0.2, 0, 0, 1),
-              box-shadow 140ms ease,
-              background-color 160ms ease,
-              filter 160ms ease;
+  transition:
+    transform 140ms cubic-bezier(0.2, 0, 0, 1),
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    opacity 180ms ease;
   will-change: transform;
 }
 .btn-press:active {
   transform: scale(0.97);
 }
 
-/* Micro dots and technical grids */
+/* Subtle Grids & Patterns */
 .bg-tech-grid {
   background-image:
-    linear-gradient(to right, rgba(199, 255, 61, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(199, 255, 61, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 36px 36px;
 }
 
 .bg-dot-pattern {
-  background-image: radial-gradient(rgba(199, 255, 61, 0.12) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.bg-dot-pattern-dense {
-  background-image: radial-gradient(rgba(199, 255, 61, 0.18) 1px, transparent 1px);
-  background-size: 14px 14px;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 .bg-acid-dots {
-  background-image: radial-gradient(rgba(7, 10, 8, 0.18) 1.2px, transparent 1.2px);
-  background-size: 14px 14px;
+  background-image: radial-gradient(rgba(5, 7, 5, 0.2) 1.25px, transparent 1.25px);
+  background-size: 16px 16px;
+}
+
+.bg-striped-lime {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(200, 255, 46, 0.35),
+    rgba(200, 255, 46, 0.35) 3px,
+    rgba(200, 255, 46, 0.1) 3px,
+    rgba(200, 255, 46, 0.1) 6px
+  );
 }
 
 /* Noise overlay */
 .noise-overlay {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
-/* Glow helper */
-.glow-lime-sm {
-  box-shadow: 0 0 15px rgba(199, 255, 61, 0.25);
+/* Custom Range Slider for Pricing Estimator (Matching frame_031.png) */
+input[type='range'].kavach-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
 }
 
-.glow-lime-md {
-  box-shadow: 0 0 35px rgba(199, 255, 61, 0.35);
+input[type='range'].kavach-slider::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 9999px;
+}
+
+input[type='range'].kavach-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: #C8FF2E;
+  border: 3px solid #050705;
+  box-shadow: 0 0 20px rgba(200, 255, 46, 0.85), 0 0 6px #FFFFFF;
+  margin-top: -7px;
+  transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 150ms ease;
+}
+
+input[type='range'].kavach-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 28px rgba(200, 255, 46, 1), 0 0 10px #FFFFFF;
+}
+
+input[type='range'].kavach-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: #C8FF2E;
+  border: 3px solid #050705;
+  box-shadow: 0 0 20px rgba(200, 255, 46, 0.85), 0 0 6px #FFFFFF;
+  transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 150ms ease;
 }
 
 /* Reduced motion accessibility */

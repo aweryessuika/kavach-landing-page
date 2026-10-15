@@ -5,8 +5,8 @@ import { HeroSection } from './components/HeroSection';
 import { OemCompatibilityRow } from './components/OemCompatibilityRow';
 import { ProtectionSection } from './components/ProtectionSection';
 import { NetworkEcosystemSection } from './components/NetworkEcosystemSection';
-import { SafetyIntelligenceSection } from './components/SafetyIntelligenceSection';
 import { BentoGridSection } from './components/BentoGridSection';
+import { SafetyIntelligenceSection } from './components/SafetyIntelligenceSection';
 import { MetricsTrustSection } from './components/MetricsTrustSection';
 import { FinalCtaSection } from './components/FinalCtaSection';
 import { Footer } from './components/Footer';
@@ -16,59 +16,60 @@ export function App() {
   const [simulationOpen, setSimulationOpen] = useState(false);
 
   const handleScrollToCta = () => {
-    const ctaSection = document.getElementById('contact') || document.querySelector('form');
+    const ctaSection =
+      document.getElementById('contact') || document.querySelector('form');
     if (ctaSection) {
       ctaSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="relative min-h-screen bg-[#030604] text-[#F5F7F4] selection:bg-[#C7FF3D] selection:text-[#070A08] overflow-x-hidden font-sans">
-      {/* 1. Procedural Luminous Vortex Filament Background (Matching Video-6454.mp4) */}
+    <div className="relative min-h-screen bg-[#050705] text-[#F4F6F0] selection:bg-[#C8FF2E] selection:text-[#050705] overflow-x-hidden font-sans">
+      {/* 1. 3D Volumetric Parabolic Silk Ribbon Shader (Matching Video-6454.mp4) */}
       <SignalRibbonBackground />
 
-      {/* 2. Sticky Glass Nav Header */}
+      {/* 2. Floating Minimal Header */}
       <Navbar
         onExploreClick={handleScrollToCta}
         onOpenSimulation={() => setSimulationOpen(true)}
       />
 
-      {/* 3. Main Stream of Sections */}
+      {/* 3. Main Narrative Stream */}
       <main className="relative z-10 w-full">
-        {/* Section 1: Hero Node Workflow */}
+        {/* Hero + 3D Tilted Workflow Canvas */}
         <HeroSection
           onExploreClick={handleScrollToCta}
           onOpenSimulation={() => setSimulationOpen(true)}
         />
 
-        {/* Section 1.5: OEM Chipset & Android Brand Compatibility Bar */}
+        {/* Connected OEM Brand Squircles */}
         <OemCompatibilityRow />
 
-        {/* Section 2: Most EMI recovery is lost in delay */}
+        {/* Story Beats 01, 02, 03 (Waterfall, Manual Control Card, 3D Isometric Bars) */}
         <ProtectionSection />
 
-        {/* Section 3: One scan. Permanent device ownership */}
+        {/* Scroll-Expanding Acid-Lime Manifesto + Reliability Dual Cards */}
         <NetworkEcosystemSection />
 
-        {/* Section 4: Live Kiosk Emulator & Enforcement Intelligence */}
-        <SafetyIntelligenceSection />
-
-        {/* Section 5: Bento Grid — The retailer sees the whole fleet */}
+        {/* Daily View ('A Tuesday, seen from Kavach' — Weekly Matrix, Ring Gauge, Sine Waves) */}
         <BentoGridSection />
 
-        {/* Section 6: Numbers you do not have to explain away */}
-        <MetricsTrustSection />
+        {/* Interactive Handset Preview (Locked, Offline PIN, Normal) */}
+        <SafetyIntelligenceSection />
 
-        {/* Section 7: Acid-Lime Card — Pick the default you hate most */}
+        {/* Numbers + Shop Owner Stories + Interactive Pricing Slider + 3 Tier Cards */}
+        <MetricsTrustSection onExploreClick={handleScrollToCta} />
+
+        {/* Two-Column Split Final CTA */}
         <div id="contact">
           <FinalCtaSection />
         </div>
       </main>
 
-      {/* 4. Quiet Dark Footer */}
+      {/* 4. Ultra-Dark Editorial Footer */}
       <Footer />
 
-      {/* 5. Interactive Simulation Modal */}
+      {/* 5. Interactive Live Lock Preview Modal */}
       <SimulationModal
         isOpen={simulationOpen}
         onClose={() => setSimulationOpen(false)}

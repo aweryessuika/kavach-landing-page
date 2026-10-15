@@ -1,204 +1,332 @@
 import { useState } from 'react';
-import { ShieldCheck, WifiOff, Zap } from 'lucide-react';
+import { Check, Clock, Pause } from 'lucide-react';
 
 export function ProtectionSection() {
-  const [activeCard, setActiveCard] = useState<number>(0);
+  const [decisionState, setDecisionState] = useState<'pending' | 'locked' | 'held'>('pending');
+  const [selectedDay, setSelectedDay] = useState<number>(5); // Saturday highlighted by default like frame_018.png
 
-  const cards = [
-    {
-      id: 0,
-      title: 'Zero Factory Reset Bypass',
-      description: 'Device Owner DPC stays permanently locked into system-level privileges.',
-      subtext: 'Even if the customer enters recovery mode (Power + Vol Down) or flashes stock ROM, Kavach auto-provisions itself upon first boot before home screen access is granted.',
-      badge: 'KNOX & DPC PERSISTENCE',
-      icon: ShieldCheck,
-      visual: (
-        <div className="mt-3 p-3 rounded-lg bg-[#060907] border border-white/[0.06] font-mono text-[10px] space-y-1.5">
-          <div className="flex justify-between text-[#9BA598]">
-            <span>RECOVERY MODE ATTEMPT</span>
-            <span className="text-[#C7FF3D]">BLOCKED</span>
-          </div>
-          <div className="flex justify-between text-[#F5F7F4]">
-            <span>OEM UNLOCK: DISABLED</span>
-            <span>USB DEBUGGING: REVOKED</span>
-          </div>
-          <div className="w-full bg-white/[0.08] h-1 rounded-full overflow-hidden">
-            <div className="bg-[#C7FF3D] h-full w-full" />
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 1,
-      title: 'Sub-350ms Remote Kiosk Lock',
-      description: 'Trigger lock with a single click from your retailer dashboard.',
-      subtext: 'Persistent bidirectional WebSockets on AWS Lightsail push encrypted commands in real time. The entire screen becomes an un-dismissible payment reminder with your UPI QR.',
-      badge: 'WEBSOCKET CLAMP',
-      icon: Zap,
-      visual: (
-        <div className="mt-3 p-3 rounded-lg bg-[#060907] border border-white/[0.06] font-mono text-[10px] space-y-1.5">
-          <div className="flex justify-between text-[#9BA598]">
-            <span>PUSH LATENCY</span>
-            <span className="text-[#00F5D4]">182 MS ACTUAL</span>
-          </div>
-          <div className="flex justify-between text-[#F5F7F4]">
-            <span>KIOSK STATUS: ACTIVE</span>
-            <span>BACK/HOME KEYS: NULLIFIED</span>
-          </div>
-          <div className="flex items-center gap-1.5 text-[#C7FF3D] text-[9px]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C7FF3D]" />
-            Displays store owner custom UPI QR code + Call Store button
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 2,
-      title: 'Offline Deadman Auto-Lock',
-      description: 'Enforces lock even when airplane mode or SIM removal is attempted.',
-      subtext: 'If a delinquent customer removes the SIM or avoids Wi-Fi, the internal cryptographic timer counts down. If no online payment token is received within 24 hours, the device locks offline automatically.',
-      badge: 'FAIL-SAFE COUNTER',
-      icon: WifiOff,
-      visual: (
-        <div className="mt-3 p-3 rounded-lg bg-[#060907] border border-white/[0.06] font-mono text-[10px] space-y-1.5">
-          <div className="flex justify-between text-[#9BA598]">
-            <span>SIM STATUS: REMOVED</span>
-            <span className="text-[#F59E0B]">DEADMAN RUNNING</span>
-          </div>
-          <div className="flex justify-between text-[#F5F7F4]">
-            <span>OFFLINE TIMER: 23:59:40</span>
-            <span>ACTION: AUTO-LOCK</span>
-          </div>
-          <div className="text-[9px] text-[#9BA598]">
-            Cryptographically sealed system clock cannot be altered in settings.
-          </div>
-        </div>
-      ),
-    },
+  const weekBars = [
+    { day: 'mon', height: 34, count: '14 paid' },
+    { day: 'tue', height: 48, count: '19 paid' },
+    { day: 'wed', height: 64, count: '26 paid' },
+    { day: 'thu', height: 80, count: '31 paid' },
+    { day: 'fri', height: 96, count: '38 paid' },
+    { day: 'sat', height: 118, count: '46 paid' },
   ];
 
   return (
-    <section id="system" className="relative py-24 lg:py-32 overflow-hidden border-t border-white/[0.04]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Left Column: Headline & Editorial Paragraph (Matching frame_007.png) */}
-          <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B100D] border border-white/10 text-xs font-mono text-[#C7FF3D]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C7FF3D]" />
-              <span>HARDWARE-LEVEL SECURITY ARMOR</span>
+    <section
+      id="how-it-works"
+      className="relative py-24 lg:py-32 overflow-hidden z-10"
+    >
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        {/* Top Section Header Split (Matching frame_015.png) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-20 lg:mb-28">
+          <div className="lg:col-span-7 space-y-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0C100C] border border-white/[0.09] text-[11.5px] font-mono text-[#D2D8CE]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E]" />
+              <span>how it works</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight text-[#F5F7F4] leading-[1.12]">
-              Most EMI recovery is
-              <br />
-              <span className="font-serif italic font-normal text-[#C7FF3D]">
-                lost in delay.
+            <h2 className="text-[36px] sm:text-[48px] lg:text-[54px] font-display font-semibold tracking-[-0.03em] text-[#F4F6F0] leading-[1.06]">
+              Most of credit recovery is{' '}
+              <span className="font-serif italic font-normal text-[#F4F6F0]">
+                chasing.
               </span>
             </h2>
+          </div>
 
-            <p className="text-base sm:text-lg text-[#9BA598] leading-relaxed">
-              Calling customers for weeks. Visiting home addresses. Hoping they do not format the device before paying. Kavach replaces manual chasing with instant hardware enforcement, leaving you with zero defaulted stock.
+          <div className="lg:col-span-5">
+            <p className="text-[15px] sm:text-[16px] text-[#9CA698] leading-[1.65]">
+              Calling a customer five times. Hearing they will pay tomorrow. Wondering if they already formatted the phone. Kavach takes the chasing away and leaves every decision in your hands.
             </p>
+          </div>
+        </div>
 
-            {/* Strategic Pillars List */}
-            <div className="pt-4 space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#C7FF3D]/10 text-[#C7FF3D] flex items-center justify-center shrink-0 mt-0.5 text-xs font-mono">
-                  ✓
-                </div>
-                <p className="text-sm text-[#9BA598]">
-                  <strong className="text-[#F5F7F4] font-medium">Safe Mode & Developer Options Disabled:</strong> USB debugging and developer options are permanently locked down.
-                </p>
+        {/* =====================================================================
+            STORY BEAT 01: Text Left, Horizontal Waterfall Card Right (frame_015.png)
+           ===================================================================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-24 lg:mb-32">
+          <div className="lg:col-span-4 space-y-3">
+            <div className="text-[12px] font-mono text-[#6E786B]">01</div>
+            <h3 className="text-[24px] sm:text-[28px] font-display font-semibold tracking-[-0.02em] text-[#F4F6F0]">
+              One scan, ready at the counter
+            </h3>
+            <p className="text-[14.5px] text-[#9CA698] leading-[1.65]">
+              Scan the box barcode, enter the customer’s name, and scan one QR code on the new phone. No computers, no cables, and zero warning popups.
+            </p>
+          </div>
+
+          <div className="lg:col-span-8">
+            <div className="dark-glass rounded-[22px] p-6 sm:p-8 border border-white/[0.08]">
+              {/* Top Row */}
+              <div className="flex items-center justify-between text-[12px] font-mono mb-7">
+                <span className="text-[#D2D8CE]">enrollment #41982</span>
+                <span className="text-[#6E786B]">finished in 48 s</span>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#C7FF3D]/10 text-[#C7FF3D] flex items-center justify-center shrink-0 mt-0.5 text-xs font-mono">
-                  ✓
+
+              {/* Waterfall Rows (Exact match to frame_015.png) */}
+              <div className="space-y-4 font-mono text-[12px]">
+                {/* Row 1 */}
+                <div className="grid grid-cols-12 items-center gap-3">
+                  <div className="col-span-5 sm:col-span-4 flex items-center gap-2.5 text-[#D2D8CE]">
+                    <Check className="w-3.5 h-3.5 text-[#9CA698]" />
+                    <span className="truncate">scan box barcode</span>
+                  </div>
+                  <div className="col-span-5 sm:col-span-6 relative h-3 flex items-center">
+                    <div
+                      className="h-2.5 rounded-sm bg-gradient-to-r from-[#84CC16] to-[#C8FF2E] shadow-[0_0_16px_rgba(200,255,46,0.4)]"
+                      style={{ width: '58%' }}
+                    />
+                  </div>
+                  <div className="col-span-2 text-right text-[#6E786B]">28 s</div>
                 </div>
-                <p className="text-sm text-[#9BA598]">
-                  <strong className="text-[#F5F7F4] font-medium">Dialer & Emergency Passthrough:</strong> Allows dialing 112 emergency services and your store contact number while all other apps remain locked.
-                </p>
+
+                {/* Row 2 */}
+                <div className="grid grid-cols-12 items-center gap-3">
+                  <div className="col-span-5 sm:col-span-4 flex items-center gap-2.5 text-[#D2D8CE]">
+                    <Check className="w-3.5 h-3.5 text-[#9CA698]" />
+                    <span className="truncate">customer details</span>
+                  </div>
+                  <div className="col-span-5 sm:col-span-6 relative h-3 flex items-center">
+                    <div
+                      className="h-2.5 w-3.5 rounded-sm bg-[#E2E8DF]"
+                      style={{ marginLeft: '58%' }}
+                    />
+                  </div>
+                  <div className="col-span-2 text-right text-[#6E786B]">12 s</div>
+                </div>
+
+                {/* Row 3 */}
+                <div className="grid grid-cols-12 items-center gap-3">
+                  <div className="col-span-5 sm:col-span-4 flex items-center gap-2.5 text-[#D2D8CE]">
+                    <Check className="w-3.5 h-3.5 text-[#9CA698]" />
+                    <span className="truncate">scan 6-tap qr</span>
+                  </div>
+                  <div className="col-span-5 sm:col-span-6 relative h-3 flex items-center">
+                    <div
+                      className="h-2.5 w-2 rounded-sm bg-[#E2E8DF]"
+                      style={{ marginLeft: '63%' }}
+                    />
+                  </div>
+                  <div className="col-span-2 text-right text-[#6E786B]">8 s</div>
+                </div>
+
+                {/* Row 4 */}
+                <div className="grid grid-cols-12 items-center gap-3">
+                  <div className="col-span-5 sm:col-span-4 flex items-center gap-2.5 text-[#6E786B]">
+                    <Clock className="w-3.5 h-3.5 text-[#6E786B]" />
+                    <span className="truncate">protection active</span>
+                  </div>
+                  <div className="col-span-5 sm:col-span-6 relative h-3 flex items-center">
+                    <div
+                      className="h-2.5 w-14 rounded-sm bg-striped-lime border border-[#C8FF2E]/30"
+                      style={{ marginLeft: '66%' }}
+                    />
+                  </div>
+                  <div className="col-span-2 text-right text-[#6E786B]">verified</div>
+                </div>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#C7FF3D]/10 text-[#C7FF3D] flex items-center justify-center shrink-0 mt-0.5 text-xs font-mono">
-                  ✓
+
+              {/* Bottom Scale Axis */}
+              <div className="grid grid-cols-12 mt-7 pt-4 border-t border-white/[0.05] text-[10.5px] font-mono text-[#5E685B]">
+                <div className="col-span-5 sm:col-span-4" />
+                <div className="col-span-5 sm:col-span-6 flex justify-between">
+                  <span>0</span>
+                  <span>15</span>
+                  <span>30</span>
+                  <span>45</span>
+                  <span>60 sec</span>
                 </div>
-                <p className="text-sm text-[#9BA598]">
-                  <strong className="text-[#F5F7F4] font-medium">Auto-Unlock on UPI Payment:</strong> The instant customer pays the EMI via QR code, phone unlocks automatically in under 5 seconds.
-                </p>
+                <div className="col-span-2" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* =====================================================================
+            STORY BEAT 02: Approval Card Left, Text Right (frame_016 & frame_018)
+           ===================================================================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-24 lg:mb-32">
+          <div className="lg:col-span-7 order-2 lg:order-1">
+            <div className="dark-glass rounded-[22px] p-6 sm:p-8 border border-white/[0.08]">
+              {/* Card Top Header */}
+              <div className="flex items-center justify-between text-[12px] font-mono text-[#6E786B] pb-4 mb-5 border-b border-white/[0.06]">
+                <span className="text-[#D2D8CE]">#shop-counter</span>
+                <span>today</span>
+              </div>
+
+              {/* App Brand Row */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-6 h-6 rounded-md bg-[#C8FF2E] text-[#050705] flex items-center justify-center font-bold text-xs">
+                    »
+                  </div>
+                  <span className="text-[13px] font-semibold text-[#F4F6F0]">
+                    Kavach Retailer App
+                  </span>
+                </div>
+                <span className="text-[11.5px] font-mono text-[#6E786B]">09:41</span>
+              </div>
+
+              {/* Question Prompt */}
+              <p className="text-[14px] text-[#D2D8CE] mb-5">
+                Installment of ₹2,400 for Rahul Sharma is past due. Lock handset screen now?
+              </p>
+
+              {/* Vertical Lime Bar Details Block (Exact match to frame_018.png) */}
+              <div className="border-l-2 border-[#C8FF2E] pl-4 space-y-2 text-[12.5px] font-mono mb-6">
+                <div className="grid grid-cols-12">
+                  <span className="col-span-4 sm:col-span-3 text-[#6E786B]">amount</span>
+                  <span className="col-span-8 sm:col-span-9 text-[#F4F6F0]">₹2,400 INR</span>
+                </div>
+                <div className="grid grid-cols-12">
+                  <span className="col-span-4 sm:col-span-3 text-[#6E786B]">customer</span>
+                  <span className="col-span-8 sm:col-span-9 text-[#F4F6F0]">Rahul Sharma · Vivo Y28</span>
+                </div>
+                <div className="grid grid-cols-12">
+                  <span className="col-span-4 sm:col-span-3 text-[#6E786B]">policy</span>
+                  <span className="col-span-8 sm:col-span-9 text-[#F4F6F0]">100% manual shop owner control</span>
+                </div>
+              </div>
+
+              {/* Action Buttons & Status */}
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setDecisionState('locked')}
+                    className={`btn-press px-4 py-2 rounded-lg text-[12.5px] font-semibold flex items-center gap-1.5 transition-all ${
+                      decisionState === 'locked'
+                        ? 'bg-[#C8FF2E] text-[#050705] shadow-[0_0_20px_rgba(200,255,46,0.4)]'
+                        : 'bg-[#C8FF2E] hover:bg-[#D5FF54] text-[#050705]'
+                    }`}
+                  >
+                    <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                    <span>{decisionState === 'locked' ? 'Screen Locked' : 'Lock phone'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setDecisionState('held')}
+                    className={`btn-press px-4 py-2 rounded-lg text-[12.5px] font-medium flex items-center gap-1.5 border transition-colors ${
+                      decisionState === 'held'
+                        ? 'bg-white/[0.14] border-white/30 text-[#F4F6F0]'
+                        : 'bg-white/[0.05] hover:bg-white/[0.09] border-white/[0.1] text-[#D2D8CE]'
+                    }`}
+                  >
+                    <Pause className="w-3 h-3" />
+                    <span>{decisionState === 'held' ? 'Kept Unlocked' : 'Hold'}</span>
+                  </button>
+                </div>
+
+                <span className="text-[11.5px] font-mono text-[#6E786B]">
+                  {decisionState === 'pending' && 'waiting on your tap'}
+                  {decisionState === 'locked' && 'locked in 280 ms · customer can call you'}
+                  {decisionState === 'held' && 'no lock sent · phone stays normal'}
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Right Column: 3 Connected Glass Cards with Vertical Route-Line */}
-          <div className="lg:col-span-7 relative">
-            {/* Glowing Vertical Route Line Connector */}
-            <div className="hidden sm:block absolute left-8 top-10 bottom-10 w-[2px] bg-gradient-to-b from-[#C7FF3D]/40 via-[#10B981]/30 to-[#00F5D4]/20 -z-0" />
+          <div className="lg:col-span-5 order-1 lg:order-2 space-y-3 lg:pl-6">
+            <div className="text-[12px] font-mono text-[#6E786B]">02</div>
+            <h3 className="text-[24px] sm:text-[28px] font-display font-semibold tracking-[-0.02em] text-[#F4F6F0]">
+              Lock or unlock where you already are
+            </h3>
+            <p className="text-[14.5px] text-[#9CA698] leading-[1.65]">
+              Nothing locks automatically behind your back. When a customer delays payment, tap once on your phone to lock theirs—or give a trusted regular a few extra days.
+            </p>
+          </div>
+        </div>
 
-            <div className="space-y-6 sm:pl-16 relative z-10">
-              {cards.map((card, idx) => {
-                const IconComponent = card.icon;
-                const isSelected = activeCard === idx;
+        {/* =====================================================================
+            STORY BEAT 03: Text Left, 3D Isometric Column Chart Right (frame_018)
+           ===================================================================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          <div className="lg:col-span-4 space-y-3">
+            <div className="text-[12px] font-mono text-[#6E786B]">03</div>
+            <h3 className="text-[24px] sm:text-[28px] font-display font-semibold tracking-[-0.02em] text-[#F4F6F0]">
+              Every phone stays on the record
+            </h3>
+            <p className="text-[14.5px] text-[#9CA698] leading-[1.65]">
+              Formatting the phone, swapping SIM cards, or visiting a local repair shop cannot remove Kavach. And if a phone has no internet, unlock it over a call with an offline PIN.
+            </p>
+          </div>
 
-                return (
-                  <div
-                    key={card.id}
-                    onClick={() => setActiveCard(idx)}
-                    className={`dark-glass-interactive rounded-2xl p-6 sm:p-7 relative cursor-pointer border transition-all duration-300 ${
-                      isSelected
-                        ? 'border-[#C7FF3D]/40 bg-[#0C130F]/90 shadow-[0_20px_45px_rgba(0,0,0,0.8),0_0_30px_rgba(199,255,61,0.12)]'
-                        : 'border-white/[0.08] bg-[#090E0B]/70 hover:border-white/20'
-                    }`}
-                  >
-                    {/* Node Indicator on the line */}
+          <div className="lg:col-span-8">
+            <div className="dark-glass rounded-[22px] p-6 sm:p-8 border border-white/[0.08]">
+              {/* Top Metric Header */}
+              <div className="flex items-center justify-between text-[12px] font-mono mb-6">
+                <div className="flex items-center gap-4">
+                  <span className="text-[#6E786B]">payments collected by day</span>
+                  <span className="text-[#D2D8CE]">{weekBars[selectedDay].count}</span>
+                </div>
+                <span className="text-[#C8FF2E]">99.4% on time</span>
+              </div>
+
+              {/* 3D Isometric Bars with Floating Diamond Caps (Exact match to frame_018.png) */}
+              <div className="grid grid-cols-6 gap-2 sm:gap-5 items-end pt-8 pb-2 h-[220px] px-2 sm:px-6">
+                {weekBars.map((bar, idx) => {
+                  const isHighlighted = selectedDay === idx;
+                  return (
                     <div
-                      className={`hidden sm:flex absolute -left-16 top-8 w-6 h-6 rounded-full items-center justify-center border transition-all duration-300 ${
-                        isSelected
-                          ? 'bg-[#C7FF3D] border-[#C7FF3D] shadow-[0_0_12px_#C7FF3D]'
-                          : 'bg-[#070A08] border-white/20'
-                      }`}
+                      key={bar.day}
+                      onMouseEnter={() => setSelectedDay(idx)}
+                      onClick={() => setSelectedDay(idx)}
+                      className="flex flex-col items-center justify-end h-full cursor-pointer group"
                     >
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          isSelected ? 'bg-[#070A08]' : 'bg-white/40'
-                        }`}
-                      />
-                    </div>
-
-                    {/* Card Header */}
-                    <div className="flex items-center justify-between gap-4 mb-3">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
-                            isSelected
-                              ? 'bg-[#C7FF3D]/20 text-[#C7FF3D]'
-                              : 'bg-white/[0.05] text-[#9BA598]'
-                          }`}
+                      {/* 3D Isometric Bar SVG */}
+                      <div className="relative w-full max-w-[54px] flex flex-col items-center justify-end">
+                        <svg
+                          viewBox="0 0 60 160"
+                          className="w-full overflow-visible"
+                          style={{ height: `${bar.height + 42}px` }}
                         >
-                          <IconComponent className="w-5 h-5" />
-                        </div>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.05] text-[#C7FF3D] border border-[#C7FF3D]/15">
-                          {card.badge}
-                        </span>
+                          {/* Floating Diamond Cap */}
+                          <polygon
+                            points="30,4 54,16 30,28 6,16"
+                            fill={isHighlighted ? '#D8FF66' : '#D2D8CE'}
+                            className="transition-all duration-300 group-hover:-translate-y-1"
+                            style={{
+                              filter: isHighlighted
+                                ? 'drop-shadow(0 0 14px rgba(200, 255, 46, 0.85))'
+                                : 'none',
+                            }}
+                          />
+
+                          {/* Top Face of 3D Pillar */}
+                          <polygon
+                            points="30,26 54,38 30,50 6,38"
+                            fill={isHighlighted ? '#84CC16' : '#2C332C'}
+                          />
+
+                          {/* Left Face of 3D Pillar */}
+                          <polygon
+                            points="6,38 30,50 30,150 6,138"
+                            fill={isHighlighted ? '#4D7C0F' : '#1E241E'}
+                          />
+
+                          {/* Right Face of 3D Pillar */}
+                          <polygon
+                            points="30,50 54,38 54,138 30,150"
+                            fill={isHighlighted ? '#365314' : '#141814'}
+                          />
+                        </svg>
                       </div>
-                      <span className="text-xs font-mono text-[#626D60]">0{idx + 1}</span>
+
+                      {/* Day label */}
+                      <span
+                        className={`mt-3 text-[11.5px] font-mono transition-colors ${
+                          isHighlighted ? 'text-[#F4F6F0] font-semibold' : 'text-[#6E786B]'
+                        }`}
+                      >
+                        {bar.day}
+                      </span>
                     </div>
-
-                    {/* Content */}
-                    <h3 className="text-xl font-display font-semibold text-[#F5F7F4] mb-2">
-                      {card.title}
-                    </h3>
-                    <p className="text-sm text-[#9BA598] leading-relaxed">
-                      {card.description}
-                    </p>
-                    <p className="text-xs text-[#626D60] mt-2 leading-relaxed">
-                      {card.subtext}
-                    </p>
-
-                    {/* Dynamic Technical Visual Component */}
-                    {card.visual}
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

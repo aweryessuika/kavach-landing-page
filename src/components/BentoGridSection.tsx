@@ -1,276 +1,291 @@
 import { useState } from 'react';
-import { Search, ShieldAlert, Layers, BarChart3, Database, DollarSign } from 'lucide-react';
+import { Clock } from 'lucide-react';
 
 export function BentoGridSection() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [simSwapped, setSimSwapped] = useState(false);
+  const [activeSlot, setActiveSlot] = useState<{ day: number; row: number }>({
+    day: 1,
+    row: 2,
+  });
 
-  const auditLogs = [
-    { id: 'LOG-881', time: '14:32:01', model: 'Galaxy A15', type: 'LOCK_ENGAGED', status: 'LOCKED', text: 'EMI Due Day 3 exceeded · WebSocket push executed' },
-    { id: 'LOG-882', time: '14:31:58', model: 'Vivo Y28 5G', type: 'PAYMENT_CLEAR', status: 'UNLOCKED', text: 'UPI payment ₹1,850 credited to store VPA' },
-    { id: 'LOG-883', time: '14:31:54', model: 'Redmi 13C', type: 'SIM_SWAP_DETECT', status: 'FLAGGED', text: 'Airtel SIM removed · Jio SIM inserted' },
-    { id: 'LOG-884', time: '14:31:49', model: 'Realme C53', type: 'HEARTBEAT_ACK', status: 'NOMINAL', text: 'Device online on Wi-Fi · Battery 78%' },
-    { id: 'LOG-885', time: '14:31:42', model: 'OPPO A79', type: 'DEADMAN_TICK', status: 'COUNTING', text: 'Offline timer 18h remaining' },
-  ];
+  const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+  const hours = ['09', '11', '13', '15', '17'];
 
-  const filteredLogs = auditLogs.filter(
-    (log) =>
-      log.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      log.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      log.type.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const slotDetails: Record<string, string> = {
+    '1-2': 'Tue 13:15 · Vivo Y28 unlocked by shop owner',
+    '0-1': 'Mon 11:00 · 4 new phones enrolled at counter',
+    '2-3': 'Wed 15:20 · Samsung A15 locked manually',
+    '4-1': 'Fri 11:40 · 6 installments marked paid',
+    '5-2': 'Sat 13:05 · Redmi 13C unlocked via offline PIN',
+  };
+
+  const activeLabel =
+    slotDetails[`${activeSlot.day}-${activeSlot.row}`] ||
+    `${days[activeSlot.day].toUpperCase()} ${hours[activeSlot.row]}:00 · All phones normal`;
 
   return (
-    <section id="network-readiness" className="relative py-24 lg:py-32 overflow-hidden border-t border-white/[0.04]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="max-w-3xl mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B100D] border border-white/10 text-xs font-mono text-[#C7FF3D]">
-            <Layers className="w-3.5 h-3.5" />
-            <span>WHOLE-FLEET OBSERVABILITY</span>
+    <section
+      id="daily-view"
+      className="relative py-24 lg:py-32 overflow-hidden z-10"
+    >
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        {/* Section Header Split (Matching frame_025.png) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16">
+          <div className="lg:col-span-7 space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0C100C] border border-white/[0.09] text-[11.5px] font-mono text-[#D2D8CE]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E]" />
+              <span>daily view</span>
+            </div>
+
+            <h2 className="text-[36px] sm:text-[48px] lg:text-[54px] font-display font-semibold tracking-[-0.03em] text-[#F4F6F0] leading-[1.06]">
+              A{' '}
+              <span className="font-serif italic font-normal text-[#F4F6F0]">
+                Tuesday,
+              </span>{' '}
+              seen from Kavach.
+            </h2>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight text-[#F5F7F4] leading-[1.12]">
-            The retailer sees
-            <br />
-            <span className="font-serif italic font-normal text-[#C7FF3D]">
-              the whole fleet.
-            </span>
-          </h2>
-
-          <p className="text-base sm:text-lg text-[#9BA598] leading-relaxed">
-            Every financed device, SIM swap, payment clearance, and offline timer across all your store branches managed from one high-precision terminal.
-          </p>
+          <div className="lg:col-span-5">
+            <p className="text-[15px] sm:text-[16px] text-[#9CA698] leading-[1.65]">
+              The screen shop owners actually keep open: which phones are active, who paid today, and who still owes an answer.
+            </p>
+          </div>
         </div>
 
-        {/* Bento Grid Layout (6 Structured Cards) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
-          {/* CARD 1: Sub-350ms Lock Latency (Span 7) */}
-          <div className="lg:col-span-7 dark-glass rounded-2xl p-6 sm:p-7 border border-[#C7FF3D]/15 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-[#C7FF3D]/10 text-[#C7FF3D] flex items-center justify-center">
-                    <BarChart3 className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-semibold text-[#F5F7F4]">
-                      Sub-350ms lock latency
-                    </h3>
-                    <span className="text-[10px] font-mono text-[#9BA598]">
-                      AWS LIGHTSAIL PERSISTENT WEBSOCKET CLUSTER
+        {/* =====================================================================
+            ROW 1: Weekly Matrix Card (8 cols) + Circular Gauge Card (4 cols)
+            (Exact match to frame_025.png)
+           ===================================================================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+          {/* Left 8-Col Card: 'this week, phone by phone' */}
+          <div className="lg:col-span-8 dark-glass rounded-[22px] p-6 sm:p-8 border border-white/[0.08]">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-7">
+              <span className="text-[12px] font-mono text-[#9CA698]">
+                this week, phone by phone
+              </span>
+
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#161E12] border border-[#C8FF2E]/25 text-[11px] font-mono text-[#D2D8CE]">
+                <Clock className="w-3 h-3 text-[#C8FF2E]" />
+                <span>{activeLabel}</span>
+              </div>
+            </div>
+
+            {/* 7-Day Slot Grid */}
+            <div className="flex items-center gap-3 sm:gap-4">
+              {/* Left Hour Axis */}
+              <div className="flex flex-col justify-between h-[148px] text-[10.5px] font-mono text-[#5E685B] pr-1">
+                {hours.map((h) => (
+                  <span key={h}>{h}</span>
+                ))}
+              </div>
+
+              {/* 7 Day Columns */}
+              <div className="flex-1 grid grid-cols-7 gap-2 sm:gap-3">
+                {days.map((day, dIdx) => (
+                  <div key={day} className="flex flex-col gap-2">
+                    {hours.map((_, rIdx) => {
+                      const isSelected =
+                        activeSlot.day === dIdx && activeSlot.row === rIdx;
+                      const isWarm =
+                        (dIdx === 1 && rIdx === 2) ||
+                        (dIdx === 4 && rIdx === 1) ||
+                        (dIdx === 5 && rIdx === 2);
+
+                      return (
+                        <button
+                          key={rIdx}
+                          type="button"
+                          onMouseEnter={() =>
+                            setActiveSlot({ day: dIdx, row: rIdx })
+                          }
+                          onClick={() =>
+                            setActiveSlot({ day: dIdx, row: rIdx })
+                          }
+                          className={`h-[23px] w-full rounded-[5px] transition-all duration-150 ${
+                            isSelected
+                              ? 'bg-[#C8FF2E]/45 border border-[#C8FF2E] shadow-[0_0_14px_rgba(200,255,46,0.35)]'
+                              : isWarm
+                              ? 'bg-[#31401B]/80 border border-[#C8FF2E]/25 hover:bg-[#C8FF2E]/35'
+                              : 'bg-white/[0.06] border border-white/[0.04] hover:bg-white/[0.12]'
+                          }`}
+                          aria-label={`${day} slot ${rIdx}`}
+                        />
+                      );
+                    })}
+                    <span className="text-center text-[11px] font-mono text-[#6E786B] mt-2">
+                      {day}
                     </span>
-                  </div>
-                </div>
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#C7FF3D]/10 text-[#C7FF3D]">
-                  MEDIAN: 182ms
-                </span>
-              </div>
-
-              <p className="text-xs text-[#9BA598] mb-4">
-                Push lock commands to any phone in India instantly. Bypasses standard FCM notification queues that take minutes to arrive.
-              </p>
-
-              {/* Horizontal Telemetry Chart */}
-              <div className="h-44 w-full bg-[#060907] rounded-xl p-4 border border-white/[0.07] relative overflow-hidden">
-                <div className="absolute inset-0 bg-tech-grid opacity-25" />
-                <svg viewBox="0 0 460 120" className="w-full h-full relative z-10" fill="none">
-                  <line x1="40" y1="100" x2="440" y2="100" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-                  <line x1="40" y1="20" x2="40" y2="100" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-
-                  {/* Standard Cloud Competitor Queue (Slow) */}
-                  <line x1="40" y1="35" x2="440" y2="35" stroke="rgba(239, 68, 68, 0.4)" strokeDasharray="3 3" strokeWidth="1.2" />
-                  <text x="45" y="30" fill="#EF4444" fontSize="8" fontFamily="JetBrains Mono">
-                    STANDARD FCM NOTIFICATION QUEUE (~ 4-12 MINUTES)
-                  </text>
-
-                  {/* Kavach Sub-350ms Horizon */}
-                  <line x1="40" y1="75" x2="440" y2="75" stroke="rgba(199, 255, 61, 0.3)" strokeDasharray="2 2" strokeWidth="1" />
-                  <text x="45" y="70" fill="#9BA598" fontSize="8" fontFamily="JetBrains Mono">
-                    KAVACH DEDICATED WEBSOCKET CLAMP (SUB-350ms)
-                  </text>
-
-                  {/* Wave */}
-                  <path
-                    d="M 40 76 Q 140 72 240 78 T 340 74 T 440 76"
-                    stroke="#C7FF3D"
-                    strokeWidth="2.5"
-                    className="filter drop-shadow-[0_0_6px_rgba(199,255,61,0.7)]"
-                  />
-                  <circle cx="240" cy="78" r="4.5" fill="#C7FF3D" />
-                  <text x="250" y="78" fill="#F5F7F4" fontSize="8.5" fontFamily="JetBrains Mono" fontWeight="bold">
-                    182 ms (REAL-TIME CLAMP)
-                  </text>
-                </svg>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-white/[0.06] text-[10px] font-mono text-[#9BA598]">
-              <div>ENGINE: NODE 22 + PM2</div>
-              <div>DATA: REDIS PUB/SUB</div>
-              <div className="text-right text-[#C7FF3D]">99.99% UPTIME</div>
-            </div>
-          </div>
-
-          {/* CARD 2: SIM Swap & Anti-Tamper (Span 5) */}
-          <div className="lg:col-span-5 dark-glass rounded-2xl p-6 sm:p-7 border border-[#C7FF3D]/15 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-lg bg-[#C7FF3D]/10 text-[#C7FF3D] flex items-center justify-center">
-                  <ShieldAlert className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-base font-semibold text-[#F5F7F4]">
-                    SIM Swap & Anti-Tamper
-                  </h3>
-                  <span className="text-[10px] font-mono text-[#9BA598]">
-                    HARDWARE ICCID ATTRIBUTE BINDING
-                  </span>
-                </div>
-              </div>
-
-              <p className="text-xs text-[#9BA598] mb-4">
-                If the customer pulls out the registered SIM card to dodge collection, Kavach immediately triggers a security warning or locks the screen.
-              </p>
-
-              {/* Interactive SIM Swap Simulator */}
-              <div className="p-4 rounded-xl bg-[#060907] border border-white/[0.07] space-y-3">
-                <div className="flex justify-between items-center text-xs font-mono">
-                  <span className="text-[#9BA598]">SIM TRAY STATUS:</span>
-                  <span className={simSwapped ? 'text-[#EF4444] font-bold' : 'text-[#C7FF3D] font-bold'}>
-                    {simSwapped ? 'SIM CARD REMOVED' : 'ORIGINAL SIM MOUNTED'}
-                  </span>
-                </div>
-
-                <button
-                  onClick={() => setSimSwapped(!simSwapped)}
-                  className="btn-press w-full py-2.5 px-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-xs font-mono text-[#F5F7F4] border border-white/10"
-                >
-                  {simSwapped ? 'Re-insert Original SIM' : 'Simulate Pulling Out SIM Card'}
-                </button>
-
-                <div className="p-2.5 rounded-lg bg-[#0C120E] border border-white/[0.05] text-[11px] font-mono flex items-center gap-2">
-                  <span
-                    className={`w-2.5 h-2.5 rounded-full ${
-                      simSwapped ? 'bg-[#EF4444] animate-ping' : 'bg-[#C7FF3D]'
-                    }`}
-                  />
-                  <span className="text-[#F5F7F4]">
-                    {simSwapped
-                      ? 'ALERT: New ICCID / Missing SIM! Lock screen enforced immediately.'
-                      : 'ICCID Verified: Registered Airtel 4G line active.'}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4 pt-3 border-t border-white/[0.06] text-[10px] font-mono text-[#9BA598] flex justify-between">
-              <span>HARDWARE INTEGRITY</span>
-              <span className="text-[#C7FF3D]">ZERO BYPASS</span>
-            </div>
-          </div>
-
-          {/* CARD 3: Retailer Unit Economics (Span 6) */}
-          <div className="lg:col-span-6 dark-glass rounded-2xl p-6 sm:p-7 border border-[#C7FF3D]/15 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-lg bg-[#C7FF3D]/10 text-[#C7FF3D] flex items-center justify-center">
-                  <DollarSign className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-base font-semibold text-[#F5F7F4]">
-                    Retailer Unit Economics
-                  </h3>
-                  <span className="text-[10px] font-mono text-[#9BA598]">
-                    FLAT ₹100 PER KEY · ZERO RECURRING CUTS
-                  </span>
-                </div>
-              </div>
-
-              <p className="text-xs text-[#9BA598] mb-4">
-                Other financing apps demand 15–20% of your device profit or monthly recurring SaaS cuts. Kavach costs ₹100 flat per phone key for the full lifetime of the loan.
-              </p>
-
-              {/* Comparison Matrix */}
-              <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-                <div className="p-3.5 rounded-xl bg-[#060907] border border-white/[0.06]">
-                  <span className="text-[10px] text-[#626D60] block">CORPORATE EMI APPS</span>
-                  <div className="text-lg font-bold text-[#EF4444] mt-1">₹800 - ₹1,500</div>
-                  <p className="text-[10px] text-[#9BA598] mt-1">
-                    Monthly cuts + delays in bank settlements.
-                  </p>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-[#0E1711] border border-[#C7FF3D]/30 shadow-[0_0_15px_rgba(199,255,61,0.1)]">
-                  <span className="text-[10px] text-[#C7FF3D] block font-bold">KAVACH PLATFORM</span>
-                  <div className="text-lg font-bold text-[#C7FF3D] mt-1">₹100 Flat</div>
-                  <p className="text-[10px] text-[#9BA598] mt-1">
-                    Direct UPI to your account. 100% of profit is yours.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono text-[#9BA598]">
-              <span>RECOVERY RATIO</span>
-              <span className="text-[#C7FF3D]">RECOVERS PHONE VALUE IN 1 PAYMENT</span>
-            </div>
-          </div>
-
-          {/* CARD 4: Cryptographic Audit Log (Span 6) */}
-          <div className="lg:col-span-6 dark-glass rounded-2xl p-6 sm:p-7 border border-[#C7FF3D]/15 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-lg bg-[#C7FF3D]/10 text-[#C7FF3D] flex items-center justify-center">
-                  <Database className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-base font-semibold text-[#F5F7F4]">
-                    Cryptographic Audit Log
-                  </h3>
-                  <span className="text-[10px] font-mono text-[#9BA598]">
-                    LEGAL DISPUTE PROOF & RECOVERY TRAIL
-                  </span>
-                </div>
-              </div>
-
-              <p className="text-xs text-[#9BA598] mb-3">
-                Searchable, timestamped records of every lock, unlock, payment attempt, and device geofence ping.
-              </p>
-
-              {/* Search input */}
-              <div className="relative mb-3">
-                <Search className="w-3.5 h-3.5 text-[#9BA598] absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Filter logs by device model, action, or status..."
-                  className="w-full bg-[#060907] border border-white/10 rounded-lg pl-8 pr-3 py-1.5 text-xs font-mono text-[#F5F7F4] placeholder:text-[#626D60] focus:outline-none focus:border-[#C7FF3D]/50"
-                />
-              </div>
-
-              {/* Logs box */}
-              <div className="h-32 bg-[#060907] rounded-xl p-2.5 border border-white/[0.07] overflow-y-auto space-y-1.5 font-mono text-[10px]">
-                {filteredLogs.map((log) => (
-                  <div
-                    key={log.id}
-                    className="flex items-center justify-between py-1 px-2 rounded bg-white/[0.02] border border-white/[0.04]"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="text-[#C7FF3D]">{log.id}</span>
-                      <span className="text-[#9BA598]">{log.model}</span>
-                      <span className="text-[#F5F7F4]">{log.text}</span>
-                    </div>
-                    <span className="text-[#626D60]">{log.time}</span>
                   </div>
                 ))}
               </div>
             </div>
+          </div>
 
-            <div className="mt-4 pt-3 border-t border-white/[0.06] text-[10px] font-mono text-[#9BA598] flex justify-between">
-              <span>TAMPER RESISTANT</span>
-              <span className="text-[#C7FF3D]">POLICE / LEGAL READY DOCUMENTATION</span>
+          {/* Right 4-Col Card: Circular Ring Gauge (Exact match to frame_025.png) */}
+          <div className="lg:col-span-4 dark-glass rounded-[22px] p-6 sm:p-8 border border-white/[0.08] flex flex-col justify-between">
+            <div className="text-[12px] font-mono text-[#6E786B]">
+              paid without a visit
+            </div>
+
+            <div className="my-4 flex items-center justify-center">
+              <div className="relative w-36 h-36 flex items-center justify-center">
+                <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="46"
+                    fill="none"
+                    stroke="rgba(255, 255, 255, 0.08)"
+                    strokeWidth="8"
+                  />
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="46"
+                    fill="none"
+                    stroke="#C8FF2E"
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    strokeDasharray="289"
+                    strokeDashoffset="34"
+                    style={{
+                      filter: 'drop-shadow(0 0 10px rgba(200, 255, 46, 0.55))',
+                    }}
+                  />
+                </svg>
+                <span className="absolute text-[26px] font-display font-semibold text-[#F4F6F0] tracking-tight">
+                  94%
+                </span>
+              </div>
+            </div>
+
+            <div className="text-[12px] font-mono text-[#6E786B] text-center">
+              of installments settle without a single home visit
+            </div>
+          </div>
+        </div>
+
+        {/* =====================================================================
+            ROW 2: Three Visual Bento Cards (Exact match to frame_027.png)
+           ===================================================================== */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* CARD 1: Waiting on people (Avatars + '3 approvals') */}
+          <div className="dark-glass rounded-[22px] p-6 sm:p-7 border border-white/[0.08] flex flex-col justify-between">
+            <div>
+              <div className="text-[12px] font-mono text-[#6E786B] mb-6">
+                waiting on your decision
+              </div>
+
+              {/* Overlapping Customer Avatars */}
+              <div className="flex items-center -space-x-2.5 mb-6">
+                {[
+                  { initials: 'RS', bg: 'bg-[#1D281A]', text: 'text-[#C8FF2E]' },
+                  { initials: 'AK', bg: 'bg-[#182226]', text: 'text-[#38BDF8]' },
+                  { initials: 'VP', bg: 'bg-[#221F1A]', text: 'text-[#F4F6F0]' },
+                  { initials: 'MK', bg: 'bg-[#1A241E]', text: 'text-[#4ADE80]' },
+                  { initials: 'SD', bg: 'bg-[#241D22]', text: 'text-[#D2D8CE]' },
+                ].map((av, i) => (
+                  <div
+                    key={i}
+                    className={`w-10 h-10 rounded-full ${av.bg} ${av.text} border-2 border-[#0B0F0B] flex items-center justify-center text-[11px] font-mono font-semibold shadow-md`}
+                  >
+                    {av.initials}
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-baseline gap-2 mb-2">
+                <span className="text-[28px] font-display font-semibold text-[#C8FF2E]">
+                  3
+                </span>
+                <span className="text-[14px] text-[#9CA698]">
+                  late installments
+                </span>
+              </div>
+            </div>
+
+            <div className="text-[12px] text-[#6E786B] pt-3 border-t border-white/[0.05]">
+              Tap once in your app to lock or extend grace days
+            </div>
+          </div>
+
+          {/* CARD 2: Locks and payments (Dual Intertwined Sine Wave from frame_027.png) */}
+          <div className="dark-glass rounded-[22px] p-6 sm:p-7 border border-white/[0.08] flex flex-col justify-between">
+            <div>
+              <div className="text-[12px] font-mono text-[#6E786B] mb-4">
+                locks and recoveries
+              </div>
+
+              {/* Dual Intertwined Sine Wave SVG (Exact match to frame_027.png) */}
+              <div className="h-[115px] w-full flex items-center justify-center my-2">
+                <svg viewBox="0 0 300 90" className="w-full h-full" fill="none">
+                  {/* Muted Gray Wave */}
+                  <path
+                    d="M 10 25 C 60 25, 80 65, 130 65 C 180 65, 200 25, 250 25 C 275 25, 285 38, 295 45"
+                    stroke="rgba(255, 255, 255, 0.24)"
+                    strokeWidth="1.75"
+                  />
+                  {/* Luminous Lime Wave */}
+                  <path
+                    d="M 10 65 C 60 65, 80 25, 130 25 C 180 25, 200 65, 250 65 C 275 65, 285 52, 295 45"
+                    stroke="#C8FF2E"
+                    strokeWidth="2"
+                    style={{
+                      filter: 'drop-shadow(0 0 8px rgba(200, 255, 46, 0.5))',
+                    }}
+                  />
+
+                  {/* Glowing Intersection Nodes */}
+                  <circle cx="70" cy="45" r="3.5" fill="#0B0F0B" stroke="#C8FF2E" strokeWidth="2" />
+                  <circle cx="190" cy="45" r="3.5" fill="#0B0F0B" stroke="#C8FF2E" strokeWidth="2" />
+                  <circle cx="292" cy="45" r="3.5" fill="#0B0F0B" stroke="#C8FF2E" strokeWidth="2" />
+                </svg>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-5 text-[11.5px] font-mono pt-3 border-t border-white/[0.05]">
+              <span className="flex items-center gap-1.5 text-[#9CA698]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E]" />
+                paid after lock
+              </span>
+              <span className="flex items-center gap-1.5 text-[#5E685B]">
+                <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                unpaid
+              </span>
+            </div>
+          </div>
+
+          {/* CARD 3: Where it runs (Dot Matrix Map from frame_027.png) */}
+          <div className="dark-glass rounded-[22px] p-6 sm:p-7 border border-white/[0.08] flex flex-col justify-between">
+            <div>
+              <div className="text-[12px] font-mono text-[#6E786B] mb-4">
+                active retail hubs
+              </div>
+
+              {/* Dot Matrix Map Graphic */}
+              <div className="relative h-[115px] w-full my-2 rounded-xl bg-dot-pattern flex items-center justify-center overflow-hidden">
+                {/* Node 1: BLR */}
+                <div className="absolute left-[14%] top-[36%] flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0A0E0A]/90 border border-white/[0.12] text-[10.5px] font-mono text-[#F4F6F0] shadow-lg">
+                  <span className="w-2 h-2 rounded-full bg-[#C8FF2E] shadow-[0_0_8px_#C8FF2E]" />
+                  <span>blr 46%</span>
+                </div>
+
+                {/* Node 2: DEL */}
+                <div className="absolute left-[48%] top-[24%] flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0A0E0A]/90 border border-white/[0.12] text-[10.5px] font-mono text-[#F4F6F0] shadow-lg">
+                  <span className="w-2 h-2 rounded-full bg-[#C8FF2E] shadow-[0_0_8px_#C8FF2E]" />
+                  <span>del 38%</span>
+                </div>
+
+                {/* Node 3: JAI */}
+                <div className="absolute right-[10%] bottom-[20%] flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0A0E0A]/90 border border-white/[0.12] text-[10.5px] font-mono text-[#F4F6F0] shadow-lg">
+                  <span className="w-2 h-2 rounded-full bg-[#C8FF2E] shadow-[0_0_8px_#C8FF2E]" />
+                  <span>jai 16%</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-[12px] text-[#6E786B] pt-3 border-t border-white/[0.05]">
+              Hosted in Mumbai · every shop stays 100% isolated
             </div>
           </div>
         </div>

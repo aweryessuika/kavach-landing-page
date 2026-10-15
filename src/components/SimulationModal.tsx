@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Play, RotateCcw, Lock, Unlock, QrCode, PhoneCall } from 'lucide-react';
+import { X, Lock, Unlock, KeyRound, PhoneCall, Check } from 'lucide-react';
 
 interface SimulationModalProps {
   isOpen: boolean;
@@ -7,10 +7,7 @@ interface SimulationModalProps {
 }
 
 export function SimulationModal({ isOpen, onClose }: SimulationModalProps) {
-  const [scenario, setScenario] = useState<'remote_lock' | 'reset_attempt' | 'sim_pull'>('remote_lock');
-  const [isRunning, setIsRunning] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [isLocked, setIsLocked] = useState(false);
+  const [phoneState, setPhoneState] = useState<'unlocked' | 'locked' | 'offline_pin'>('unlocked');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -20,184 +17,207 @@ export function SimulationModal({ isOpen, onClose }: SimulationModalProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  useEffect(() => {
-    setIsRunning(false);
-    setProgress(0);
-    setIsLocked(false);
-  }, [scenario]);
-
-  useEffect(() => {
-    if (!isRunning) return;
-
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          setIsRunning(false);
-          setIsLocked(true);
-          return 100;
-        }
-        if (prev >= 40 && !isLocked) {
-          setIsLocked(true);
-        }
-        return prev + 2.5;
-      });
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, [isRunning, isLocked]);
-
   if (!isOpen) return null;
 
-  const handleStart = () => {
-    setIsRunning(true);
-    setProgress(0);
-    setIsLocked(false);
-  };
-
-  const handleReset = () => {
-    setIsRunning(false);
-    setProgress(0);
-    setIsLocked(false);
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#030604]/85 backdrop-blur-xl animate-fade-in">
-      <div className="relative w-full max-w-4xl rounded-[24px] bg-[#0A0F0C] border border-white/[0.12] shadow-[0_30px_90px_rgba(0,0,0,0.95)] overflow-hidden flex flex-col max-h-[90vh]">
-        {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-white/[0.02]">
-          <div className="flex items-center gap-2.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#C7FF3D] animate-ping" />
-            <h3 className="font-display font-semibold text-base text-[#F5F7F4]">
-              Kavach Live Enforcement Simulator
-            </h3>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#C7FF3D]/10 text-[#C7FF3D] border border-[#C7FF3D]/20">
-              DEVICE OWNER DPC 3.0
-            </span>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#040604]/85 backdrop-blur-2xl">
+      <div className="relative w-full max-w-3xl rounded-[26px] bg-[#0B0F0B] border border-white/[0.12] shadow-[0_35px_100px_rgba(0,0,0,0.95)] overflow-hidden">
+        {/* Top Bar */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08]">
+          <div className="flex items-center gap-2.5 text-[12.5px] font-mono text-[#D2D8CE]">
+            <span className="w-2 h-2 rounded-full bg-[#C8FF2E] shadow-[0_0_8px_#C8FF2E]" />
+            <span>Interactive Counter Preview · Vivo Y28</span>
           </div>
 
           <button
+            type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-[#9BA598] hover:text-[#F5F7F4] transition-colors"
+            className="p-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-[#9CA698] hover:text-[#F4F6F0] transition-colors"
+            aria-label="Close preview"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Modal Body */}
-        <div className="p-6 overflow-y-auto space-y-6">
-          {/* Scenario Tabs */}
-          <div className="flex flex-wrap gap-2">
-            {[
-              { id: 'remote_lock', label: 'Remote Kiosk Lock (Overdue EMI)', badge: '< 350ms Push' },
-              { id: 'reset_attempt', label: 'Factory Reset Evade Attempt', badge: 'Knox Persistence' },
-              { id: 'sim_pull', label: 'SIM Pull & Airplane Mode Evasion', badge: 'Offline Deadman' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setScenario(tab.id as any)}
-                className={`btn-press px-4 py-2 rounded-xl text-xs font-mono border transition-all ${
-                  scenario === tab.id
-                    ? 'bg-[#C7FF3D]/15 border-[#C7FF3D] text-[#C7FF3D] font-bold shadow-[0_0_15px_rgba(199,255,61,0.2)]'
-                    : 'bg-white/[0.03] border-white/10 text-[#9BA598] hover:border-white/20'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Interactive Screen Display */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center p-6 rounded-2xl bg-[#060A07] border border-white/[0.08]">
-            {/* Phone Screen Mockup (Span 5) */}
-            <div className="md:col-span-5 mx-auto w-full max-w-[260px]">
-              <div className="relative rounded-[32px] bg-[#020403] border-4 border-[#212C24] p-4 shadow-2xl text-center">
-                <div className="w-16 h-3.5 bg-[#212C24] rounded-full mx-auto mb-3" />
-
-                {isLocked ? (
-                  <div className="space-y-3 py-2 animate-fade-in">
-                    <div className="w-10 h-10 rounded-xl bg-[#EF4444]/20 border border-[#EF4444]/40 flex items-center justify-center mx-auto text-[#EF4444]">
-                      <Lock className="w-5 h-5" />
-                    </div>
-                    <div className="text-[9px] font-mono text-[#EF4444] font-bold">
-                      HANDSET LOCKED BY STORE
-                    </div>
-                    <div className="text-sm font-display font-bold text-[#F5F7F4]">
-                      EMI Due: ₹1,999
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-white text-[#070A08] max-w-[120px] mx-auto">
-                      <QrCode className="w-16 h-16 text-[#070A08] mx-auto" />
-                      <div className="text-[7.5px] font-mono font-bold mt-1">SCAN TO UNLOCK</div>
-                    </div>
-                    <button className="w-full py-1.5 px-3 rounded-lg bg-white/[0.08] text-[11px] font-mono text-[#F5F7F4] flex items-center justify-center gap-1.5">
-                      <PhoneCall className="w-3 h-3 text-[#C7FF3D]" />
-                      <span>Call Store</span>
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-4 py-8 animate-fade-in">
-                    <div className="w-12 h-12 rounded-xl bg-[#C7FF3D]/15 border border-[#C7FF3D]/40 flex items-center justify-center mx-auto text-[#C7FF3D]">
-                      <Unlock className="w-6 h-6" />
-                    </div>
-                    <div className="text-xs font-display font-bold text-[#F5F7F4]">
-                      Normal Customer Usage
-                    </div>
-                    <p className="text-[10px] text-[#9BA598]">
-                      Device running all apps freely. Background telemetry active.
-                    </p>
-                  </div>
-                )}
+        {/* Body */}
+        <div className="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          {/* Left: Shop Owner Controls (Span 6) */}
+          <div className="md:col-span-6 space-y-5">
+            <div>
+              <div className="text-[11px] font-mono text-[#6E786B] mb-1">
+                1. YOUR SHOP PHONE
               </div>
+              <h3 className="text-[22px] font-display font-semibold text-[#F4F6F0]">
+                Try tapping a command
+              </h3>
+              <p className="text-[13.5px] text-[#9CA698] mt-1 leading-relaxed">
+                See what happens on the customer’s phone the moment you tap Lock or Unlock from your counter app.
+              </p>
             </div>
 
-            {/* Explanation / Progress (Span 7) */}
-            <div className="md:col-span-7 space-y-4">
-              <div className="text-xs font-mono text-[#9BA598] flex justify-between">
-                <span>SIMULATION PROGRESS</span>
-                <span className="text-[#C7FF3D] font-bold">{Math.round(progress)}%</span>
-              </div>
-
-              <div className="w-full bg-white/[0.08] h-2 rounded-full overflow-hidden">
-                <div
-                  className="bg-[#C7FF3D] h-full rounded-full transition-all duration-150"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-
-              <div className="p-4 rounded-xl bg-[#0B120E] border border-white/[0.06] text-xs font-mono space-y-2">
-                <div className="text-[#C7FF3D] font-semibold">
-                  {scenario === 'remote_lock' && 'Scenario: Overdue EMI Remote Push'}
-                  {scenario === 'reset_attempt' && 'Scenario: Hardware Button Wipe Attempt'}
-                  {scenario === 'sim_pull' && 'Scenario: Delinquent Offline Attempt'}
+            <div className="space-y-2.5">
+              <button
+                type="button"
+                onClick={() => setPhoneState('locked')}
+                className={`btn-press w-full p-4 rounded-2xl border text-left flex items-center justify-between transition-all ${
+                  phoneState === 'locked'
+                    ? 'bg-[#1A2412] border-[#C8FF2E]/50 text-[#F4F6F0]'
+                    : 'bg-white/[0.03] border-white/[0.08] text-[#D2D8CE] hover:bg-white/[0.06]'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#C8FF2E] text-[#050705] flex items-center justify-center">
+                    <Lock className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-[13.5px] font-semibold">Lock customer phone</div>
+                    <div className="text-[11.5px] text-[#9CA698]">
+                      Locks screen in under 1 second
+                    </div>
+                  </div>
                 </div>
-                <p className="text-[#9BA598] text-[11px] leading-relaxed">
-                  {isLocked
-                    ? 'ENFORCEMENT ACTIVE: Handset screen replaced with immutable kiosk layer. Launcher disabled, all settings inaccessible, UPI payment QR mounted.'
-                    : 'Awaiting trigger event. Press "Run Incident Test" to initiate verification.'}
-                </p>
-              </div>
+                {phoneState === 'locked' && (
+                  <Check className="w-4 h-4 text-[#C8FF2E]" />
+                )}
+              </button>
 
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <button
-                  onClick={handleReset}
-                  className="btn-press px-4 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-xs font-mono text-[#9BA598] flex items-center gap-1.5"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Reset</span>
-                </button>
+              <button
+                type="button"
+                onClick={() => setPhoneState('offline_pin')}
+                className={`btn-press w-full p-4 rounded-2xl border text-left flex items-center justify-between transition-all ${
+                  phoneState === 'offline_pin'
+                    ? 'bg-[#1A2412] border-[#C8FF2E]/50 text-[#F4F6F0]'
+                    : 'bg-white/[0.03] border-white/[0.08] text-[#D2D8CE] hover:bg-white/[0.06]'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/[0.08] text-[#F4F6F0] flex items-center justify-center">
+                    <KeyRound className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-[13.5px] font-semibold">Generate Offline PIN</div>
+                    <div className="text-[11.5px] text-[#9CA698]">
+                      When customer has no mobile internet
+                    </div>
+                  </div>
+                </div>
+                {phoneState === 'offline_pin' && (
+                  <Check className="w-4 h-4 text-[#C8FF2E]" />
+                )}
+              </button>
 
-                <button
-                  disabled={isRunning}
-                  onClick={handleStart}
-                  className={`btn-press px-6 py-2.5 rounded-xl text-xs font-mono font-bold flex items-center gap-2 ${
-                    isRunning
-                      ? 'bg-[#C7FF3D]/50 text-[#070A08] cursor-not-allowed'
-                      : 'bg-[#C7FF3D] hover:bg-[#D4FF33] text-[#070A08] shadow-[0_0_20px_rgba(199,255,61,0.3)]'
-                  }`}
-                >
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                  <span>Run Incident Test</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setPhoneState('unlocked')}
+                className={`btn-press w-full p-4 rounded-2xl border text-left flex items-center justify-between transition-all ${
+                  phoneState === 'unlocked'
+                    ? 'bg-[#1A2412] border-[#C8FF2E]/50 text-[#F4F6F0]'
+                    : 'bg-white/[0.03] border-white/[0.08] text-[#D2D8CE] hover:bg-white/[0.06]'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/[0.08] text-[#F4F6F0] flex items-center justify-center">
+                    <Unlock className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-[13.5px] font-semibold">Unlock customer phone</div>
+                    <div className="text-[11.5px] text-[#9CA698]">
+                      Restores all apps immediately
+                    </div>
+                  </div>
+                </div>
+                {phoneState === 'unlocked' && (
+                  <Check className="w-4 h-4 text-[#C8FF2E]" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Right: Customer Phone Screen (Span 6) */}
+          <div className="md:col-span-6 flex justify-center">
+            <div className="w-[250px] rounded-[34px] bg-[#050705] border-[3px] border-white/[0.15] p-4 shadow-2xl text-center">
+              <div className="w-14 h-3 rounded-full bg-white/[0.08] mx-auto mb-4" />
+
+              {phoneState === 'locked' && (
+                <div className="py-4 space-y-4">
+                  <div className="w-11 h-11 rounded-2xl bg-[#C8FF2E]/15 border border-[#C8FF2E]/40 flex items-center justify-center mx-auto text-[#C8FF2E]">
+                    <Lock className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-[10px] font-mono text-[#C8FF2E] uppercase">
+                      Locked by Shop
+                    </div>
+                    <div className="text-[15px] font-display font-semibold text-[#F4F6F0]">
+                      Sri Balaji Mobiles
+                    </div>
+                    <p className="text-[11.5px] text-[#9CA698] px-2">
+                      Installment of ₹2,400 is pending. Call the shop below to unlock your phone.
+                    </p>
+                  </div>
+                  <div className="w-full py-2.5 px-3 rounded-xl bg-[#C8FF2E] text-[#050705] text-[12px] font-semibold flex items-center justify-center gap-1.5">
+                    <PhoneCall className="w-3.5 h-3.5" />
+                    <span>Call Shop Owner</span>
+                  </div>
+                  <div className="text-[10px] font-mono text-[#5E685B]">
+                    Emergency 112 calling always works
+                  </div>
+                </div>
+              )}
+
+              {phoneState === 'offline_pin' && (
+                <div className="py-4 space-y-4">
+                  <div className="w-11 h-11 rounded-2xl bg-white/[0.08] border border-white/[0.15] flex items-center justify-center mx-auto text-[#C8FF2E]">
+                    <KeyRound className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-[10px] font-mono text-[#9CA698] uppercase">
+                      Offline PIN Screen
+                    </div>
+                    <div className="text-[15px] font-display font-semibold text-[#F4F6F0]">
+                      Enter 6-Digit PIN
+                    </div>
+                    <p className="text-[11px] text-[#9CA698]">
+                      Customer enters the PIN you read to them over the phone call:
+                    </p>
+                  </div>
+                  <div className="flex justify-center gap-1.5 font-mono text-sm">
+                    {['7', '2', '9', '4', '0', '5'].map((d, i) => (
+                      <span
+                        key={i}
+                        className="w-7 h-8 rounded bg-white/[0.08] border border-[#C8FF2E]/40 flex items-center justify-center text-[#C8FF2E] font-bold"
+                      >
+                        {d}
+                      </span>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setPhoneState('unlocked')}
+                    className="w-full py-2.5 rounded-xl bg-[#C8FF2E] text-[#050705] text-[12px] font-semibold"
+                  >
+                    Unlock Now
+                  </button>
+                </div>
+              )}
+
+              {phoneState === 'unlocked' && (
+                <div className="py-8 space-y-4">
+                  <div className="w-11 h-11 rounded-2xl bg-[#C8FF2E]/15 border border-[#C8FF2E]/35 flex items-center justify-center mx-auto text-[#C8FF2E]">
+                    <Unlock className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-[10px] font-mono text-[#C8FF2E] uppercase">
+                      Normal Mode
+                    </div>
+                    <div className="text-[15px] font-display font-semibold text-[#F4F6F0]">
+                      All Apps Unlocked
+                    </div>
+                    <p className="text-[11.5px] text-[#9CA698] px-2">
+                      Customer uses their phone normally with zero popups or slowdowns.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
