@@ -3,20 +3,20 @@ import { MousePointer, Plus, Redo2 } from 'lucide-react';
 
 interface CommandCentreHeroProps {
   onOpenSimulation?: () => void;
+  onNotify?: (message: string) => void;
 }
 
-export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) {
+export function CommandCentreHero({ onOpenSimulation, onNotify }: CommandCentreHeroProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const boardRef = useRef<HTMLDivElement | null>(null);
   const [activeNode, setActiveNode] = useState<'lock' | 'unlock'>('lock');
   const [pulseStep, setPulseStep] = useState(0);
 
-  // Subtle live activity rotation matching frame_002 -> frame_009
   const allRuns = [
-    { time: '09:43:02', label: 'vivo y28 · unlocked after payment', speed: '240 ms', active: true },
-    { time: '09:41:49', label: 'samsung a15 · locked by shop owner', speed: '310 ms', active: false },
-    { time: '09:38:12', label: 'redmi 13c · enrolled at counter', speed: '42 s', active: false },
-    { time: '09:34:05', label: 'oppo a79 · offline pin unlocked', speed: 'instant', active: false },
+    { time: '09:43:02', label: 'vivo y28 · unlocked after payment', speed: '240 ms' },
+    { time: '09:41:49', label: 'samsung a15 · locked by shop owner', speed: '310 ms' },
+    { time: '09:38:12', label: 'redmi 13c · enrolled at counter', speed: '42 s' },
+    { time: '09:34:05', label: 'oppo a79 · offline pin unlocked', speed: 'instant' },
   ];
 
   useEffect(() => {
@@ -43,6 +43,15 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
     boardRef.current.style.transform = 'rotateY(-7deg) rotateX(3deg)';
   };
 
+  const handleSwitchBranch = (branch: 'lock' | 'unlock') => {
+    setActiveNode(branch);
+    if (branch === 'lock') {
+      onNotify?.('Manual lock path selected · Ready for 1-tap lock (< 1 sec)');
+    } else {
+      onNotify?.('Installment logged · Handset stays unlocked');
+    }
+  };
+
   return (
     <div
       ref={containerRef}
@@ -62,15 +71,13 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
         }}
       />
 
-      {/* Main 3D Tilted Glass Canvas Board (Matching frame_002.png) */}
+      {/* Main 3D Tilted Board — Zero backdrop-filter blur so 3D tilt runs at 120fps on any device */}
       <div
         ref={boardRef}
         className="relative rounded-[24px] border border-white/[0.11] shadow-[0_35px_90px_rgba(0,0,0,0.88),inset_0_1px_0_rgba(255,255,255,0.14)] transition-transform duration-300 ease-out overflow-visible will-change-transform"
         style={{
           background:
-            'linear-gradient(145deg, rgba(24, 30, 20, 0.78) 0%, rgba(12, 16, 12, 0.86) 60%, rgba(9, 12, 9, 0.92) 100%)',
-          backdropFilter: 'blur(24px) saturate(150%)',
-          WebkitBackdropFilter: 'blur(24px) saturate(150%)',
+            'linear-gradient(145deg, rgba(23, 29, 20, 0.92) 0%, rgba(12, 16, 12, 0.95) 60%, rgba(9, 12, 9, 0.98) 100%)',
           transform: 'rotateY(-7deg) rotateX(3deg)',
           transformStyle: 'preserve-3d',
         }}
@@ -83,7 +90,8 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
             <span className="text-[#9CA698]">3 steps / 1 tap</span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E] shadow-[0_0_8px_#C8FF2E]" />
             <span className="text-[12px] font-mono text-[#C8FF2E] tracking-tight">
               protected
             </span>
@@ -97,67 +105,120 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
             100%
           </div>
 
-          {/* Left Mini Floating Tool Buttons (Exact match to frame_002.png) */}
+          {/* Left Mini Floating Tool Buttons */}
           <div className="hidden sm:flex flex-col gap-1.5 absolute left-5 top-5 z-20">
             <button
               type="button"
               onClick={onOpenSimulation}
               className="w-7 h-7 rounded-lg bg-white/[0.06] hover:bg-white/[0.11] border border-white/[0.08] flex items-center justify-center text-[#D2D8CE] transition-colors"
-              title="Inspect canvas"
+              title="Open interactive preview"
             >
               <MousePointer className="w-3.5 h-3.5" />
             </button>
             <button
               type="button"
-              onClick={() => setActiveNode(activeNode === 'lock' ? 'unlock' : 'lock')}
+              onClick={() =>
+                handleSwitchBranch(activeNode === 'lock' ? 'unlock' : 'lock')
+              }
               className="w-7 h-7 rounded-lg bg-white/[0.06] hover:bg-white/[0.11] border border-white/[0.08] flex items-center justify-center text-[#D2D8CE] transition-colors"
-              title="Toggle branch"
+              title="Switch path"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
             <button
               type="button"
-              onClick={onOpenSimulation}
+              onClick={() => {
+                setPulseStep((prev) => (prev + 1) % 2);
+                onNotify?.('Refreshed live counter activity log');
+              }}
               className="w-7 h-7 rounded-lg bg-white/[0.06] hover:bg-white/[0.11] border border-white/[0.08] flex items-center justify-center text-[#D2D8CE] transition-colors"
-              title="Replay flow"
+              title="Refresh activity"
             >
               <Redo2 className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* Desktop SVG Node Graph (Exact layout & bezier connectors from frame_002.png) */}
+          {/* Desktop SVG Node Graph with Traveling Signal Pulse */}
           <div className="relative h-[225px] w-full">
-            {/* SVG Bezier Wires */}
             <svg
               viewBox="0 0 580 220"
               className="absolute inset-0 w-full h-full pointer-events-none"
               fill="none"
             >
-              {/* Left Root Node -> Top Branch */}
+              {/* Base Wires */}
               <path
                 d="M 125 112 C 162 112, 165 56, 200 56"
-                stroke={activeNode === 'lock' ? '#C8FF2E' : 'rgba(255,255,255,0.22)'}
+                stroke={
+                  activeNode === 'lock'
+                    ? 'rgba(200,255,46,0.45)'
+                    : 'rgba(255,255,255,0.18)'
+                }
                 strokeWidth="1.5"
               />
-              {/* Left Root Node -> Bottom Branch */}
               <path
                 d="M 125 112 C 162 112, 165 168, 200 168"
-                stroke={activeNode === 'unlock' ? '#C8FF2E' : 'rgba(255,255,255,0.22)'}
+                stroke={
+                  activeNode === 'unlock'
+                    ? 'rgba(200,255,46,0.45)'
+                    : 'rgba(255,255,255,0.18)'
+                }
+                strokeWidth="1.5"
+              />
+              <path
+                d="M 358 56 C 395 56, 395 112, 428 112"
+                stroke={
+                  activeNode === 'lock'
+                    ? 'rgba(200,255,46,0.45)'
+                    : 'rgba(255,255,255,0.18)'
+                }
+                strokeWidth="1.5"
+              />
+              <path
+                d="M 358 168 C 395 168, 395 112, 428 112"
+                stroke={
+                  activeNode === 'unlock'
+                    ? 'rgba(200,255,46,0.45)'
+                    : 'rgba(255,255,255,0.18)'
+                }
                 strokeWidth="1.5"
               />
 
-              {/* Top Branch -> Right Outcome Node */}
-              <path
-                d="M 358 56 C 395 56, 395 112, 428 112"
-                stroke={activeNode === 'lock' ? '#C8FF2E' : 'rgba(255,255,255,0.22)'}
-                strokeWidth="1.5"
-              />
-              {/* Bottom Branch -> Right Outcome Node */}
-              <path
-                d="M 358 168 C 395 168, 395 112, 428 112"
-                stroke={activeNode === 'unlock' ? '#C8FF2E' : 'rgba(255,255,255,0.22)'}
-                strokeWidth="1.5"
-              />
+              {/* Animated Traveling Signal Pulse along the Active Branch (Pure CSS GPU stroke-dashoffset) */}
+              {activeNode === 'lock' ? (
+                <>
+                  <path
+                    d="M 125 112 C 162 112, 165 56, 200 56"
+                    stroke="#EEFFAA"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    className="animate-signal-flow"
+                  />
+                  <path
+                    d="M 358 56 C 395 56, 395 112, 428 112"
+                    stroke="#EEFFAA"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    className="animate-signal-flow"
+                  />
+                </>
+              ) : (
+                <>
+                  <path
+                    d="M 125 112 C 162 112, 165 168, 200 168"
+                    stroke="#EEFFAA"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    className="animate-signal-flow"
+                  />
+                  <path
+                    d="M 358 168 C 395 168, 395 112, 428 112"
+                    stroke="#EEFFAA"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    className="animate-signal-flow"
+                  />
+                </>
+              )}
 
               {/* Port connection dots */}
               <circle cx="125" cy="112" r="3" fill="#D2D8CE" />
@@ -168,7 +229,7 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
               <circle cx="428" cy="112" r="3" fill="#C8FF2E" />
             </svg>
 
-            {/* Branch Labels ('due' and 'paid') */}
+            {/* Branch Labels ('late' and 'paid') */}
             <div className="absolute left-[24%] top-[33%] px-2 py-0.5 rounded bg-[#141A14] border border-white/[0.08] text-[10px] font-mono text-[#9CA698]">
               late
             </div>
@@ -176,10 +237,10 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
               paid
             </div>
 
-            {/* NODE 1: Left Root Trigger (Overlapping left edge slightly like frame_002.png) */}
+            {/* NODE 1: Left Root Trigger */}
             <div
               onClick={onOpenSimulation}
-              className="cursor-pointer absolute left-[-10px] sm:left-[-18px] top-[80px] w-[148px] px-3.5 py-3 rounded-xl bg-[#141915]/95 border border-white/[0.12] shadow-[0_12px_30px_rgba(0,0,0,0.65)] hover:border-[#C8FF2E]/40 transition-colors"
+              className="cursor-pointer absolute left-[-10px] sm:left-[-18px] top-[80px] w-[148px] px-3.5 py-3 rounded-xl bg-[#141915] border border-white/[0.12] shadow-[0_12px_30px_rgba(0,0,0,0.65)] hover:border-[#C8FF2E]/40 transition-colors"
             >
               <div className="text-[12.5px] font-medium text-[#F4F6F0] leading-tight">
                 Phone sold on EMI
@@ -191,11 +252,11 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
 
             {/* NODE 2: Top Condition Node */}
             <div
-              onClick={() => setActiveNode('lock')}
+              onClick={() => handleSwitchBranch('lock')}
               className={`cursor-pointer absolute left-[34.5%] top-[24px] w-[158px] px-4 py-3 rounded-xl border transition-all ${
                 activeNode === 'lock'
-                  ? 'bg-[#121713]/95 border-[#C8FF2E]/35 shadow-[0_10px_28px_rgba(0,0,0,0.6)]'
-                  : 'bg-[#101411]/90 border-white/[0.08]'
+                  ? 'bg-[#131913] border-[#C8FF2E]/40 shadow-[0_10px_28px_rgba(0,0,0,0.6)]'
+                  : 'bg-[#101411] border-white/[0.08] hover:border-white/[0.16]'
               }`}
             >
               <div className="text-[12.5px] font-medium text-[#F4F6F0] leading-tight">
@@ -208,11 +269,11 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
 
             {/* NODE 3: Bottom Action Node */}
             <div
-              onClick={() => setActiveNode('unlock')}
+              onClick={() => handleSwitchBranch('unlock')}
               className={`cursor-pointer absolute left-[34.5%] top-[136px] w-[158px] px-4 py-3 rounded-xl border transition-all ${
                 activeNode === 'unlock'
-                  ? 'bg-[#121713]/95 border-[#C8FF2E]/35 shadow-[0_10px_28px_rgba(0,0,0,0.6)]'
-                  : 'bg-[#101411]/90 border-white/[0.08]'
+                  ? 'bg-[#131913] border-[#C8FF2E]/40 shadow-[0_10px_28px_rgba(0,0,0,0.6)]'
+                  : 'bg-[#101411] border-white/[0.08] hover:border-white/[0.16]'
               }`}
             >
               <div className="text-[12.5px] font-medium text-[#F4F6F0] leading-tight">
@@ -226,7 +287,7 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
             {/* NODE 4: Right Final Action Node */}
             <div
               onClick={onOpenSimulation}
-              className="cursor-pointer absolute right-0 top-[76px] w-[148px] px-3.5 py-3 rounded-xl bg-[#121713]/95 border border-white/[0.12] hover:border-[#C8FF2E]/45 shadow-[0_12px_30px_rgba(0,0,0,0.65)] transition-colors"
+              className="cursor-pointer absolute right-0 top-[76px] w-[148px] px-3.5 py-3 rounded-xl bg-[#131913] border border-white/[0.12] hover:border-[#C8FF2E]/45 shadow-[0_12px_30px_rgba(0,0,0,0.65)] transition-colors"
             >
               <div className="text-[12.5px] font-medium text-[#F4F6F0] leading-tight">
                 {activeNode === 'lock' ? 'Lock screen' : 'Instant unlock'}
@@ -243,7 +304,7 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
             </div>
           </div>
 
-          {/* Bottom 'last runs' activity feed (Matching frame_002.png) */}
+          {/* Bottom 'last actions' activity feed */}
           <div className="mt-4 pt-5 border-t border-white/[0.06]">
             <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-mono text-[#6E786B]">

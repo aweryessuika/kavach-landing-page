@@ -9,9 +9,9 @@
   --color-pitch: #050705;
   --color-pitch-deep: #030503;
   --color-surface-dark: #0A0D0A;
-  --color-surface-glass: rgba(14, 18, 14, 0.72);
-  --color-surface-card: rgba(16, 20, 16, 0.68);
-  --color-surface-highlight: rgba(24, 30, 24, 0.75);
+  --color-surface-glass: rgba(14, 18, 14, 0.88);
+  --color-surface-card: rgba(16, 20, 16, 0.85);
+  --color-surface-highlight: rgba(24, 30, 24, 0.9);
 
   --color-lime-accent: #C8FF2E;
   --color-lime-glow: #D4FF4D;
@@ -91,53 +91,71 @@
   background: rgba(200, 255, 46, 0.45);
 }
 
-/* Luxury Dark Glass Surface — Matching Relay Video-6454.mp4 */
+/*
+  Zero-Blur GPU-Friendly Dark Surface — Matching Video-6454.mp4
+  Eliminates expensive per-frame backdrop-filter blur passes over the live canvas
+  so phones and low-tier integrated-GPU laptops run at a locked 60/120fps.
+*/
 .dark-glass {
-  background: rgba(13, 17, 13, 0.72);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  background: linear-gradient(
+    165deg,
+    rgba(20, 26, 19, 0.88) 0%,
+    rgba(11, 15, 11, 0.93) 100%
+  );
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow:
-    0 24px 60px -15px rgba(0, 0, 0, 0.85),
+    0 22px 50px -15px rgba(0, 0, 0, 0.82),
     inset 0 1px 0 rgba(255, 255, 255, 0.09);
 }
 
 .dark-glass-interactive {
-  background: rgba(13, 17, 13, 0.72);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  background: linear-gradient(
+    165deg,
+    rgba(20, 26, 19, 0.88) 0%,
+    rgba(11, 15, 11, 0.93) 100%
+  );
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow:
-    0 20px 50px -12px rgba(0, 0, 0, 0.75),
+    0 18px 42px -12px rgba(0, 0, 0, 0.75),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   transition:
-    transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 280ms ease,
-    box-shadow 280ms ease,
-    background-color 280ms ease;
+    transform 240ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 240ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .dark-glass-interactive:hover {
-    transform: translateY(-2px);
-    background: rgba(16, 22, 16, 0.8);
-    border-color: rgba(200, 255, 46, 0.22);
-    box-shadow:
-      0 28px 60px -12px rgba(0, 0, 0, 0.9),
-      0 0 32px -8px rgba(200, 255, 46, 0.12),
-      inset 0 1px 0 rgba(200, 255, 46, 0.2);
+    transform: translate3d(0, -2px, 0);
+    border-color: rgba(200, 255, 46, 0.24);
   }
+}
+
+/*
+  Ultra-Light 1-Way GPU Compositor Reveal ([data-reveal])
+  Only animates opacity & translate3d (0 layout/paint cost).
+  Once revealed (data-visible="true"), stays locked in place permanently.
+*/
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+  transition:
+    opacity 520ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 520ms cubic-bezier(0.23, 1, 0.32, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal][data-visible='true'] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
 }
 
 /* Emil Kowalski & Apple Tactile Button Physics */
 .btn-press {
   transition:
     transform 140ms cubic-bezier(0.2, 0, 0, 1),
-    box-shadow 180ms ease,
-    background-color 180ms ease,
-    border-color 180ms ease,
-    opacity 180ms ease;
-  will-change: transform;
+    background-color 160ms ease,
+    border-color 160ms ease,
+    opacity 160ms ease;
 }
 .btn-press:active {
   transform: scale(0.97);
@@ -217,6 +235,18 @@ input[type='range'].kavach-slider::-moz-range-thumb {
   transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 150ms ease;
 }
 
+/* Keyframe for SVG traveling signal dot in Hero card (runs off main thread on GPU) */
+@keyframes pulseDash {
+  to {
+    stroke-dashoffset: -120;
+  }
+}
+
+.animate-signal-flow {
+  stroke-dasharray: 10 110;
+  animation: pulseDash 2.6s linear infinite;
+}
+
 /* Reduced motion accessibility */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -224,5 +254,9 @@ input[type='range'].kavach-slider::-moz-range-thumb {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

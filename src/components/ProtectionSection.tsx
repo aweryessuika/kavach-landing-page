@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { Check, Clock, Pause } from 'lucide-react';
 
-export function ProtectionSection() {
+interface ProtectionSectionProps {
+  onNotify?: (message: string) => void;
+}
+
+export function ProtectionSection({ onNotify }: ProtectionSectionProps) {
   const [decisionState, setDecisionState] = useState<'pending' | 'locked' | 'held'>('pending');
-  const [selectedDay, setSelectedDay] = useState<number>(5); // Saturday highlighted by default like frame_018.png
+  const [selectedDay, setSelectedDay] = useState<number>(5);
 
   const weekBars = [
     { day: 'mon', height: 34, count: '14 paid' },
@@ -20,8 +24,11 @@ export function ProtectionSection() {
       className="relative py-24 lg:py-32 overflow-hidden z-10"
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
-        {/* Top Section Header Split (Matching frame_015.png) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-20 lg:mb-28">
+        {/* Top Section Header Split */}
+        <div
+          data-reveal
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-20 lg:mb-28"
+        >
           <div className="lg:col-span-7 space-y-5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0C100C] border border-white/[0.09] text-[11.5px] font-mono text-[#D2D8CE]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E]" />
@@ -43,10 +50,11 @@ export function ProtectionSection() {
           </div>
         </div>
 
-        {/* =====================================================================
-            STORY BEAT 01: Text Left, Horizontal Waterfall Card Right (frame_015.png)
-           ===================================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-24 lg:mb-32">
+        {/* STORY BEAT 01: Text Left, Horizontal Waterfall Card Right */}
+        <div
+          data-reveal
+          className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-24 lg:mb-32"
+        >
           <div className="lg:col-span-4 space-y-3">
             <div className="text-[12px] font-mono text-[#6E786B]">01</div>
             <h3 className="text-[24px] sm:text-[28px] font-display font-semibold tracking-[-0.02em] text-[#F4F6F0]">
@@ -59,15 +67,12 @@ export function ProtectionSection() {
 
           <div className="lg:col-span-8">
             <div className="dark-glass rounded-[22px] p-6 sm:p-8 border border-white/[0.08]">
-              {/* Top Row */}
               <div className="flex items-center justify-between text-[12px] font-mono mb-7">
                 <span className="text-[#D2D8CE]">enrollment #41982</span>
                 <span className="text-[#6E786B]">finished in 48 s</span>
               </div>
 
-              {/* Waterfall Rows (Exact match to frame_015.png) */}
               <div className="space-y-4 font-mono text-[12px]">
-                {/* Row 1 */}
                 <div className="grid grid-cols-12 items-center gap-3">
                   <div className="col-span-5 sm:col-span-4 flex items-center gap-2.5 text-[#D2D8CE]">
                     <Check className="w-3.5 h-3.5 text-[#9CA698]" />
@@ -82,7 +87,6 @@ export function ProtectionSection() {
                   <div className="col-span-2 text-right text-[#6E786B]">28 s</div>
                 </div>
 
-                {/* Row 2 */}
                 <div className="grid grid-cols-12 items-center gap-3">
                   <div className="col-span-5 sm:col-span-4 flex items-center gap-2.5 text-[#D2D8CE]">
                     <Check className="w-3.5 h-3.5 text-[#9CA698]" />
@@ -97,7 +101,6 @@ export function ProtectionSection() {
                   <div className="col-span-2 text-right text-[#6E786B]">12 s</div>
                 </div>
 
-                {/* Row 3 */}
                 <div className="grid grid-cols-12 items-center gap-3">
                   <div className="col-span-5 sm:col-span-4 flex items-center gap-2.5 text-[#D2D8CE]">
                     <Check className="w-3.5 h-3.5 text-[#9CA698]" />
@@ -112,7 +115,6 @@ export function ProtectionSection() {
                   <div className="col-span-2 text-right text-[#6E786B]">8 s</div>
                 </div>
 
-                {/* Row 4 */}
                 <div className="grid grid-cols-12 items-center gap-3">
                   <div className="col-span-5 sm:col-span-4 flex items-center gap-2.5 text-[#6E786B]">
                     <Clock className="w-3.5 h-3.5 text-[#6E786B]" />
@@ -128,7 +130,6 @@ export function ProtectionSection() {
                 </div>
               </div>
 
-              {/* Bottom Scale Axis */}
               <div className="grid grid-cols-12 mt-7 pt-4 border-t border-white/[0.05] text-[10.5px] font-mono text-[#5E685B]">
                 <div className="col-span-5 sm:col-span-4" />
                 <div className="col-span-5 sm:col-span-6 flex justify-between">
@@ -144,19 +145,18 @@ export function ProtectionSection() {
           </div>
         </div>
 
-        {/* =====================================================================
-            STORY BEAT 02: Approval Card Left, Text Right (frame_016 & frame_018)
-           ===================================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-24 lg:mb-32">
+        {/* STORY BEAT 02: Approval Card Left, Text Right */}
+        <div
+          data-reveal
+          className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-24 lg:mb-32"
+        >
           <div className="lg:col-span-7 order-2 lg:order-1">
             <div className="dark-glass rounded-[22px] p-6 sm:p-8 border border-white/[0.08]">
-              {/* Card Top Header */}
               <div className="flex items-center justify-between text-[12px] font-mono text-[#6E786B] pb-4 mb-5 border-b border-white/[0.06]">
                 <span className="text-[#D2D8CE]">#shop-counter</span>
                 <span>today</span>
               </div>
 
-              {/* App Brand Row */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2.5">
                   <div className="w-6 h-6 rounded-md bg-[#C8FF2E] text-[#050705] flex items-center justify-center font-bold text-xs">
@@ -169,12 +169,10 @@ export function ProtectionSection() {
                 <span className="text-[11.5px] font-mono text-[#6E786B]">09:41</span>
               </div>
 
-              {/* Question Prompt */}
               <p className="text-[14px] text-[#D2D8CE] mb-5">
                 Installment of ₹2,400 for Rahul Sharma is past due. Lock handset screen now?
               </p>
 
-              {/* Vertical Lime Bar Details Block (Exact match to frame_018.png) */}
               <div className="border-l-2 border-[#C8FF2E] pl-4 space-y-2 text-[12.5px] font-mono mb-6">
                 <div className="grid grid-cols-12">
                   <span className="col-span-4 sm:col-span-3 text-[#6E786B]">amount</span>
@@ -190,12 +188,14 @@ export function ProtectionSection() {
                 </div>
               </div>
 
-              {/* Action Buttons & Status */}
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-2.5">
                   <button
                     type="button"
-                    onClick={() => setDecisionState('locked')}
+                    onClick={() => {
+                      setDecisionState('locked');
+                      onNotify?.('Command delivered: Vivo Y28 locked in 280 ms');
+                    }}
                     className={`btn-press px-4 py-2 rounded-lg text-[12.5px] font-semibold flex items-center gap-1.5 transition-all ${
                       decisionState === 'locked'
                         ? 'bg-[#C8FF2E] text-[#050705] shadow-[0_0_20px_rgba(200,255,46,0.4)]'
@@ -208,7 +208,10 @@ export function ProtectionSection() {
 
                   <button
                     type="button"
-                    onClick={() => setDecisionState('held')}
+                    onClick={() => {
+                      setDecisionState('held');
+                      onNotify?.('Grace extended: Vivo Y28 kept unlocked');
+                    }}
                     className={`btn-press px-4 py-2 rounded-lg text-[12.5px] font-medium flex items-center gap-1.5 border transition-colors ${
                       decisionState === 'held'
                         ? 'bg-white/[0.14] border-white/30 text-[#F4F6F0]'
@@ -240,10 +243,11 @@ export function ProtectionSection() {
           </div>
         </div>
 
-        {/* =====================================================================
-            STORY BEAT 03: Text Left, 3D Isometric Column Chart Right (frame_018)
-           ===================================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        {/* STORY BEAT 03: Text Left, 3D Isometric Column Chart Right */}
+        <div
+          data-reveal
+          className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center"
+        >
           <div className="lg:col-span-4 space-y-3">
             <div className="text-[12px] font-mono text-[#6E786B]">03</div>
             <h3 className="text-[24px] sm:text-[28px] font-display font-semibold tracking-[-0.02em] text-[#F4F6F0]">
@@ -256,7 +260,6 @@ export function ProtectionSection() {
 
           <div className="lg:col-span-8">
             <div className="dark-glass rounded-[22px] p-6 sm:p-8 border border-white/[0.08]">
-              {/* Top Metric Header */}
               <div className="flex items-center justify-between text-[12px] font-mono mb-6">
                 <div className="flex items-center gap-4">
                   <span className="text-[#6E786B]">payments collected by day</span>
@@ -265,7 +268,6 @@ export function ProtectionSection() {
                 <span className="text-[#C8FF2E]">99.4% on time</span>
               </div>
 
-              {/* 3D Isometric Bars with Floating Diamond Caps (Exact match to frame_018.png) */}
               <div className="grid grid-cols-6 gap-2 sm:gap-5 items-end pt-8 pb-2 h-[220px] px-2 sm:px-6">
                 {weekBars.map((bar, idx) => {
                   const isHighlighted = selectedDay === idx;
@@ -276,38 +278,25 @@ export function ProtectionSection() {
                       onClick={() => setSelectedDay(idx)}
                       className="flex flex-col items-center justify-end h-full cursor-pointer group"
                     >
-                      {/* 3D Isometric Bar SVG */}
                       <div className="relative w-full max-w-[54px] flex flex-col items-center justify-end">
                         <svg
                           viewBox="0 0 60 160"
                           className="w-full overflow-visible"
                           style={{ height: `${bar.height + 42}px` }}
                         >
-                          {/* Floating Diamond Cap */}
                           <polygon
                             points="30,4 54,16 30,28 6,16"
                             fill={isHighlighted ? '#D8FF66' : '#D2D8CE'}
-                            className="transition-all duration-300 group-hover:-translate-y-1"
-                            style={{
-                              filter: isHighlighted
-                                ? 'drop-shadow(0 0 14px rgba(200, 255, 46, 0.85))'
-                                : 'none',
-                            }}
+                            className="transition-transform duration-200 group-hover:-translate-y-1"
                           />
-
-                          {/* Top Face of 3D Pillar */}
                           <polygon
                             points="30,26 54,38 30,50 6,38"
                             fill={isHighlighted ? '#84CC16' : '#2C332C'}
                           />
-
-                          {/* Left Face of 3D Pillar */}
                           <polygon
                             points="6,38 30,50 30,150 6,138"
                             fill={isHighlighted ? '#4D7C0F' : '#1E241E'}
                           />
-
-                          {/* Right Face of 3D Pillar */}
                           <polygon
                             points="30,50 54,38 54,138 30,150"
                             fill={isHighlighted ? '#365314' : '#141814'}
@@ -315,7 +304,6 @@ export function ProtectionSection() {
                         </svg>
                       </div>
 
-                      {/* Day label */}
                       <span
                         className={`mt-3 text-[11.5px] font-mono transition-colors ${
                           isHighlighted ? 'text-[#F4F6F0] font-semibold' : 'text-[#6E786B]'

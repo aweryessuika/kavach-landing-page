@@ -9,10 +9,18 @@ export function SignalRibbonBackground() {
     const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId = 0;
+    let isPageVisible = !document.hidden;
     let width = 0;
     let height = 0;
     let maxScroll = 3000;
+
+    // Detect mobile or low-core laptop to scale GPU workload automatically
+    const isLowPowerDevice =
+      window.innerWidth < 768 ||
+      (typeof navigator !== 'undefined' &&
+        navigator.hardwareConcurrency &&
+        navigator.hardwareConcurrency <= 4);
 
     // Smooth spring-damped pointer & scroll state
     let mouseX = 0;
@@ -26,16 +34,17 @@ export function SignalRibbonBackground() {
       targetMouseY = e.clientY;
     };
 
-    const handleResize = () => {
+    const updateDimensions = () => {
       if (!canvas) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Cap DPR at 1.0 on mobile/low-power and 1.35 on desktop to prevent GPU fill-rate lag
+      const maxDpr = isLowPowerDevice ? 1.0 : 1.35;
+      const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
       width = window.innerWidth;
       height = window.innerHeight;
       maxScroll = Math.max(1, document.documentElement.scrollHeight - height);
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       if (mouseX === 0 && mouseY === 0) {
         mouseX = targetMouseX = width * 0.5;
@@ -44,19 +53,24 @@ export function SignalRibbonBackground() {
     };
 
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
-    window.addEventListener('resize', handleResize, { passive: true });
-    handleResize();
+    window.addEventListener('resize', updateDimensions, { passive: true });
+    updateDimensions();
+
+    // Update cached scrollHeight once after fonts/layout settle (never inside rAF!)
+    const settleTimer = window.setTimeout(() => {
+      maxScroll = Math.max(1, document.documentElement.scrollHeight - height);
+    }, 600);
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // 52 ultra-smooth native Bezier silk strands
-    const STRAND_COUNT = 52;
-    const strands = Array.from({ length: STRAND_COUNT }, (_, i) => {
-      const norm = i / (STRAND_COUNT - 1); // 0 to 1
-      const centered = (norm - 0.5) * 2; // -1 to 1
+    // Adaptive strand count: 30 on mobile/low-tier laptops, 48 on desktop
+    const STRAND_COUNT = isLowPowerDevice ? 30 : 48;
+    const alphaBoost = isLowPowerDevice ? 1.35 : 1.0;
 
-      // Chromatic dispersion matching Video-6454.mp4:
-      // Inner caustic fold = warm white-lime, middle = electric lime & emerald, outer edge = cyan-teal
+    const strands = Array.from({ length: STRAND_COUNT }, (_, i) => {
+      const norm = i / (STRAND_COUNT - 1);
+      const centered = (norm - 0.5) * 2;
+
       let color = '#B8FF2C';
       if (norm < 0.24) {
         color = '#EEFF99';
@@ -68,47 +82,48 @@ export function SignalRibbonBackground() {
         color = '#38BDF8';
       }
 
+      const rawAlpha = norm < 0.25 ? 0.16 : 0.068 + (1 - Math.abs(centered)) * 0.075;
+
       return {
         index: i,
         norm,
         centered,
         color,
-        lineWidth: norm < 0.26 ? 1.4 : 0.65 + (1 - Math.abs(centered)) * 0.55,
-        baseAlpha: norm < 0.25 ? 0.16 : 0.065 + (1 - Math.abs(centered)) * 0.075,
+        lineWidth: norm < 0.26 ? 1.45 : 0.7 + (1 - Math.abs(centered)) * 0.55,
+        baseAlpha: Math.min(0.32, rawAlpha * alphaBoost),
         angleOffset: centered * Math.PI * 0.92,
-        speed: 0.009 + (i % 6) * 0.0016,
-        phaseOffset: i * 0.21,
+        speed: 0.0085 + (i % 6) * 0.0015,
+        phaseOffset: i * 0.22,
       };
     });
 
-    // Subtle floating dust motes / bokeh sparks
-    const SPARK_COUNT = 32;
+    const SPARK_COUNT = isLowPowerDevice ? 16 : 28;
     const sparks = Array.from({ length: SPARK_COUNT }, (_, i) => ({
       u: Math.random(),
       radialOffset: (Math.random() - 0.5) * 180,
       orthoOffset: (Math.random() - 0.5) * 110,
       speed: 0.00055 + (i % 5) * 0.0003,
       size: 0.9 + (i % 3) * 0.7,
-      alpha: 0.2 + Math.random() * 0.4,
+      alpha: 0.22 + Math.random() * 0.38,
       color: i % 4 === 0 ? '#38BDF8' : i % 2 === 0 ? '#EEFFAA' : '#C8FF2E',
       phase: Math.random() * Math.PI * 2,
     }));
 
     let time = 0;
 
-    // Linear interpolation helper
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-    // Smoothstep easing for seamless angle transitions between scroll zones
     const smoothstep = (edge0: number, edge1: number, x: number) => {
       const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
       return t * t * (3 - 2 * t);
     };
 
     const render = () => {
-      // Read window.scrollY directly inside rAF for zero-jitter, 120fps scroll damping
+      if (!isPageVisible) return;
+
+      // Pure numeric read — zero DOM layout/reflow inside rAF
       const rawScrollY = window.scrollY;
-      smoothScrollY += (rawScrollY - smoothScrollY) * 0.065;
+      smoothScrollY += (rawScrollY - smoothScrollY) * 0.075;
 
       mouseX += (targetMouseX - mouseX) * 0.045;
       mouseY += (targetMouseY - mouseY) * 0.045;
@@ -116,34 +131,24 @@ export function SignalRibbonBackground() {
       const ptrX = (mouseX / Math.max(width, 1) - 0.5) * 2;
       const ptrY = (mouseY / Math.max(height, 1) - 0.5) * 2;
 
-      // Normalized page scroll progress s in [0, 1]
-      maxScroll = Math.max(1, document.documentElement.scrollHeight - height);
       const s = Math.max(0, Math.min(1, smoothScrollY / maxScroll));
 
-      // Blend weights for the 3 continuous angle states of the SAME ribbon:
-      // State A (s = 0.0 -> 0.35): Hero C-shaped parabolic fold on center-left
-      // State B (s = 0.35 -> 0.72): Mid-section sweeping diagonal S-ribbon at a tilted angle
-      // State C (s = 0.72 -> 1.0): Bottom wide horizontal wave arc behind Pricing & Final CTA
+      // Continuous angle transitions for the SAME silk ribbon across the page
       const wMid = smoothstep(0.08, 0.42, s);
       const wBot = smoothstep(0.58, 0.92, s);
 
       ctx.clearRect(0, 0, width, height);
 
-      // =========================================================================
-      // CONTINUOUS SPINE CONTROL POINTS (Same ribbon smoothly rotating its angle)
-      // =========================================================================
-      const breathX = Math.sin(time * 0.011) * 16;
-      const breathY = Math.cos(time * 0.009) * 14;
+      const breathX = Math.sin(time * 0.011) * 15;
+      const breathY = Math.cos(time * 0.009) * 13;
 
-      // 1. Start Point (Top-Right in Hero -> Top-Left/Center in Mid -> Left-Edge in Bottom)
       const startX =
         lerp(lerp(width * 0.94, width * 0.72, wMid), -width * 0.08, wBot) +
-        ptrX * 18;
+        ptrX * 16;
       const startY =
         lerp(lerp(-height * 0.08, -height * 0.1, wMid), height * 0.46, wBot) +
         ptrY * 12;
 
-      // 2. Upper Control Point 1
       const c1X =
         lerp(lerp(width * 0.62, width * 0.54, wMid), width * 0.18, wBot) +
         breathX;
@@ -151,18 +156,15 @@ export function SignalRibbonBackground() {
         lerp(lerp(height * 0.14, height * 0.18, wMid), height * 0.34, wBot) +
         breathY;
 
-      // 3. Central Caustic Fold / Vertex (Shifts angle smoothly as you scroll)
       const vertexX =
         lerp(lerp(width * 0.355, width * 0.44, wMid), width * 0.48, wBot) +
-        ptrX * 26 +
-        breathX * 0.8;
+        ptrX * 24 +
+        breathX * 0.75;
       const vertexY =
         lerp(lerp(height * 0.54, height * 0.46, wMid), height * 0.25, wBot) +
-        ptrY * 20 +
-        breathY * 0.8;
+        ptrY * 18 +
+        breathY * 0.75;
 
-      // Tangent vector at the vertex rotates smoothly from vertical (Hero)
-      // to angled diagonal (Mid-section) to horizontal (Bottom CTA)!
       const tangentAngle = lerp(
         lerp(Math.PI * 0.5, Math.PI * 0.36, wMid),
         Math.PI * 0.08,
@@ -172,13 +174,11 @@ export function SignalRibbonBackground() {
       const tx = Math.cos(tangentAngle) * tangentLen;
       const ty = Math.sin(tangentAngle) * tangentLen;
 
-      // C1-continuous control points before and after the vertex (guarantees zero pinch/kink)
       const c2X = vertexX - tx;
       const c2Y = vertexY - ty;
       const c3X = vertexX + tx;
       const c3Y = vertexY + ty;
 
-      // 4. Lower Control Point 4
       const c4X =
         lerp(lerp(width * 0.66, width * 0.34, wMid), width * 0.78, wBot) -
         breathX;
@@ -186,72 +186,47 @@ export function SignalRibbonBackground() {
         lerp(lerp(height * 0.8, height * 0.78, wMid), height * 0.36, wBot) +
         breathY;
 
-      // 5. End Point (Bottom-Right in Hero -> Bottom-Left in Mid -> Top-Right in Bottom)
       const endX =
         lerp(lerp(width * 0.74, width * 0.22, wMid), width * 1.08, wBot) -
-        ptrX * 18;
+        ptrX * 16;
       const endY =
         lerp(lerp(height * 1.16, height * 1.14, wMid), height * 0.16, wBot);
 
-      // =========================================================================
-      // 1. VOLUMETRIC ATMOSPHERIC NEBULA UNDERGLOW
-      // =========================================================================
+      // 1. Volumetric Nebula Underglow
       const vertexGlow = ctx.createRadialGradient(
         vertexX + 12,
         vertexY,
         2,
         vertexX + 24,
         vertexY,
-        Math.min(width, height) * 0.46
+        Math.min(width, height) * 0.45
       );
-      vertexGlow.addColorStop(0, 'rgba(242, 255, 175, 0.34)');
-      vertexGlow.addColorStop(0.14, 'rgba(200, 255, 50, 0.2)');
-      vertexGlow.addColorStop(0.4, 'rgba(110, 180, 35, 0.075)');
-      vertexGlow.addColorStop(0.75, 'rgba(20, 80, 45, 0.025)');
+      vertexGlow.addColorStop(0, 'rgba(242, 255, 175, 0.33)');
+      vertexGlow.addColorStop(0.14, 'rgba(200, 255, 50, 0.19)');
+      vertexGlow.addColorStop(0.4, 'rgba(110, 180, 35, 0.07)');
+      vertexGlow.addColorStop(0.75, 'rgba(20, 80, 45, 0.02)');
       vertexGlow.addColorStop(1, 'transparent');
 
       ctx.fillStyle = vertexGlow;
       ctx.fillRect(0, 0, width, height);
 
-      // Secondary ambient glow along the upper wing
-      const wingGlowX = lerp(width * 0.68, width * 0.55, wMid);
-      const wingGlowY = lerp(height * 0.32, height * 0.28, wMid);
-      const wingGlow = ctx.createRadialGradient(
-        wingGlowX,
-        wingGlowY,
-        15,
-        wingGlowX,
-        wingGlowY,
-        width * 0.42
-      );
-      wingGlow.addColorStop(0, 'rgba(180, 245, 40, 0.095)');
-      wingGlow.addColorStop(0.5, 'rgba(60, 130, 40, 0.035)');
-      wingGlow.addColorStop(1, 'transparent');
-
-      ctx.fillStyle = wingGlow;
-      ctx.fillRect(0, 0, width, height);
-
-      // =========================================================================
-      // 2. NATIVE GPU CUBIC-BEZIER SILK RIBBON STRANDS
-      // =========================================================================
+      // 2. Native GPU Cubic-Bezier Silk Strands
       ctx.save();
       ctx.globalCompositeOperation = 'lighter';
 
-      // Normal vector perpendicular to the vertex tangent for 3D ribbon cross-section
       const nx = -Math.sin(tangentAngle);
       const ny = Math.cos(tangentAngle);
 
-      strands.forEach((strand) => {
+      for (let i = 0; i < strands.length; i++) {
+        const strand = strands[i];
         const phase = prefersReducedMotion
           ? strand.phaseOffset
           : time * strand.speed + strand.phaseOffset;
 
-        // 3D helical twist angles at Start, Vertex, and End
         const a0 = strand.angleOffset + Math.sin(phase) * 0.28;
         const aMid = strand.angleOffset + Math.PI * 0.85 + Math.sin(phase * 0.9) * 0.22;
         const aEnd = strand.angleOffset + Math.PI * 1.85 + Math.cos(phase * 0.85) * 0.28;
 
-        // Ribbon spreads wide at the ends (185px) and pinches tight at the caustic fold (30px)
         const s0 = Math.sin(a0) * 180;
         const o0 = Math.cos(a0) * 48;
 
@@ -267,7 +242,6 @@ export function SignalRibbonBackground() {
         const sEnd = Math.sin(aEnd) * 195;
         const oEnd = Math.cos(aEnd) * 52;
 
-        // Compute displaced control points for this silk thread
         const p0x = startX + nx * s0 + o0;
         const p0y = startY + ny * s0 + o0 * 0.6;
 
@@ -298,19 +272,11 @@ export function SignalRibbonBackground() {
         ctx.bezierCurveTo(p1x, p1y, p2x, p2y, pVx, pVy);
         ctx.bezierCurveTo(p3x, p3y, p4x, p4y, pEx, pEy);
         ctx.stroke();
+      }
 
-        // Soft wide volumetric pass on every 8th strand
-        if (strand.index % 8 === 0) {
-          ctx.lineWidth = 15;
-          ctx.globalAlpha = 0.018;
-          ctx.stroke();
-        }
-      });
-
-      // =========================================================================
-      // 3. FLOATING MICRO-SPARKS ALONG THE RIBBON
-      // =========================================================================
-      sparks.forEach((sp) => {
+      // 3. Floating Sparks
+      for (let i = 0; i < sparks.length; i++) {
+        const sp = sparks[i];
         if (!prefersReducedMotion) {
           sp.u += sp.speed;
           if (sp.u > 1) sp.u = 0;
@@ -363,21 +329,34 @@ export function SignalRibbonBackground() {
         ctx.fillStyle = sp.color;
         ctx.globalAlpha = sp.alpha * twinkle;
         ctx.fill();
-      });
+      }
 
       ctx.restore();
 
-      if (!prefersReducedMotion) {
+      if (!prefersReducedMotion && isPageVisible) {
         time += 1;
         animationFrameId = requestAnimationFrame(render);
       }
     };
 
+    const handleVisibilityChange = () => {
+      isPageVisible = !document.hidden;
+      if (isPageVisible && !prefersReducedMotion) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = requestAnimationFrame(render);
+      } else {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     render();
 
     return () => {
+      window.clearTimeout(settleTimer);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', updateDimensions);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -385,7 +364,7 @@ export function SignalRibbonBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050705]">
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
-      <div className="absolute inset-0 bg-dot-pattern opacity-[0.14] pointer-events-none" />
+      <div className="absolute inset-0 bg-dot-pattern opacity-[0.13] pointer-events-none" />
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -393,7 +372,6 @@ export function SignalRibbonBackground() {
             'radial-gradient(ellipse 95% 85% at 48% 42%, transparent 48%, rgba(5, 7, 5, 0.55) 78%, rgba(5, 7, 5, 0.92) 100%)',
         }}
       />
-      <div className="absolute inset-0 noise-overlay pointer-events-none opacity-35" />
     </div>
   );
 }

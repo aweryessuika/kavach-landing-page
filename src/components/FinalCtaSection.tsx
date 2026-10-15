@@ -16,7 +16,10 @@ export function FinalCtaSection() {
     <section className="relative py-20 lg:py-28 overflow-hidden z-10">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         {/* Two-Column Split CTA (Exact match to frame_033.png & frame_035.png) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <div
+          data-reveal
+          className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch"
+        >
           {/* LEFT CARD (5 cols): Dark Glass Brand Card with Giant Watermark Chevron */}
           <div className="lg:col-span-5 dark-glass rounded-[26px] p-8 sm:p-10 border border-white/[0.08] relative overflow-hidden flex flex-col justify-between min-h-[320px]">
             {/* Giant Subtle Watermark Double-Chevron (Matching frame_035.png) */}

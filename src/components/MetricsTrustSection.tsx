@@ -20,7 +20,10 @@ export function MetricsTrustSection({ onExploreClick }: MetricsTrustSectionProps
         {/* =====================================================================
             PART 1: NUMBERS WE DID NOT HAVE TO EXPLAIN AWAY (frame_027.png)
            ===================================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16">
+        <div
+          data-reveal
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16"
+        >
           <div className="lg:col-span-7 space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0C100C] border border-white/[0.09] text-[11.5px] font-mono text-[#D2D8CE]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E]" />
@@ -46,7 +49,10 @@ export function MetricsTrustSection({ onExploreClick }: MetricsTrustSectionProps
         </div>
 
         {/* 3 Giant Minimal Stat Columns (Exact match to frame_014 & frame_027) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pt-8 pb-20 border-t border-white/[0.08]">
+        <div
+          data-reveal
+          className="grid grid-cols-1 md:grid-cols-3 gap-10 pt-8 pb-20 border-t border-white/[0.08]"
+        >
           {/* Stat 1 */}
           <div className="space-y-3">
             <div className="text-[12px] font-mono text-[#6E786B]">

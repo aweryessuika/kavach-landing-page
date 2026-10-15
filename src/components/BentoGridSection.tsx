@@ -29,7 +29,10 @@ export function BentoGridSection() {
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         {/* Section Header Split (Matching frame_025.png) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16">
+        <div
+          data-reveal
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16"
+        >
           <div className="lg:col-span-7 space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0C100C] border border-white/[0.09] text-[11.5px] font-mono text-[#D2D8CE]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E]" />
@@ -56,7 +59,10 @@ export function BentoGridSection() {
             ROW 1: Weekly Matrix Card (8 cols) + Circular Gauge Card (4 cols)
             (Exact match to frame_025.png)
            ===================================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+        <div
+          data-reveal
+          className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6"
+        >
           {/* Left 8-Col Card: 'this week, phone by phone' */}
           <div className="lg:col-span-8 dark-glass rounded-[22px] p-6 sm:p-8 border border-white/[0.08]">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-7">
@@ -168,7 +174,10 @@ export function BentoGridSection() {
         {/* =====================================================================
             ROW 2: Three Visual Bento Cards (Exact match to frame_027.png)
            ===================================================================== */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+          data-reveal
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
           {/* CARD 1: Waiting on people (Avatars + '3 approvals') */}
           <div className="dark-glass rounded-[22px] p-6 sm:p-7 border border-white/[0.08] flex flex-col justify-between">
             <div>
