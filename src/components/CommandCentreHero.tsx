@@ -7,7 +7,7 @@ interface CommandCentreHeroProps {
 
 export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [tilt, setTilt] = useState({ x: -7, y: 3 });
+  const boardRef = useRef<HTMLDivElement | null>(null);
   const [activeNode, setActiveNode] = useState<'lock' | 'unlock'>('lock');
   const [pulseStep, setPulseStep] = useState(0);
 
@@ -29,18 +29,18 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
   const visibleRuns = pulseStep === 0 ? allRuns.slice(0, 3) : allRuns.slice(1, 4);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || !boardRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const nx = (e.clientX - rect.left) / rect.width - 0.5;
     const ny = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({
-      x: -7 + nx * 6,
-      y: 3 - ny * 5,
-    });
+    const rx = (-7 + nx * 6).toFixed(2);
+    const ry = (3 - ny * 5).toFixed(2);
+    boardRef.current.style.transform = `rotateY(${rx}deg) rotateX(${ry}deg)`;
   };
 
   const handlePointerLeave = () => {
-    setTilt({ x: -7, y: 3 });
+    if (!boardRef.current) return;
+    boardRef.current.style.transform = 'rotateY(-7deg) rotateX(3deg)';
   };
 
   return (
@@ -64,13 +64,14 @@ export function CommandCentreHero({ onOpenSimulation }: CommandCentreHeroProps) 
 
       {/* Main 3D Tilted Glass Canvas Board (Matching frame_002.png) */}
       <div
-        className="relative rounded-[24px] border border-white/[0.11] shadow-[0_35px_90px_rgba(0,0,0,0.88),inset_0_1px_0_rgba(255,255,255,0.14)] transition-transform duration-300 ease-out overflow-visible"
+        ref={boardRef}
+        className="relative rounded-[24px] border border-white/[0.11] shadow-[0_35px_90px_rgba(0,0,0,0.88),inset_0_1px_0_rgba(255,255,255,0.14)] transition-transform duration-300 ease-out overflow-visible will-change-transform"
         style={{
           background:
             'linear-gradient(145deg, rgba(24, 30, 20, 0.78) 0%, rgba(12, 16, 12, 0.86) 60%, rgba(9, 12, 9, 0.92) 100%)',
           backdropFilter: 'blur(24px) saturate(150%)',
           WebkitBackdropFilter: 'blur(24px) saturate(150%)',
-          transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
+          transform: 'rotateY(-7deg) rotateX(3deg)',
           transformStyle: 'preserve-3d',
         }}
       >

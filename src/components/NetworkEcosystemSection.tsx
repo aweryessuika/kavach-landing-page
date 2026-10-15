@@ -3,41 +3,65 @@ import { Lock } from 'lucide-react';
 
 export function NetworkEcosystemSection() {
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const [expandProgress, setExpandProgress] = useState(0.92);
+  const [hasEntered, setHasEntered] = useState(false);
 
-  // Smooth scroll-linked expansion matching frame_020 -> frame_021
+  // One-way hardware-accelerated entrance (triggers once and stays locked open — zero scroll jitter)
   useEffect(() => {
-    const handleScroll = () => {
-      if (!cardRef.current) return;
-      const rect = cardRef.current.getBoundingClientRect();
-      const vh = window.innerHeight || 800;
-      // Progress from 0 when entering bottom to 1 when centered
-      const raw = 1 - Math.max(0, Math.min(1, (rect.top - vh * 0.15) / (vh * 0.65)));
-      setExpandProgress(0.78 + raw * 0.22);
-    };
+    const el = cardRef.current;
+    if (!el) return;
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setHasEntered(true);
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        threshold: 0.18,
+        rootMargin: '0px 0px -40px 0px',
+      }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   return (
     <section className="relative py-16 lg:py-24 overflow-hidden z-10">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         {/* =====================================================================
-            PART 1: SCROLL-EXPANDING ACID-LIME MANIFESTO PANEL (frame_021.png)
+            PART 1: ONE-WAY SMOOTH ACID-LIME MANIFESTO PANEL (frame_020 -> 021)
            ===================================================================== */}
         <div
           ref={cardRef}
-          className="relative mx-auto rounded-[28px] bg-[#C8FF2E] text-[#050705] px-6 py-16 sm:py-24 lg:py-28 overflow-hidden shadow-[0_30px_100px_rgba(200,255,46,0.22)] transition-transform duration-200 ease-out mb-28 lg:mb-36"
+          className="relative mx-auto rounded-[28px] bg-[#C8FF2E] text-[#050705] px-6 py-16 sm:py-24 lg:py-28 overflow-hidden shadow-[0_30px_100px_rgba(200,255,46,0.22)] mb-28 lg:mb-36"
           style={{
-            transform: `scale(${expandProgress})`,
+            transform: hasEntered
+              ? 'translate3d(0, 0px, 0) scale(1)'
+              : 'translate3d(0, 32px, 0) scale(0.88)',
+            opacity: hasEntered ? 1 : 0,
+            transition:
+              'transform 820ms cubic-bezier(0.16, 1, 0.3, 1), opacity 620ms cubic-bezier(0.16, 1, 0.3, 1)',
+            willChange: 'transform, opacity',
           }}
         >
           {/* Fine dot-matrix texture matching frame_021.png */}
           <div className="absolute inset-0 bg-acid-dots opacity-45 pointer-events-none" />
 
-          <div className="relative z-10 max-w-3xl mx-auto text-center space-y-6">
+          <div
+            className="relative z-10 max-w-3xl mx-auto text-center space-y-6"
+            style={{
+              transform: hasEntered
+                ? 'translate3d(0, 0px, 0)'
+                : 'translate3d(0, 14px, 0)',
+              opacity: hasEntered ? 1 : 0,
+              transition:
+                'transform 750ms cubic-bezier(0.16, 1, 0.3, 1) 120ms, opacity 650ms ease 120ms',
+            }}
+          >
             <div className="text-[11.5px] font-mono tracking-wider text-[#050705]/65">
               [ what we are actually selling ]
             </div>
@@ -72,7 +96,7 @@ export function NetworkEcosystemSection() {
         </div>
 
         {/* =====================================================================
-            PART 2: RELIABILITY SECTION ("Simple in the ways that matter" — frame_022 & 024)
+            PART 2: RELIABILITY SECTION ("Quiet in the ways that matter" — frame_022 & 024)
            ===================================================================== */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-14">
           <div className="lg:col-span-7 space-y-4">
