@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Lock } from 'lucide-react';
+import {
+  SamsungLogo,
+  XiaomiLogo,
+  VivoLogo,
+  OppoLogo,
+} from './BrandLogos';
 
 export function NetworkEcosystemSection() {
   const cardRef = useRef<HTMLDivElement | null>(null);
@@ -145,17 +151,17 @@ export function NetworkEcosystemSection() {
                 </div>
 
                 {/* Top Left Brand Node */}
-                <div className="absolute left-[22%] top-[14px] flex flex-col items-center gap-1.5">
-                  <div className="w-9 h-9 rounded-xl bg-[#121612] border border-white/[0.1] flex items-center justify-center text-[10.5px] font-mono text-[#D2D8CE]">
-                    SM
+                <div className="absolute left-[20%] top-[10px] flex flex-col items-center gap-1.5">
+                  <div className="w-11 h-11 rounded-xl bg-[#121612] border border-white/[0.1] flex items-center justify-center text-[#D2D8CE] hover:border-[#C8FF2E]/40 hover:text-[#C8FF2E] transition-colors">
+                    <SamsungLogo className="w-8 h-8" />
                   </div>
                   <span className="text-[10.5px] font-mono text-[#6E786B]">samsung</span>
                 </div>
 
                 {/* Far Left Brand Node */}
-                <div className="absolute left-[6%] top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5">
-                  <div className="w-9 h-9 rounded-xl bg-[#121612] border border-white/[0.1] flex items-center justify-center text-[10.5px] font-mono text-[#D2D8CE]">
-                    XM
+                <div className="absolute left-[4%] top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5">
+                  <div className="w-11 h-11 rounded-xl bg-[#121612] border border-white/[0.1] flex items-center justify-center text-[#D2D8CE] hover:border-[#C8FF2E]/40 hover:text-[#C8FF2E] transition-colors">
+                    <XiaomiLogo className="w-4 h-4" />
                   </div>
                   <span className="text-[10.5px] font-mono text-[#6E786B]">xiaomi</span>
                 </div>
@@ -177,17 +183,17 @@ export function NetworkEcosystemSection() {
                 </div>
 
                 {/* Top Right Brand Node */}
-                <div className="absolute right-[22%] top-[14px] flex flex-col items-center gap-1.5">
-                  <div className="w-9 h-9 rounded-xl bg-[#121612] border border-white/[0.1] flex items-center justify-center text-[10.5px] font-mono text-[#D2D8CE]">
-                    VV
+                <div className="absolute right-[20%] top-[10px] flex flex-col items-center gap-1.5">
+                  <div className="w-11 h-11 rounded-xl bg-[#121612] border border-white/[0.1] flex items-center justify-center text-[#D2D8CE] hover:border-[#C8FF2E]/40 hover:text-[#C8FF2E] transition-colors">
+                    <VivoLogo className="w-7 h-7" />
                   </div>
                   <span className="text-[10.5px] font-mono text-[#6E786B]">vivo</span>
                 </div>
 
                 {/* Far Right Brand Node */}
-                <div className="absolute right-[6%] top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5">
-                  <div className="w-9 h-9 rounded-xl bg-[#121612] border border-white/[0.1] flex items-center justify-center text-[10.5px] font-mono text-[#D2D8CE]">
-                    OP
+                <div className="absolute right-[4%] top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5">
+                  <div className="w-11 h-11 rounded-xl bg-[#121612] border border-white/[0.1] flex items-center justify-center text-[#D2D8CE] hover:border-[#C8FF2E]/40 hover:text-[#C8FF2E] transition-colors">
+                    <OppoLogo className="w-7 h-7" />
                   </div>
                   <span className="text-[10.5px] font-mono text-[#6E786B]">oppo</span>
                 </div>

@@ -1,17 +1,27 @@
 import { useState } from 'react';
+import {
+  SamsungLogo,
+  XiaomiLogo,
+  VivoLogo,
+  OppoLogo,
+  RealmeLogo,
+  MotorolaLogo,
+  OnePlusLogo,
+  AndroidLogo,
+} from './BrandLogos';
 
 export function OemCompatibilityRow() {
   const [hoveredIdx, setHoveredIdx] = useState<number>(2);
 
   const brands = [
-    { code: 'SM', label: 'samsung' },
-    { code: 'XM', label: 'xiaomi' },
-    { code: 'VV', label: 'vivo' },
-    { code: 'OP', label: 'oppo' },
-    { code: 'RM', label: 'realme' },
-    { code: 'MT', label: 'motorola' },
-    { code: 'IQ', label: 'iqoo' },
-    { code: '+', label: '120+ more' },
+    { label: 'samsung', icon: <SamsungLogo className="w-9 h-9" /> },
+    { label: 'xiaomi', icon: <XiaomiLogo className="w-5 h-5" /> },
+    { label: 'vivo', icon: <VivoLogo className="w-8 h-8" /> },
+    { label: 'oppo', icon: <OppoLogo className="w-8 h-8" /> },
+    { label: 'realme', icon: <RealmeLogo className="w-5 h-5" /> },
+    { label: 'motorola', icon: <MotorolaLogo className="w-6 h-6" /> },
+    { label: 'oneplus', icon: <OnePlusLogo className="w-5 h-5" /> },
+    { label: '120+ more', icon: <AndroidLogo className="w-6 h-6" /> },
   ];
 
   return (
@@ -23,11 +33,11 @@ export function OemCompatibilityRow() {
           </span>
         </div>
 
-        {/* Connected Squircle Row (Matching frame_007.png & frame_012.png) */}
+        {/* Connected Squircle Row with Official Background-less Brand Vector Logos */}
         <div className="relative flex items-center justify-between gap-3 overflow-x-auto pb-2">
           {/* Subtle dotted horizontal line running behind the squircles */}
           <div
-            className="hidden sm:block absolute top-[26px] left-6 right-6 h-[1px] pointer-events-none -z-10"
+            className="hidden sm:block absolute top-[28px] left-6 right-6 h-[1px] pointer-events-none -z-10"
             style={{
               backgroundImage:
                 'linear-gradient(to right, rgba(255,255,255,0.12) 2px, transparent 2px)',
@@ -41,20 +51,21 @@ export function OemCompatibilityRow() {
               <div
                 key={item.label}
                 onMouseEnter={() => setHoveredIdx(idx)}
-                className="flex flex-col items-center gap-3 min-w-[68px] cursor-default group"
+                onClick={() => setHoveredIdx(idx)}
+                className="flex flex-col items-center gap-3 min-w-[72px] cursor-pointer group"
               >
                 <div
-                  className={`w-[52px] h-[52px] rounded-[15px] flex items-center justify-center font-mono text-[12px] transition-all duration-200 ${
+                  className={`w-[56px] h-[56px] rounded-[16px] flex items-center justify-center transition-all duration-200 ${
                     isHighlighted
-                      ? 'bg-[#1D2614]/90 border border-[#C8FF2E]/40 text-[#C8FF2E] shadow-[0_0_24px_rgba(200,255,46,0.18)]'
-                      : 'bg-[#0C100C]/90 border border-white/[0.08] text-[#9CA698] group-hover:border-white/[0.18] group-hover:text-[#F4F6F0]'
+                      ? 'bg-[#1D2614] border border-[#C8FF2E]/45 text-[#C8FF2E] shadow-[0_0_26px_rgba(200,255,46,0.2)]'
+                      : 'bg-[#0C100C] border border-white/[0.08] text-[#A2ACA0] group-hover:border-white/[0.18] group-hover:text-[#F4F6F0]'
                   }`}
                 >
-                  {item.code}
+                  {item.icon}
                 </div>
                 <span
                   className={`text-[11.5px] font-mono transition-colors ${
-                    isHighlighted ? 'text-[#D2D8CE]' : 'text-[#6E786B]'
+                    isHighlighted ? 'text-[#F4F6F0]' : 'text-[#6E786B]'
                   }`}
                 >
                   {item.label}
