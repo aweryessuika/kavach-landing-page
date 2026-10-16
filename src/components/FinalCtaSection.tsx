@@ -14,7 +14,7 @@ export function FinalCtaSection() {
 
   return (
     <section className="relative py-20 lg:py-28 overflow-hidden z-10">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <div className="w-full max-w-[95vw] 2xl:max-w-[1820px] mx-auto px-4 sm:px-7 lg:px-10">
         {/* Two-Column Split CTA (Exact match to frame_033.png & frame_035.png) */}
         <div
           data-reveal

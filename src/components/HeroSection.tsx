@@ -17,8 +17,8 @@ export function HeroSection({
       id="product"
       className="relative min-h-[88vh] pt-28 pb-12 lg:pt-36 lg:pb-20 flex items-center overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 w-full relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-6 items-center">
+      <div className="w-full max-w-[95vw] 2xl:max-w-[1820px] mx-auto px-4 sm:px-7 lg:px-10 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Editorial Headline & Human Copy */}
           <div className="lg:col-span-5 space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0B0F0B]/90 border border-white/[0.1] text-[11.5px] font-mono text-[#D2D8CE]">
@@ -26,18 +26,18 @@ export function HeroSection({
               <span>live across india / 120+ phone models</span>
             </div>
 
-            <h1 className="text-[42px] sm:text-[56px] lg:text-[62px] font-display font-semibold tracking-[-0.03em] text-[#F4F6F0] leading-[1.04]">
+            <h1 className="text-[40px] sm:text-[52px] xl:text-[60px] font-display font-semibold tracking-[-0.03em] text-[#F4F6F0] leading-[1.05]">
               <span className="sr-only">
                 Kavach (Kavach Lock &amp; Kavach EMI) — Smartphone Credit &amp; EMI Lock for Mobile Shops:{' '}
               </span>
-              Every phone you sell
+              <span className="sm:whitespace-nowrap">Every phone you sell</span>
               <br />
               <span className="font-serif italic font-normal text-[#F4F6F0] tracking-[-0.01em]">
                 comes back paid.
               </span>
             </h1>
 
-            <p className="text-[15.5px] sm:text-[16.5px] text-[#9CA698] max-w-[440px] leading-[1.6] font-normal">
+            <p className="text-[15.5px] sm:text-[16.5px] text-[#9CA698] max-w-[460px] leading-[1.6] font-normal">
               Kavach protects every smartphone you sell on credit or EMI, and lets you lock or unlock it with one tap whenever it matters.
             </p>
 

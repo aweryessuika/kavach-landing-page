@@ -26,7 +26,7 @@ export function OemCompatibilityRow() {
 
   return (
     <section className="relative py-12 lg:py-16 z-10">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <div className="w-full max-w-[95vw] 2xl:max-w-[1820px] mx-auto px-4 sm:px-7 lg:px-10">
         <div className="mb-7">
           <span className="text-[12px] font-mono text-[#6E786B] tracking-tight">
             works on every Android brand you sell, right out of the box

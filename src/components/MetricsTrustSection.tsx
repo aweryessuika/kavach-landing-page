@@ -16,7 +16,7 @@ export function MetricsTrustSection({ onExploreClick }: MetricsTrustSectionProps
       id="customers"
       className="relative py-24 lg:py-32 overflow-hidden z-10"
     >
-      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <div className="w-full max-w-[95vw] 2xl:max-w-[1820px] mx-auto px-4 sm:px-7 lg:px-10">
         {/* =====================================================================
             PART 1: NUMBERS WE DID NOT HAVE TO EXPLAIN AWAY (frame_027.png)
            ===================================================================== */}

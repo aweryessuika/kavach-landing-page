@@ -57,7 +57,7 @@ export function CommandCentreHero({ onOpenSimulation, onNotify }: CommandCentreH
       ref={containerRef}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="relative w-full max-w-[660px] mx-auto lg:mr-[-24px] select-none"
+      className="relative w-full max-w-[780px] mx-auto lg:ml-auto lg:mr-0 select-none"
       style={{
         perspective: '1300px',
       }}
@@ -139,7 +139,7 @@ export function CommandCentreHero({ onOpenSimulation, onNotify }: CommandCentreH
           </div>
 
           {/* Desktop SVG Node Graph with Traveling Signal Pulse */}
-          <div className="relative h-[225px] w-full">
+          <div className="relative h-[235px] w-full max-w-[620px] mx-auto">
             <svg
               viewBox="0 0 580 220"
               className="absolute inset-0 w-full h-full pointer-events-none"

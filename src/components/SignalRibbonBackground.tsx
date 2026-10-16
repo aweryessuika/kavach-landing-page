@@ -6,7 +6,10 @@ export function SignalRibbonBackground() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+    // CRITICAL FOR MOBILE GPUs (Adreno / Mali TBDR):
+    // Never use desynchronized: true (causes 40-50 purple/blue hardware tile glitch boxes on Android).
+    // Use alpha: false (opaque RGB buffer) for rock-solid double-buffered mobile compositing.
+    const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
 
     let animationFrameId = 0;
@@ -15,8 +18,7 @@ export function SignalRibbonBackground() {
     let height = 0;
     let maxScroll = 3000;
 
-    // Detect mobile or low-core laptop to scale GPU workload automatically
-    const isLowPowerDevice =
+    const isMobileOrLowPower =
       window.innerWidth < 768 ||
       (typeof navigator !== 'undefined' &&
         navigator.hardwareConcurrency &&
@@ -34,14 +36,30 @@ export function SignalRibbonBackground() {
       targetMouseY = e.clientY;
     };
 
-    const updateDimensions = () => {
+    const updateDimensions = (force = false) => {
       if (!canvas) return;
-      // Cap DPR at 1.0 on mobile/low-power and 1.35 on desktop to prevent GPU fill-rate lag
-      const maxDpr = isLowPowerDevice ? 1.0 : 1.35;
+      const newWidth = window.innerWidth;
+      const newHeight = window.innerHeight;
+
+      // On mobile, scrolling hides/shows the browser URL bar (changing innerHeight by ~60-120px).
+      // Ignore small vertical-only resizes so we never reallocate the GPU texture mid-scroll!
+      if (
+        !force &&
+        width > 0 &&
+        Math.abs(newWidth - width) < 4 &&
+        Math.abs(newHeight - height) < 180
+      ) {
+        maxScroll = Math.max(1, document.documentElement.scrollHeight - newHeight);
+        return;
+      }
+
+      const maxDpr = isMobileOrLowPower ? 1.0 : 1.35;
       const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
-      width = window.innerWidth;
-      height = window.innerHeight;
-      maxScroll = Math.max(1, document.documentElement.scrollHeight - height);
+      width = newWidth;
+      // Add slight vertical overscan on mobile so hiding the URL bar never leaves a gap
+      height = isMobileOrLowPower ? Math.max(newHeight, newHeight + 80) : newHeight;
+      maxScroll = Math.max(1, document.documentElement.scrollHeight - newHeight);
+
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -52,20 +70,20 @@ export function SignalRibbonBackground() {
       }
     };
 
-    window.addEventListener('pointermove', handlePointerMove, { passive: true });
-    window.addEventListener('resize', updateDimensions, { passive: true });
-    updateDimensions();
+    const handleResize = () => updateDimensions(false);
 
-    // Update cached scrollHeight once after fonts/layout settle (never inside rAF!)
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
+    updateDimensions(true);
+
     const settleTimer = window.setTimeout(() => {
-      maxScroll = Math.max(1, document.documentElement.scrollHeight - height);
+      maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     }, 600);
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Adaptive strand count: 30 on mobile/low-tier laptops, 48 on desktop
-    const STRAND_COUNT = isLowPowerDevice ? 30 : 48;
-    const alphaBoost = isLowPowerDevice ? 1.35 : 1.0;
+    const STRAND_COUNT = isMobileOrLowPower ? 28 : 46;
+    const alphaBoost = isMobileOrLowPower ? 1.3 : 1.0;
 
     const strands = Array.from({ length: STRAND_COUNT }, (_, i) => {
       const norm = i / (STRAND_COUNT - 1);
@@ -82,22 +100,22 @@ export function SignalRibbonBackground() {
         color = '#38BDF8';
       }
 
-      const rawAlpha = norm < 0.25 ? 0.16 : 0.068 + (1 - Math.abs(centered)) * 0.075;
+      const rawAlpha = norm < 0.25 ? 0.17 : 0.075 + (1 - Math.abs(centered)) * 0.08;
 
       return {
         index: i,
         norm,
         centered,
         color,
-        lineWidth: norm < 0.26 ? 1.45 : 0.7 + (1 - Math.abs(centered)) * 0.55,
-        baseAlpha: Math.min(0.32, rawAlpha * alphaBoost),
+        lineWidth: norm < 0.26 ? 1.45 : 0.75 + (1 - Math.abs(centered)) * 0.55,
+        baseAlpha: Math.min(0.34, rawAlpha * alphaBoost),
         angleOffset: centered * Math.PI * 0.92,
         speed: 0.0085 + (i % 6) * 0.0015,
         phaseOffset: i * 0.22,
       };
     });
 
-    const SPARK_COUNT = isLowPowerDevice ? 16 : 28;
+    const SPARK_COUNT = isMobileOrLowPower ? 14 : 26;
     const sparks = Array.from({ length: SPARK_COUNT }, (_, i) => ({
       u: Math.random(),
       radialOffset: (Math.random() - 0.5) * 180,
@@ -121,7 +139,6 @@ export function SignalRibbonBackground() {
     const render = () => {
       if (!isPageVisible) return;
 
-      // Pure numeric read — zero DOM layout/reflow inside rAF
       const rawScrollY = window.scrollY;
       smoothScrollY += (rawScrollY - smoothScrollY) * 0.075;
 
@@ -133,11 +150,14 @@ export function SignalRibbonBackground() {
 
       const s = Math.max(0, Math.min(1, smoothScrollY / maxScroll));
 
-      // Continuous angle transitions for the SAME silk ribbon across the page
       const wMid = smoothstep(0.08, 0.42, s);
       const wBot = smoothstep(0.58, 0.92, s);
 
-      ctx.clearRect(0, 0, width, height);
+      // Solid opaque background fill prevents any mobile tile alpha artifacts
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#050705';
+      ctx.fillRect(0, 0, width, height);
 
       const breathX = Math.sin(time * 0.011) * 15;
       const breathY = Math.cos(time * 0.009) * 13;
@@ -201,18 +221,18 @@ export function SignalRibbonBackground() {
         vertexY,
         Math.min(width, height) * 0.45
       );
-      vertexGlow.addColorStop(0, 'rgba(242, 255, 175, 0.33)');
-      vertexGlow.addColorStop(0.14, 'rgba(200, 255, 50, 0.19)');
+      vertexGlow.addColorStop(0, 'rgba(242, 255, 175, 0.32)');
+      vertexGlow.addColorStop(0.14, 'rgba(200, 255, 50, 0.18)');
       vertexGlow.addColorStop(0.4, 'rgba(110, 180, 35, 0.07)');
       vertexGlow.addColorStop(0.75, 'rgba(20, 80, 45, 0.02)');
-      vertexGlow.addColorStop(1, 'transparent');
+      vertexGlow.addColorStop(1, 'rgba(5, 7, 5, 0)');
 
       ctx.fillStyle = vertexGlow;
       ctx.fillRect(0, 0, width, height);
 
-      // 2. Native GPU Cubic-Bezier Silk Strands
+      // 2. Native GPU Cubic-Bezier Silk Strands ('screen' blend prevents mobile tile color overflow)
       ctx.save();
-      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalCompositeOperation = 'screen';
 
       const nx = -Math.sin(tangentAngle);
       const ny = Math.cos(tangentAngle);
@@ -356,7 +376,7 @@ export function SignalRibbonBackground() {
       window.clearTimeout(settleTimer);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('resize', updateDimensions);
+      window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);

@@ -1,7 +1,7 @@
 export function Footer() {
   return (
     <footer className="relative bg-[#040604] pt-8 pb-12 overflow-hidden text-[#9CA698] z-10">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <div className="w-full max-w-[95vw] 2xl:max-w-[1820px] mx-auto px-4 sm:px-7 lg:px-10">
         {/* Top 3-Item Status Bar (Exact match to frame_035.png) */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-10 border-b border-white/[0.07] text-[11.5px] font-mono text-[#6E786B]">
           <div className="flex items-center gap-2">

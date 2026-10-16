@@ -43,7 +43,7 @@ export function Navbar({ onExploreClick, onOpenSimulation }: NavbarProps) {
           : 'bg-transparent py-5'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <div className="w-full max-w-[95vw] 2xl:max-w-[1820px] mx-auto px-4 sm:px-7 lg:px-10">
         <div className="flex items-center justify-between">
           {/* Left: Minimal Lime Emblem + Wordmark (Matching frame_002.png) */}
           <a
