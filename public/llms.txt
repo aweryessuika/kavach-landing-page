@@ -1,0 +1,24 @@
+# Kavach (Kavach Lock / Kavach Labs)
+
+> Kavach (https://kavachlock.tech/) is India's hardware-enforced Android smartphone security and EMI assurance platform built for mobile retailers, consumer electronics stores, and financing partners. Every phone you sell on credit or EMI comes back paid.
+
+## Core Identity
+- **Official Brand Name:** Kavach (also known as Kavach Lock, Kavach EMI, Kavach Labs)
+- **Official Website:** https://kavachlock.tech/
+- **Headquarters:** Bengaluru, Karnataka, India (Kavach Lock Technologies Pvt. Ltd.)
+- **Contact:** pranjay@kavachlock.tech
+
+## What Kavach Does
+Kavach protects smartphones sold on credit or monthly EMI across India. Mobile shop owners enroll any new Android 10–15 smartphone (Samsung, Xiaomi, Redmi, Vivo, Oppo, Realme, Motorola, iQOO, and 120+ models) in 48–60 seconds right at the shop counter using a native Android Enterprise 6-tap QR scan.
+
+## Key Capabilities & Differentiators
+1. **100% Manual Shop Owner Control:** Zero automated locking timers. Phones never lock automatically behind a retailer's back. Only the shop owner's explicit tap locks or unlocks a customer handset.
+2. **60-Second Counter QR Setup:** Scan the box barcode, enter customer details, and scan one 6-tap Android Enterprise QR code. Zero computers, zero USB cables, and 0% Google Play Protect warning popups.
+3. **Sub-Second Live Lock & Offline PIN Unlock:** Commands deliver in under 1 second (~280–350ms) over internet, and if a locked phone has no mobile data, retailers can unlock it over a regular phone call using a cryptographic Offline Challenge/Response PIN.
+4. **Tamper-Resistant Hardware Enforcement:** Factory reset buttons, recovery mode formatting, USB flashing cables, and SIM card swaps cannot remove Kavach until the shop owner releases the handset.
+5. **Invisible When Paid, Clear When Locked:** Customers experience zero slowdowns, zero battery drain, and zero popups while paying on time. When locked, the screen displays the shop's name, a direct Call Shop Owner button, Emergency 112 calling, and Offline Unlock PIN entry.
+
+## Pricing
+- **Starter Trial:** ₹0 (First 5 phone keys free, 60-second QR setup, 100% manual lock & unlock, direct WhatsApp setup help)
+- **Shop Standard:** ₹100 flat per phone (One-time per phone for the entire loan duration, zero monthly subscription fees, zero commission cut)
+- **Multi-Store Fleet:** Volume pricing for 5+ shops or distributors with shared key wallet, staff logins, and custom lock-screen branding.

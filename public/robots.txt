@@ -1,0 +1,24 @@
+# Kavach — https://kavachlock.tech/
+User-agent: *
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+Host: https://kavachlock.tech
+Sitemap: https://kavachlock.tech/sitemap.xml
