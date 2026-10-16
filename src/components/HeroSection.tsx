@@ -27,6 +27,9 @@ export function HeroSection({
             </div>
 
             <h1 className="text-[42px] sm:text-[56px] lg:text-[62px] font-display font-semibold tracking-[-0.03em] text-[#F4F6F0] leading-[1.04]">
+              <span className="sr-only">
+                Kavach (Kavach Lock &amp; Kavach EMI) — Smartphone Credit &amp; EMI Lock for Mobile Shops:{' '}
+              </span>
               Every phone you sell
               <br />
               <span className="font-serif italic font-normal text-[#F4F6F0] tracking-[-0.01em]">

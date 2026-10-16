@@ -177,6 +177,14 @@ export function Footer() {
             </a>
           </p>
         </div>
+
+        {/* Persistent Post-Hydration Semantic Summary for Google WRS (Headless Chrome) */}
+        <div className="sr-only">
+          <h2>Kavach Lock (Kavach EMI) — Smartphone EMI Lock &amp; Credit Security for Indian Mobile Retailers</h2>
+          <p>
+            Kavach (official domain kavachlock.tech, developed by Kavach Labs / Kavach Lock Technologies Pvt. Ltd. in Bengaluru, India) is a hardware-enforced Android smartphone security and EMI assurance platform. Mobile shop owners use the Kavach Retailer App and 60-second Android Enterprise 6-tap QR setup to protect phones sold on credit or monthly EMI across Samsung, Xiaomi, Redmi, Vivo, Oppo, Realme, Motorola, and iQOO with 100% manual shop owner lock and unlock control, zero Google Play Protect warnings, anti-reset hardware enforcement, and offline PIN unlock.
+          </p>
+        </div>
       </div>
     </footer>
   );
