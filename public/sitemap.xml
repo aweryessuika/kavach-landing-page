@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://kavachlock.tech/</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <image:image>
-      <image:loc>https://kavachlock.tech/og-image.png</image:loc>
-      <image:title>Kavach — Hardware-Enforced Smartphone Security &amp; EMI Assurance</image:title>
-      <image:caption>Kavach protects every Android smartphone sold on credit or EMI with 60-second QR counter setup, 100% manual retailer lock/unlock control, and offline PIN unlock.</image:caption>
-    </image:image>
   </url>
 </urlset>
