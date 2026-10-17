@@ -19,6 +19,6 @@ Kavach protects smartphones sold on credit or monthly EMI across India. Mobile s
 5. **Invisible When Paid, Clear When Locked:** Customers experience zero slowdowns, zero battery drain, and zero popups while paying on time. When locked, the screen displays the shop's name, a direct Call Shop Owner button, Emergency 112 calling, and Offline Unlock PIN entry.
 
 ## Pricing
-- **Starter Trial:** ₹0 (First 5 phone keys free, 60-second QR setup, 100% manual lock & unlock, direct WhatsApp setup help)
+- **Starter Trial:** ₹0 (First 10 phone keys free, 60-second QR setup, 100% manual lock & unlock, direct WhatsApp setup help)
 - **Shop Standard:** ₹100 flat per phone (One-time per phone for the entire loan duration, zero monthly subscription fees, zero commission cut)
 - **Multi-Store Fleet:** Volume pricing for 5+ shops or distributors with shared key wallet, staff logins, and custom lock-screen branding.

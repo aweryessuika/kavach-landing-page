@@ -83,7 +83,7 @@ export function Navbar({ onExploreClick, onOpenSimulation }: NavbarProps) {
             ))}
           </nav>
 
-          {/* Right: Status Pill + Start Free CTA */}
+          {/* Right: Status Pill + Shop Login + APK + Start Free CTA */}
           <div className="hidden sm:flex items-center gap-3">
             <button
               type="button"
@@ -94,6 +94,24 @@ export function Navbar({ onExploreClick, onOpenSimulation }: NavbarProps) {
               <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E] shadow-[0_0_8px_#C8FF2E]" />
               <span>all systems normal</span>
             </button>
+
+            <a
+              href="https://13.205.109.18.sslip.io/api/retailer/download/kavach-retailer.apk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden lg:inline-flex items-center px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.09] border border-white/[0.08] text-[12px] font-mono text-[#9CA698] hover:text-[#F4F6F0] transition-colors"
+            >
+              Android APK
+            </a>
+
+            <a
+              href="https://13.205.109.18.sslip.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.11] border border-white/[0.1] text-[12px] font-medium text-[#F4F6F0] transition-colors"
+            >
+              Shop Login
+            </a>
 
             <button
               type="button"
@@ -150,6 +168,27 @@ export function Navbar({ onExploreClick, onOpenSimulation }: NavbarProps) {
               <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E]" />
               <span>Try live phone lock preview</span>
             </button>
+
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <a
+                href="https://13.205.109.18.sslip.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 px-3 rounded-xl bg-white/[0.07] border border-white/10 text-xs font-medium text-[#F4F6F0] text-center"
+              >
+                Shop Login
+              </a>
+              <a
+                href="https://13.205.109.18.sslip.io/api/retailer/download/kavach-retailer.apk"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 px-3 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-mono text-[#C8FF2E] text-center"
+              >
+                Android APK
+              </a>
+            </div>
           </div>
         </div>
       )}

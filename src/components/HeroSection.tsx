@@ -61,7 +61,7 @@ export function HeroSection({
             </div>
 
             <div className="pt-1 text-[11.5px] font-mono text-[#6E786B] tracking-tight">
-              first 5 phones free / ₹100 per phone / no monthly fees
+              first 10 phones free / ₹100 per phone / no monthly fees
             </div>
           </div>
 

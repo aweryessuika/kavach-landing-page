@@ -1,13 +1,34 @@
 import { useState } from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, ExternalLink, Download, Loader2 } from 'lucide-react';
 
 export function FinalCtaSection() {
   const [contact, setContact] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (contact.trim()) {
+    const trimmed = contact.trim();
+    if (!trimmed || submitting) return;
+
+    setSubmitting(true);
+    try {
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 6000);
+      await fetch('https://13.205.109.18.sslip.io/api/public/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contact: trimmed,
+          source: 'kavachlock.tech-cta',
+        }),
+        signal: controller.signal,
+      });
+      window.clearTimeout(timeoutId);
+    } catch {
+      // Graceful fallback if backend is offline or unreachable from client network
+    } finally {
+      setSubmitting(false);
       setSubmitted(true);
     }
   };
@@ -74,13 +95,28 @@ export function FinalCtaSection() {
               <div className="flex items-center gap-2">
                 {[
                   { label: 'em', href: 'mailto:pranjay@kavachlock.tech' },
-                  { label: 'wa', href: 'mailto:pranjay@kavachlock.tech' },
-                  { label: 'in', href: '#contact' },
-                  { label: 'gh', href: 'https://github.com/aweryessuika/kavach-landing-page' },
+                  {
+                    label: 'wa',
+                    href: 'https://wa.me/919109300253?text=Hi%20Kavach%20team%2C%20I%20want%20to%20start%20my%2010%20free%20phone%20keys%20trial',
+                  },
+                  {
+                    label: 'in',
+                    href: 'https://www.linkedin.com/in/pranjayrathore',
+                  },
+                  {
+                    label: 'gh',
+                    href: 'https://github.com/aweryessuika/kavach-landing-page',
+                  },
                 ].map((item) => (
                   <a
                     key={item.label}
                     href={item.href}
+                    target={item.href.startsWith('http') ? '_blank' : undefined}
+                    rel={
+                      item.href.startsWith('http')
+                        ? 'noopener noreferrer'
+                        : undefined
+                    }
                     className="w-7 h-7 rounded-md bg-white/[0.05] hover:bg-white/[0.11] border border-white/[0.08] flex items-center justify-center text-[10.5px] font-mono text-[#9CA698] hover:text-[#F4F6F0] transition-colors"
                   >
                     {item.label}
@@ -109,17 +145,17 @@ export function FinalCtaSection() {
               </h2>
 
               <p className="text-[14.5px] sm:text-[15.5px] text-[#050705]/80 max-w-lg leading-[1.55]">
-                Start with 5 free phone keys. If Kavach does not set up cleanly at your counter in under a minute, we will tell you so.
+                Start with 10 free phone keys. If Kavach does not set up cleanly at your counter in under a minute, we will tell you so.
               </p>
             </div>
 
             {/* Integrated White Pill Input with Embedded Black Button (Exact match to frame_035.png) */}
-            <div className="relative z-10 pt-7">
+            <div className="relative z-10 pt-7 space-y-3.5">
               {submitted ? (
                 <div className="p-4 rounded-2xl bg-[#0A0E0A] text-[#F4F6F0] flex items-center gap-3 shadow-xl">
                   <CheckCircle2 className="w-5 h-5 text-[#C8FF2E] shrink-0" />
                   <div className="text-[12.5px] font-mono">
-                    We received <span className="text-[#C8FF2E] font-semibold">{contact}</span>. Your 5 free trial keys are being sent right now.
+                    We received <span className="text-[#C8FF2E] font-semibold">{contact}</span>. Your 10 free trial keys are ready — sign in or install the Retailer App below.
                   </div>
                 </div>
               ) : (
@@ -130,19 +166,50 @@ export function FinalCtaSection() {
                   <input
                     type="text"
                     required
+                    disabled={submitting}
                     value={contact}
                     onChange={(e) => setContact(e.target.value)}
                     placeholder="Phone number or work email"
-                    className="w-full bg-transparent text-[#050705] placeholder:text-[#050705]/45 text-[14px] font-sans focus:outline-none pr-3"
+                    className="w-full bg-transparent text-[#050705] placeholder:text-[#050705]/45 text-[14px] font-sans focus:outline-none pr-3 disabled:opacity-60"
                   />
                   <button
                     type="submit"
-                    className="btn-press px-6 py-2.5 rounded-full bg-[#0A0E0A] hover:bg-[#171E17] text-[#F4F6F0] font-semibold text-[13px] shrink-0"
+                    disabled={submitting}
+                    className="btn-press px-6 py-2.5 rounded-full bg-[#0A0E0A] hover:bg-[#171E17] text-[#F4F6F0] font-semibold text-[13px] shrink-0 flex items-center gap-2 disabled:opacity-75"
                   >
-                    Start free
+                    {submitting ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#C8FF2E]" />
+                        <span>Starting...</span>
+                      </>
+                    ) : (
+                      <span>Start free</span>
+                    )}
                   </button>
                 </form>
               )}
+
+              {/* Direct Retailer Launch & APK Download Actions */}
+              <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                <a
+                  href="https://13.205.109.18.sslip.io"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-press inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0A0E0A] hover:bg-[#171E17] text-[#F4F6F0] text-[12px] font-mono font-medium shadow-md transition-colors"
+                >
+                  <span>Open Retailer Web App</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-[#C8FF2E]" />
+                </a>
+                <a
+                  href="https://13.205.109.18.sslip.io/api/retailer/download/kavach-retailer.apk"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-press inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#050705]/10 hover:bg-[#050705]/20 border border-[#050705]/25 text-[#050705] text-[12px] font-mono font-semibold transition-colors"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download Android APK</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>

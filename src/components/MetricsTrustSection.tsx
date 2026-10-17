@@ -225,7 +225,7 @@ export function MetricsTrustSection({ onExploreClick }: MetricsTrustSectionProps
                 </div>
 
                 <div className="text-[12px] font-mono text-[#9CA698]">
-                  ₹100 flat per phone · first 5 keys free
+                  ₹100 flat per phone · first 10 keys free
                 </div>
 
                 <div className="pt-2">
@@ -253,13 +253,13 @@ export function MetricsTrustSection({ onExploreClick }: MetricsTrustSectionProps
                   ₹0
                 </div>
                 <div className="text-[12px] font-mono text-[#6E786B] mb-7">
-                  first 5 phones free
+                  first 10 phones free
                 </div>
 
                 <ul className="space-y-3 text-[13.5px] text-[#9CA698] mb-8">
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#9CA698] shrink-0" />
-                    <span>5 full phone keys included</span>
+                    <span>10 full phone keys included</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#9CA698] shrink-0" />

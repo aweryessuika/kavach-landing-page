@@ -78,6 +78,26 @@ export function Footer() {
                     Pricing
                   </a>
                 </li>
+                <li>
+                  <a
+                    href="https://13.205.109.18.sslip.io"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#C8FF2E] transition-colors"
+                  >
+                    Shop Login
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://13.205.109.18.sslip.io/api/retailer/download/kavach-retailer.apk"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#C8FF2E] transition-colors"
+                  >
+                    Android APK
+                  </a>
+                </li>
               </ul>
             </div>
 
