@@ -103,27 +103,27 @@ export function Footer() {
 
             <div>
               <span className="font-mono text-[11.5px] text-[#6E786B] block mb-3.5">
-                features
+                guides
               </span>
               <ul className="space-y-2.5 text-[#9CA698]">
                 <li>
-                  <a href="#how-it-works" className="hover:text-[#F4F6F0] transition-colors">
-                    Manual Lock
+                  <a href="/emi-locker-app" className="hover:text-[#F4F6F0] transition-colors">
+                    EMI Locker App
                   </a>
                 </li>
                 <li>
-                  <a href="#how-it-works" className="hover:text-[#F4F6F0] transition-colors">
-                    Offline PIN
+                  <a href="/emi-locker-price" className="hover:text-[#F4F6F0] transition-colors">
+                    EMI Locker Price
                   </a>
                 </li>
                 <li>
-                  <a href="#how-it-works" className="hover:text-[#F4F6F0] transition-colors">
-                    Anti-Reset
+                  <a href="/best-emi-locker-app-india" className="hover:text-[#F4F6F0] transition-colors">
+                    Best EMI Lockers
                   </a>
                 </li>
                 <li>
-                  <a href="#customers" className="hover:text-[#F4F6F0] transition-colors">
-                    Shop Stories
+                  <a href="/alternatives" className="hover:text-[#F4F6F0] transition-colors">
+                    Alternatives
                   </a>
                 </li>
               </ul>

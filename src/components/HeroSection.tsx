@@ -23,12 +23,12 @@ export function HeroSection({
           <div className="lg:col-span-5 space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0B0F0B]/90 border border-white/[0.1] text-[11.5px] font-mono text-[#D2D8CE]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E] shadow-[0_0_8px_#C8FF2E]" />
-              <span>live across india / 120+ phone models</span>
+              <span>emi locker app / live across india / 120+ phone models</span>
             </div>
 
             <h1 className="text-[40px] sm:text-[52px] xl:text-[60px] font-display font-semibold tracking-[-0.03em] text-[#F4F6F0] leading-[1.05]">
               <span className="sr-only">
-                Kavach (Kavach Lock &amp; Kavach EMI) — Smartphone Credit &amp; EMI Lock for Mobile Shops:{' '}
+                Kavach (Kavach Lock &amp; Kavach EMI) — the EMI locker app for Indian mobile shops:{' '}
               </span>
               <span className="sm:whitespace-nowrap">Every phone you sell</span>
               <br />
@@ -38,7 +38,7 @@ export function HeroSection({
             </h1>
 
             <p className="text-[15.5px] sm:text-[16.5px] text-[#9CA698] max-w-[460px] leading-[1.6] font-normal">
-              Kavach protects every smartphone you sell on credit or EMI, and lets you lock or unlock it with one tap whenever it matters.
+              Kavach is the EMI locker app for Indian mobile shops. It protects every smartphone you sell on credit or EMI, and lets you lock or unlock it with one tap whenever it matters.
             </p>
 
             <div className="flex flex-wrap items-center gap-3.5 pt-1">
