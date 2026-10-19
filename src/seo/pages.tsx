@@ -1,5 +1,5 @@
 import { COMPETITORS, KAVACH_PROFILE, type ProductProfile } from './competitors';
-import { KAVACH_FACTS, RETAILER_APK_URL, RETAILER_APP_URL } from './site';
+import { KAVACH_FACTS, RETAILER_APK_URL, RETAILER_APP_URL, whatsappUrl } from './site';
 import {
   CardGrid,
   CompareTable,
@@ -38,7 +38,7 @@ export function EmiLockerAppPage() {
         eyebrow="emi locker app / android / india"
         title="The EMI locker app for"
         accent="Indian mobile shops."
-        intro={`Kavach locks a phone you sold on EMI when the customer stops paying, and unlocks it the moment they pay. You set it up at the counter in about ${KAVACH_FACTS.averageSetupSeconds} seconds and pay ${KAVACH_FACTS.pricePerPhone} per phone. The first ${KAVACH_FACTS.freePhones} phones are free.`}
+        intro={`Kavach locks a phone you sold on EMI when the customer stops paying, and unlocks it the moment they pay. You set it up at the counter in about ${KAVACH_FACTS.averageSetupSeconds} seconds, and you decide every lock yourself. The first ${KAVACH_FACTS.freePhones} phones are free.`}
       >
         <div className="flex flex-wrap gap-3 pt-2">
           <PrimaryLink href="/#contact">Start free with 10 phones</PrimaryLink>
@@ -94,8 +94,8 @@ export function EmiLockerAppPage() {
               body: 'Kavach uses official Android Enterprise setup, so customers do not see scary security pop ups on their new phone.',
             },
             {
-              title: 'One price per phone',
-              body: `${KAVACH_FACTS.pricePerPhone} covers the full loan, whether it runs 3 months or 12. No monthly subscription and no cut of your EMI.`,
+              title: 'Pay once per phone',
+              body: 'One payment covers the full loan, whether it runs 3 months or 12, at a price set for your shop. No monthly subscription and no cut of your EMI.',
             },
             {
               title: 'Your shop on the lock screen',
@@ -114,7 +114,7 @@ export function EmiLockerAppPage() {
           <p>
             Comparing options? Read our honest{' '}
             <InlineLink href="/best-emi-locker-app-india">comparison of EMI locker apps in India</InlineLink> or see{' '}
-            <InlineLink href="/emi-locker-price">what an EMI locker key costs</InlineLink>.
+            <InlineLink href="/emi-locker-price">how EMI locker pricing works</InlineLink>.
           </p>
         </Prose>
       </Section>
@@ -144,7 +144,7 @@ export function EmiLockerAppHindiPage() {
         eyebrow="emi locker app / हिंदी"
         title="मोबाइल दुकान के लिए"
         accent="EMI locker ऐप।"
-        intro={`ग्राहक ने किस्त नहीं भरी? Kavach से आप EMI पर बेचा हुआ फ़ोन लॉक कर सकते हैं, और पैसे मिलते ही अनलॉक। काउंटर पर सेटअप लगभग ${KAVACH_FACTS.averageSetupSeconds} सेकंड में होता है। हर फ़ोन का ${KAVACH_FACTS.pricePerPhone}, पहले ${KAVACH_FACTS.freePhones} फ़ोन फ्री।`}
+        intro={`ग्राहक ने किस्त नहीं भरी? Kavach से आप EMI पर बेचा हुआ फ़ोन लॉक कर सकते हैं, और पैसे मिलते ही अनलॉक। काउंटर पर सेटअप लगभग ${KAVACH_FACTS.averageSetupSeconds} सेकंड में होता है, और हर लॉक का फ़ैसला आपका। पहले ${KAVACH_FACTS.freePhones} फ़ोन फ्री।`}
       >
         <div className="flex flex-wrap gap-3 pt-2">
           <PrimaryLink href="/#contact">{KAVACH_FACTS.freePhones} फ़ोन फ्री में शुरू करें</PrimaryLink>
@@ -200,8 +200,8 @@ export function EmiLockerAppHindiPage() {
               body: 'Kavach Android Enterprise के ऑफ़िशियल तरीके से लगता है, इसलिए ग्राहक को नए फ़ोन पर डराने वाले security पॉप-अप नहीं दिखते।',
             },
             {
-              title: 'हर फ़ोन का एक दाम',
-              body: `${KAVACH_FACTS.pricePerPhone} में पूरा लोन कवर, चाहे किस्त 3 महीने की हो या 12 की। न महीने की फ़ीस, न आपकी EMI में कोई हिस्सा।`,
+              title: 'हर फ़ोन का एक बार दाम',
+              body: 'एक बार का दाम पूरा लोन कवर करता है, चाहे किस्त 3 महीने की हो या 12 की। दाम आपकी दुकान के हिसाब से तय होता है। न महीने की फ़ीस, न आपकी EMI में कोई हिस्सा।',
             },
             {
               title: 'लॉक स्क्रीन पर आपकी दुकान',
@@ -220,7 +220,7 @@ export function EmiLockerAppHindiPage() {
           <p>
             दूसरे ऐप से तुलना करनी है? पढ़ें{' '}
             <InlineLink href="/best-emi-locker-app-india">भारत के EMI locker ऐप्स की तुलना</InlineLink> या देखें{' '}
-            <InlineLink href="/emi-locker-price">एक EMI locker key का दाम</InlineLink>। ये पेज अंग्रेज़ी में हैं।
+            <InlineLink href="/emi-locker-price">EMI locker का दाम कैसे तय होता है</InlineLink>। ये पेज अंग्रेज़ी में हैं।
           </p>
         </Prose>
       </Section>
@@ -296,7 +296,23 @@ export function BestEmiLockerPage() {
   );
 }
 
-const PRICE_EXAMPLES = [5, 20, 40, 100];
+const PRICE_FACTORS = [
+  {
+    title: 'How many phones you sell on EMI',
+    body: 'A shop that protects more phones each month pays less per phone than a shop that protects a few.',
+  },
+  {
+    title: 'Which brands you sell',
+    body: 'Tell us your usual mix, for example mostly Vivo and Redmi, or mostly Samsung.',
+  },
+  {
+    title: 'One shop or many',
+    body: 'Shops with 5 or more branches and distributors get volume terms, a shared key wallet, staff logins and their own branding on the lock screen.',
+  },
+];
+
+const PRICE_QUOTE_MESSAGE =
+  'Namaste Kavach team, I run a mobile shop and want the EMI locker price for my shop. I sell about ___ phones on EMI a month.';
 
 export function EmiLockerPricePage() {
   return (
@@ -304,68 +320,29 @@ export function EmiLockerPricePage() {
       <PageHero
         eyebrow="emi locker price / per phone"
         title="EMI locker price:"
-        accent={`${KAVACH_FACTS.pricePerPhone} per phone, once.`}
-        intro={`With Kavach you buy one key per phone you protect. A key costs ${KAVACH_FACTS.pricePerPhone} and covers that phone for the whole loan. The first ${KAVACH_FACTS.freePhones} keys are free, and there is no monthly fee.`}
+        accent="paid once per phone, priced for your shop."
+        intro={`With Kavach you pay once for each phone you protect, and that covers the phone for the whole loan. There is no monthly fee and no cut of your EMI. The per phone price depends on your shop, so we quote it on WhatsApp. The first ${KAVACH_FACTS.freePhones} phones are free.`}
       >
         <div className="flex flex-wrap gap-3 pt-2">
-          <PrimaryLink href="/#contact">Get 10 free keys</PrimaryLink>
+          <PrimaryLink href={whatsappUrl(PRICE_QUOTE_MESSAGE)}>Get my price on WhatsApp</PrimaryLink>
+          <SecondaryLink href="/#contact">Start free with {KAVACH_FACTS.freePhones} phones</SecondaryLink>
         </div>
       </PageHero>
 
-      <Section title="Kavach plans">
-        <ul className="grid gap-4 md:grid-cols-3">
-          <li className="rounded-2xl border border-white/[0.08] bg-[#0B0F0B] p-6 space-y-2">
-            <h3 className="text-lg font-semibold">Starter trial</h3>
-            <p className="font-display text-4xl font-semibold text-[#F4F6F0]">₹0</p>
-            <p className="text-base text-[#9CA698] text-pretty">
-              First {KAVACH_FACTS.freePhones} phones free, full features, setup help on WhatsApp.
-            </p>
-          </li>
-          <li className="rounded-2xl border border-[#C8FF2E]/40 bg-[#0B0F0B] p-6 space-y-2">
-            <h3 className="text-lg font-semibold">Shop standard</h3>
-            <p className="font-display text-4xl font-semibold text-[#C8FF2E]">{KAVACH_FACTS.pricePerPhone}</p>
-            <p className="text-base text-[#9CA698] text-pretty">
-              Per phone, one time, for the entire loan. Offline PIN unlock and reset protection included.
-            </p>
-          </li>
-          <li className="rounded-2xl border border-white/[0.08] bg-[#0B0F0B] p-6 space-y-2">
-            <h3 className="text-lg font-semibold">Multi store</h3>
-            <p className="font-display text-4xl font-semibold text-[#F4F6F0]">Volume</p>
-            <p className="text-base text-[#9CA698] text-pretty">
-              For 5+ shops or distributors. Shared key wallet, staff logins and your branding on the lock screen.
-            </p>
-          </li>
-        </ul>
+      <Section title="What your price depends on">
+        <CardGrid items={PRICE_FACTORS} />
       </Section>
 
-      <Section title="What you pay each month">
-        <div className="overflow-x-auto rounded-2xl border border-white/[0.08] max-w-2xl">
-          <table className="w-full text-left text-base">
-            <caption className="sr-only">Kavach cost by phones sold on EMI per month</caption>
-            <thead className="bg-[#0B0F0B]">
-              <tr>
-                <th scope="col" className="p-4 font-mono text-xs text-[#6E786B] font-normal">
-                  phones sold on emi per month
-                </th>
-                <th scope="col" className="p-4 font-mono text-xs text-[#6E786B] font-normal">
-                  kavach cost
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/[0.07]">
-              {PRICE_EXAMPLES.map((phones) => (
-                <tr key={phones}>
-                  <td className="p-4 text-[#F4F6F0]">{phones} phones</td>
-                  <td className="p-4 text-[#9CA698]">₹{(phones * KAVACH_FACTS.pricePerPhoneInr).toLocaleString('en-IN')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <Section title="What one payment covers">
         <Prose>
-          <p className="mt-6">
-            One phone that never gets paid off usually costs a shop more than a year of Kavach keys. That is the real
-            comparison to make.
+          <p>
+            One payment protects one phone from the day you set it up until you release it at the end of the loan,
+            whether the loan runs 3 months or 12. It includes the lock and unlock from your app, unlock without
+            internet over a phone call, and protection against factory reset and flashing.
+          </p>
+          <p>
+            You never pay a monthly subscription, and Kavach never takes a share of your customer’s EMI. One phone
+            that is never paid off usually costs a shop far more than protecting every phone it sells on EMI.
           </p>
         </Prose>
       </Section>

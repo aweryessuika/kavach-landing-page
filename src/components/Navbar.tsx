@@ -1,12 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { RETAILER_APP_URL } from '../seo/site';
+import { KavachMark } from './KavachMark';
 
 interface NavbarProps {
   onExploreClick?: () => void;
-  onOpenSimulation?: () => void;
 }
 
-export function Navbar({ onExploreClick, onOpenSimulation }: NavbarProps) {
+const NAV_LINKS = [
+  { name: 'How it works', href: '#how-it-works' },
+  { name: 'Lock screen', href: '#lock-screen' },
+  { name: 'Get your price', href: '#pricing' },
+];
+
+const focusRing =
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8FF2E]';
+
+export function Navbar({ onExploreClick }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -18,124 +28,84 @@ export function Navbar({ onExploreClick, onOpenSimulation }: NavbarProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Product', href: '#product' },
-    { name: 'How it works', href: '#how-it-works' },
-    { name: 'Daily view', href: '#daily-view' },
-    { name: 'Customers', href: '#customers' },
-    { name: 'Pricing', href: '#pricing' },
-  ];
-
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setMobileMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Solid background once scrolled: a backdrop blur that repaints on every scroll frame
+  // is too heavy for the budget Android phones our retailers use.
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-[#050705]/80 backdrop-blur-xl border-b border-white/[0.06] py-3.5'
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
+        scrolled || mobileMenuOpen
+          ? 'bg-[#050705]/95 border-b border-white/[0.06] py-3.5'
           : 'bg-transparent py-5'
       }`}
     >
       <div className="w-full max-w-[95vw] 2xl:max-w-[1820px] mx-auto px-4 sm:px-7 lg:px-10">
-        <div className="flex items-center justify-between">
-          {/* Left: Minimal Lime Emblem + Wordmark (Matching frame_002.png) */}
-          <a
-            href="#"
-            className="flex items-center gap-2.5 group focus:outline-none"
-          >
-            <div className="w-7 h-7 rounded-[9px] bg-[#C8FF2E] text-[#050705] flex items-center justify-center shadow-[0_0_18px_rgba(200,255,46,0.35)] transition-transform duration-200 group-hover:scale-105">
-              <svg
-                viewBox="0 0 20 20"
-                fill="none"
-                className="w-4 h-4"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M5.5 5.5L10 10L5.5 14.5" />
-                <path d="M10.5 5.5L15 10L10.5 14.5" />
-              </svg>
-            </div>
+        <div className="flex items-center justify-between gap-6">
+          <a href="#" className={`flex items-center gap-2.5 rounded-lg ${focusRing}`}>
+            <KavachMark />
             <span className="font-display font-semibold tracking-tight text-[16px] text-[#F4F6F0]">
               Kavach
             </span>
           </a>
 
-          {/* Centre Navigation: Quiet, borderless links matching frame_002.png */}
-          <nav className="hidden md:flex items-center gap-7">
-            {navLinks.map((link) => (
+          <nav aria-label="Main" className="hidden md:flex items-center gap-7">
+            {NAV_LINKS.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-[13px] font-normal text-[#9CA698] hover:text-[#F4F6F0] transition-colors duration-150"
+                className={`text-[13.5px] whitespace-nowrap text-[#9CA698] hover:text-[#F4F6F0] transition-colors duration-150 rounded ${focusRing}`}
               >
                 {link.name}
               </a>
             ))}
           </nav>
 
-          {/* Right: Status Pill + Shop Login + APK + Start Free CTA */}
-          <div className="hidden sm:flex items-center gap-3">
-            <button
-              type="button"
-              onClick={onOpenSimulation}
-              className="btn-press cursor-pointer flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0B0F0B]/85 border border-white/[0.1] text-[11.5px] font-mono text-[#D2D8D0] hover:border-[#C8FF2E]/35 transition-colors"
-              title="Open interactive phone lock preview"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E] shadow-[0_0_8px_#C8FF2E]" />
-              <span>all systems normal</span>
-            </button>
-
+          <div className="hidden md:flex items-center gap-5">
             <a
-              href="https://13.205.109.18.sslip.io/api/retailer/download/kavach-retailer.apk"
+              href="/hi/emi-locker-app"
+              hrefLang="hi-IN"
+              lang="hi-IN"
+              className={`text-[13.5px] text-[#9CA698] hover:text-[#F4F6F0] transition-colors rounded ${focusRing}`}
+            >
+              हिंदी
+            </a>
+            <a
+              href={RETAILER_APP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden lg:inline-flex items-center px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.09] border border-white/[0.08] text-[12px] font-mono text-[#9CA698] hover:text-[#F4F6F0] transition-colors"
+              className={`text-[13.5px] whitespace-nowrap text-[#9CA698] hover:text-[#F4F6F0] transition-colors rounded ${focusRing}`}
             >
-              Android APK
+              Shop login
             </a>
-
-            <a
-              href="https://13.205.109.18.sslip.io"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.11] border border-white/[0.1] text-[12px] font-medium text-[#F4F6F0] transition-colors"
-            >
-              Shop Login
-            </a>
-
             <button
               type="button"
               onClick={onExploreClick}
-              className="btn-press px-4 py-1.5 rounded-full bg-[#C8FF2E] hover:bg-[#D5FF54] text-[#050705] font-semibold text-[12.5px] tracking-tight shadow-[0_0_22px_rgba(200,255,46,0.28)]"
+              className={`btn-press px-4 py-2 rounded-full bg-[#C8FF2E] hover:bg-[#D5FF54] text-[#050705] font-semibold text-[13px] whitespace-nowrap ${focusRing}`}
             >
               Start free
             </button>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center gap-2.5">
             <button
               type="button"
               onClick={onExploreClick}
-              className="btn-press px-3.5 py-1.5 rounded-full bg-[#C8FF2E] text-[#050705] font-semibold text-xs"
+              className={`btn-press px-3.5 py-1.5 rounded-full bg-[#C8FF2E] text-[#050705] font-semibold text-xs ${focusRing}`}
             >
               Start free
             </button>
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg bg-white/[0.05] border border-white/10 text-[#F4F6F0]"
-              aria-label="Toggle menu"
+              className={`p-2 rounded-lg bg-white/[0.05] border border-white/10 text-[#F4F6F0] ${focusRing}`}
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -143,52 +113,35 @@ export function Navbar({ onExploreClick, onOpenSimulation }: NavbarProps) {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden mt-3 px-5 pb-6 pt-3 bg-[#050705]/95 backdrop-blur-2xl border-b border-white/[0.08]">
-          <div className="flex flex-col gap-2">
-            {navLinks.map((link) => (
+        <div className="md:hidden mt-3 px-5 pb-6 pt-3 border-t border-white/[0.06]">
+          <div className="flex flex-col gap-1">
+            {NAV_LINKS.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-sm text-[#9CA698] hover:text-[#F4F6F0] py-2 px-2 rounded-lg"
+                className={`text-[15px] text-[#D2D8CE] hover:text-[#F4F6F0] py-2.5 px-2 rounded-lg ${focusRing}`}
               >
                 {link.name}
               </a>
             ))}
-            <button
-              type="button"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenSimulation?.();
-              }}
-              className="mt-2 w-full py-2.5 px-4 rounded-xl bg-white/[0.06] border border-white/10 text-xs font-mono text-[#F4F6F0] text-left flex items-center gap-2"
+            <a
+              href="/hi/emi-locker-app"
+              hrefLang="hi-IN"
+              lang="hi-IN"
+              className={`text-[15px] text-[#D2D8CE] hover:text-[#F4F6F0] py-2.5 px-2 rounded-lg ${focusRing}`}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF2E]" />
-              <span>Try live phone lock preview</span>
-            </button>
-
-            <div className="grid grid-cols-2 gap-2 pt-2">
-              <a
-                href="https://13.205.109.18.sslip.io"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2.5 px-3 rounded-xl bg-white/[0.07] border border-white/10 text-xs font-medium text-[#F4F6F0] text-center"
-              >
-                Shop Login
-              </a>
-              <a
-                href="https://13.205.109.18.sslip.io/api/retailer/download/kavach-retailer.apk"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2.5 px-3 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-mono text-[#C8FF2E] text-center"
-              >
-                Android APK
-              </a>
-            </div>
+              हिंदी में पढ़ें
+            </a>
+            <a
+              href={RETAILER_APP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`text-[15px] text-[#D2D8CE] hover:text-[#F4F6F0] py-2.5 px-2 rounded-lg ${focusRing}`}
+            >
+              Shop login
+            </a>
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
 {
   "name": "Kavach — Smartphone EMI & Credit Security",
   "short_name": "Kavach",
-  "description": "Kavach protects every smartphone you sell on credit or EMI. 60-second QR setup at the counter, 100% manual shop owner control, and offline PIN unlock.",
+  "description": "Kavach protects every smartphone you sell on credit or EMI. 48-second QR setup at the counter, 100% manual shop owner control, and offline PIN unlock.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#050705",

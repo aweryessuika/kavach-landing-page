@@ -144,6 +144,22 @@
   transition-delay: var(--reveal-delay, 0ms);
 }
 
+/* Hero phone screen change: a short fade so the lock reads as the result of the tap. */
+@keyframes hero-screen-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.hero-screen-swap {
+  animation: hero-screen-in 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 [data-reveal][data-visible='true'] {
   opacity: 1;
   transform: translate3d(0, 0, 0);

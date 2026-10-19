@@ -35,7 +35,7 @@ const IPHONE_FAQ: Faq = {
 
 const PRICE_FAQ: Faq = {
   q: 'How much does the Kavach EMI locker cost?',
-  a: `The first ${KAVACH_FACTS.freePhones} phones are free. After that it is ${KAVACH_FACTS.pricePerPhone} per phone, paid once for the whole loan, with no monthly fee and no commission on your EMI.`,
+  a: `The first ${KAVACH_FACTS.freePhones} phones are free. After that you pay once per phone for the whole loan, with no monthly fee and no commission on your EMI. The per phone price depends on how many phones you sell and which brands, so we quote it for your shop on WhatsApp.`,
 };
 
 const OFFLINE_FAQ: Faq = {
@@ -56,7 +56,7 @@ function alternativePage(slug: string): SeoPage {
     faqs: [
       {
         q: `Is Kavach a good ${competitor.name} alternative?`,
-        a: `Kavach suits mobile shops that sell Android phones from many brands, want a published price of ${KAVACH_FACTS.pricePerPhone} per phone, and want to decide every lock themselves. ${competitor.name} may suit you better if: ${competitor.bestFor.charAt(0).toLowerCase()}${competitor.bestFor.slice(1)}`,
+        a: `Kavach suits mobile shops that sell Android phones from many brands, want a per phone price set for their own shop, and want to decide every lock themselves. ${competitor.name} may suit you better if: ${competitor.bestFor.charAt(0).toLowerCase()}${competitor.bestFor.slice(1)}`,
       },
       {
         q: `Can I use Kavach and ${competitor.name} at the same time?`,
@@ -74,7 +74,7 @@ export const SEO_PAGES: SeoPage[] = [
     path: EMI_LOCKER_APP_EN_PATH,
     translations: [{ lang: 'hi-IN', path: EMI_LOCKER_APP_HI_PATH }],
     title: 'EMI Locker App for Mobile Shops in India | Kavach',
-    description: `Kavach is the EMI locker app for Indian mobile shops. Lock phones sold on EMI when customers stop paying. ${KAVACH_FACTS.averageSetupSeconds} second setup, ${KAVACH_FACTS.pricePerPhone} per phone, first ${KAVACH_FACTS.freePhones} free.`,
+    description: `Kavach is the EMI locker app for Indian mobile shops. Lock phones sold on EMI when customers stop paying. ${KAVACH_FACTS.averageSetupSeconds} second setup, you decide every lock, first ${KAVACH_FACTS.freePhones} phones free.`,
     crumbs: [{ label: 'EMI locker app', href: EMI_LOCKER_APP_EN_PATH }],
     faqs: [
       {
@@ -99,7 +99,7 @@ export const SEO_PAGES: SeoPage[] = [
     lang: 'hi-IN',
     translations: [{ lang: 'en-IN', path: EMI_LOCKER_APP_EN_PATH }],
     title: 'EMI Locker ऐप: मोबाइल दुकानों के लिए फ़ोन लॉक | Kavach',
-    description: `किस्त पर बेचा फ़ोन, ग्राहक ने EMI नहीं भरी? Kavach EMI locker से फ़ोन लॉक करें, पैसे मिलते ही अनलॉक। हर फ़ोन ${KAVACH_FACTS.pricePerPhone}, पहले ${KAVACH_FACTS.freePhones} फ्री।`,
+    description: `किस्त पर बेचा फ़ोन, ग्राहक ने EMI नहीं भरी? Kavach EMI locker से फ़ोन लॉक करें, पैसे मिलते ही अनलॉक। हर लॉक का फ़ैसला आपका, पहले ${KAVACH_FACTS.freePhones} फ़ोन फ्री।`,
     crumbs: [{ label: 'EMI locker ऐप', href: EMI_LOCKER_APP_HI_PATH }],
     faqs: [
       {
@@ -128,7 +128,7 @@ export const SEO_PAGES: SeoPage[] = [
       },
       {
         q: 'Kavach EMI locker का दाम कितना है?',
-        a: `पहले ${KAVACH_FACTS.freePhones} फ़ोन फ्री हैं। उसके बाद हर फ़ोन का ${KAVACH_FACTS.pricePerPhone}, पूरे लोन के लिए एक बार। न महीने की फ़ीस, न आपकी EMI पर कोई कमीशन।`,
+        a: `पहले ${KAVACH_FACTS.freePhones} फ़ोन फ्री हैं। उसके बाद हर फ़ोन का दाम पूरे लोन के लिए एक बार लगता है। दाम आपकी दुकान पर निर्भर करता है, यानी आप महीने में कितने फ़ोन बेचते हैं और कौन से ब्रांड, इसलिए हम WhatsApp पर आपकी दुकान का दाम बताते हैं। न महीने की फ़ीस, न आपकी EMI पर कोई कमीशन।`,
       },
     ],
     lastModified: LAST_MODIFIED,
@@ -161,8 +161,8 @@ export const SEO_PAGES: SeoPage[] = [
   },
   {
     path: '/emi-locker-price',
-    title: `EMI Locker Price in India: ${KAVACH_FACTS.pricePerPhone} per Phone | Kavach`,
-    description: `What does an EMI locker key cost? Kavach charges ${KAVACH_FACTS.pricePerPhone} per phone for the whole loan, no monthly fee, first ${KAVACH_FACTS.freePhones} phones free. See plans and how prices compare.`,
+    title: 'EMI Locker Price in India: How Pricing Works | Kavach',
+    description: `What does an EMI locker key cost? Kavach charges once per phone for the whole loan, priced for your shop. No monthly fee, first ${KAVACH_FACTS.freePhones} phones free.`,
     crumbs: [{ label: 'EMI locker price', href: '/emi-locker-price' }],
     faqs: [
       PRICE_FAQ,
@@ -173,6 +173,10 @@ export const SEO_PAGES: SeoPage[] = [
       {
         q: 'Is there a monthly fee?',
         a: 'No. Kavach has no monthly subscription. You pay only for the keys you use.',
+      },
+      {
+        q: 'Why is the Kavach price not listed on the website?',
+        a: 'Because it is set per shop. A shop that protects 150 phones a month pays a different per phone price than one that protects 10, and branches and distributors get their own terms. Message us on WhatsApp with how many phones you sell and we reply with your price.',
       },
       {
         q: 'Are there discounts for multiple shops?',

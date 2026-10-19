@@ -9,23 +9,24 @@
 - **Contact:** pranjay@kavachlock.tech
 
 ## What Kavach Does
-Kavach protects smartphones sold on credit or monthly EMI across India. Mobile shop owners enroll any new Android 10–15 smartphone (Samsung, Xiaomi, Redmi, Vivo, Oppo, Realme, Motorola, iQOO, and 120+ models) in 48–60 seconds right at the shop counter using a native Android Enterprise 6-tap QR scan.
+Kavach protects smartphones sold on credit or monthly EMI across India. Mobile shop owners enroll any new Android 10–15 smartphone (Samsung, Xiaomi, Redmi, Vivo, Oppo, Realme, Motorola, iQOO, and 120+ models) in about 48 seconds right at the shop counter using a native Android Enterprise 6-tap QR scan.
 
 ## Key Capabilities & Differentiators
 1. **100% Manual Shop Owner Control:** Zero automated locking timers. Phones never lock automatically behind a retailer's back. Only the shop owner's explicit tap locks or unlocks a customer handset.
-2. **60-Second Counter QR Setup:** Scan the box barcode, enter customer details, and scan one 6-tap Android Enterprise QR code. Zero computers, zero USB cables, and 0% Google Play Protect warning popups.
-3. **Sub-Second Live Lock & Offline PIN Unlock:** Commands deliver in under 1 second (~280–350ms) over internet, and if a locked phone has no mobile data, retailers can unlock it over a regular phone call using a cryptographic Offline Challenge/Response PIN.
+2. **48-Second Counter QR Setup:** Scan the box barcode, enter customer details, and scan one 6-tap Android Enterprise QR code. No computer, no USB cable, and no Google Play Protect warning popups.
+3. **Sub-Second Live Lock & Offline PIN Unlock:** Lock and unlock commands reach the phone over the internet in about a second, and if a locked phone has no mobile data, retailers can unlock it over a regular phone call using a cryptographic Offline Challenge/Response PIN.
 4. **Tamper-Resistant Hardware Enforcement:** Factory reset buttons, recovery mode formatting, USB flashing cables, and SIM card swaps cannot remove Kavach until the shop owner releases the handset.
-5. **Invisible When Paid, Clear When Locked:** Customers experience zero slowdowns, zero battery drain, and zero popups while paying on time. When locked, the screen displays the shop's name, a direct Call Shop Owner button, Emergency 112 calling, and Offline Unlock PIN entry.
+5. **Invisible When Paid, Clear When Locked:** While customers pay on time they see no popups and every app works normally. When locked, the screen displays the shop's name, a direct Call Shop Owner button, Emergency 112 calling, and Offline Unlock PIN entry.
 
 ## Pricing
-- **Starter Trial:** ₹0 (First 10 phone keys free, 60-second QR setup, 100% manual lock & unlock, direct WhatsApp setup help)
-- **Shop Standard:** ₹100 flat per phone (One-time per phone for the entire loan duration, zero monthly subscription fees, zero commission cut)
-- **Multi-Store Fleet:** Volume pricing for 5+ shops or distributors with shared key wallet, staff logins, and custom lock-screen branding.
+- **Free trial:** first 10 phones free, with WhatsApp setup help.
+- **Per phone, priced per shop:** you pay once per phone for the whole loan, with no monthly subscription and no commission on the EMI. Kavach does not publish a fixed rate; the per phone price depends on monthly volume and brand mix and is quoted on WhatsApp.
+- **Multi-store:** volume terms for 5+ shops or distributors with a shared key wallet, staff logins and custom lock-screen branding.
 
 ## Guides
 - [EMI locker app for mobile shops](https://kavachlock.tech/emi-locker-app): what an EMI locker is and how Kavach works
 - [Best EMI locker apps in India, compared](https://kavachlock.tech/best-emi-locker-app-india): Kavach, ZEN EMI Locker, EmiVault, InstenLock, EasyLock, Samsung Knox Guard
-- [EMI locker price](https://kavachlock.tech/emi-locker-price): ₹100 per phone, first 10 free, no monthly fee
+- [EMI locker price](https://kavachlock.tech/emi-locker-price): how Kavach pricing works, first 10 phones free, no monthly fee
+- [EMI locker ऐप हिंदी में](https://kavachlock.tech/hi/emi-locker-app): the EMI locker guide in Hindi
 - [Download the Kavach EMI locker APK](https://kavachlock.tech/download)
 - [EMI locker alternatives](https://kavachlock.tech/alternatives)

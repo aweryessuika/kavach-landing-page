@@ -28,14 +28,14 @@ const CHROME_TEXT: Record<
     skipLink: 'Skip to content',
     faqHeading: 'Common questions',
     ctaTitle: `Protect your next ${KAVACH_FACTS.freePhones} phones free`,
-    ctaBody: `${KAVACH_FACTS.pricePerPhone} per phone after that. No monthly fee, no commission, and you decide every lock.`,
+    ctaBody: 'After that, you pay per phone at a price set for your shop. No monthly fee, no commission, and you decide every lock.',
     ctaButton: 'Start free',
   },
   'hi-IN': {
     skipLink: 'सीधे मुख्य हिस्से पर जाएँ',
     faqHeading: 'आम सवाल',
     ctaTitle: `अगले ${KAVACH_FACTS.freePhones} फ़ोन फ्री में सुरक्षित करें`,
-    ctaBody: `उसके बाद हर फ़ोन का ${KAVACH_FACTS.pricePerPhone}। न महीने की फ़ीस, न कमीशन, और हर लॉक का फ़ैसला आपका।`,
+    ctaBody: 'उसके बाद हर फ़ोन का दाम आपकी दुकान के हिसाब से। न महीने की फ़ीस, न कमीशन, और हर लॉक का फ़ैसला आपका।',
     ctaButton: 'फ्री में शुरू करें',
   },
 };

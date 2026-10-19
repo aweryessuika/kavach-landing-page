@@ -24,14 +24,14 @@ export const KAVACH_PROFILE: ProductProfile = {
   website: 'kavachlock.tech',
   summary:
     'Kavach is an EMI locker app for Indian mobile shops. The shop owner sets up each phone with one QR scan at the counter and decides personally when a phone is locked or unlocked.',
-  pricing: `${KAVACH_FACTS.pricePerPhone} flat per phone for the whole loan. First ${KAVACH_FACTS.freePhones} phones free. No monthly fee.`,
+  pricing: `Paid once per phone for the whole loan, at a price quoted for each shop on WhatsApp based on volume and brands. First ${KAVACH_FACTS.freePhones} phones free. No monthly fee.`,
   setup: `One Android Enterprise QR scan on a new phone, about ${KAVACH_FACTS.averageSetupSeconds} seconds at the counter. No PC or cable.`,
   lockControl: 'Always manual. A phone locks only when the shop owner taps lock. No automatic timers.',
   offline: 'Yes. The customer reads a challenge code over a normal call and the shop gives a one time unlock PIN.',
   resetProtection: 'Yes. Factory reset, recovery mode and USB flashing cannot remove it until the shop releases the phone.',
   platforms: `${KAVACH_FACTS.androidVersions}, ${KAVACH_FACTS.phoneModels} models. Android only.`,
   extras: 'Lock screen shows the shop name, a Call Shop button and emergency 112 calling.',
-  bestFor: 'Shop owners who want full control over every lock and a simple per phone price.',
+  bestFor: 'Shop owners who want full control over every lock and a per phone price set for their own shop.',
 };
 
 export const COMPETITORS: ProductProfile[] = [

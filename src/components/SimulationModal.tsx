@@ -74,7 +74,7 @@ export function SimulationModal({ isOpen, onClose }: SimulationModalProps) {
                   : 'bg-white/[0.05] text-[#9CA698] hover:text-[#F4F6F0]'
               }`}
             >
-              2. 60s Counter QR Setup
+              2. 48s Counter QR Setup
             </button>
           </div>
 
@@ -196,7 +196,7 @@ export function SimulationModal({ isOpen, onClose }: SimulationModalProps) {
                         Locked by Shop
                       </div>
                       <div className="text-[15px] font-display font-semibold text-[#F4F6F0]">
-                        Sri Balaji Mobiles
+                        Sharma Mobiles
                       </div>
                       <p className="text-[11.5px] text-[#9CA698] px-2">
                         Installment of ₹2,400 is pending. Call the shop below to unlock your phone.

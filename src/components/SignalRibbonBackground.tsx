@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 export function SignalRibbonBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -136,8 +137,27 @@ export function SignalRibbonBackground() {
       return t * t * (3 - 2 * t);
     };
 
+    // The ribbon belongs to the hero. Past it, fade the whole layer out so section text
+    // sits on a plain background, and skip drawing while nothing is visible.
+    const heroFade = () => 1 - smoothstep(window.innerHeight * 0.3, window.innerHeight * 1.0, window.scrollY);
+    let lastFade = -1;
+    const applyFade = () => {
+      const fade = heroFade();
+      if (wrapperRef.current && Math.abs(fade - lastFade) > 0.005) {
+        wrapperRef.current.style.opacity = fade.toFixed(3);
+        lastFade = fade;
+      }
+    };
+    window.addEventListener('scroll', applyFade, { passive: true });
+    applyFade();
+
     const render = () => {
       if (!isPageVisible) return;
+
+      if (lastFade === 0) {
+        if (!prefersReducedMotion) animationFrameId = requestAnimationFrame(render);
+        return;
+      }
 
       const rawScrollY = window.scrollY;
       smoothScrollY += (rawScrollY - smoothScrollY) * 0.075;
@@ -375,6 +395,7 @@ export function SignalRibbonBackground() {
     return () => {
       window.clearTimeout(settleTimer);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('scroll', applyFade);
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
@@ -382,7 +403,7 @@ export function SignalRibbonBackground() {
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050705]">
+    <div ref={wrapperRef} className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050705]">
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
       <div className="absolute inset-0 bg-dot-pattern opacity-[0.13] pointer-events-none" />
       <div
