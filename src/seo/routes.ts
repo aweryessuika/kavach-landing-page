@@ -4,6 +4,7 @@ import {
   AlternativesHubPage,
   BestEmiLockerPage,
   DownloadPage,
+  EmiLockerAppHindiPage,
   EmiLockerAppPage,
   EmiLockerPricePage,
   NotFoundPage,
@@ -13,6 +14,9 @@ import { COMPETITORS_CHECKED_ON, KAVACH_FACTS } from './site';
 import type { Faq, SeoPage } from './types';
 
 const LAST_MODIFIED = '2026-10-19';
+
+const EMI_LOCKER_APP_EN_PATH = '/emi-locker-app';
+const EMI_LOCKER_APP_HI_PATH = '/hi/emi-locker-app';
 
 const MANUAL_LOCK_FAQ: Faq = {
   q: 'Does Kavach lock phones automatically when an EMI is late?',
@@ -67,10 +71,11 @@ function alternativePage(slug: string): SeoPage {
 
 export const SEO_PAGES: SeoPage[] = [
   {
-    path: '/emi-locker-app',
+    path: EMI_LOCKER_APP_EN_PATH,
+    translations: [{ lang: 'hi-IN', path: EMI_LOCKER_APP_HI_PATH }],
     title: 'EMI Locker App for Mobile Shops in India | Kavach',
     description: `Kavach is the EMI locker app for Indian mobile shops. Lock phones sold on EMI when customers stop paying. ${KAVACH_FACTS.averageSetupSeconds} second setup, ${KAVACH_FACTS.pricePerPhone} per phone, first ${KAVACH_FACTS.freePhones} free.`,
-    crumbs: [{ label: 'EMI locker app', href: '/emi-locker-app' }],
+    crumbs: [{ label: 'EMI locker app', href: EMI_LOCKER_APP_EN_PATH }],
     faqs: [
       {
         q: 'What is an EMI locker app?',
@@ -88,6 +93,46 @@ export const SEO_PAGES: SeoPage[] = [
     ],
     lastModified: LAST_MODIFIED,
     render: EmiLockerAppPage,
+  },
+  {
+    path: EMI_LOCKER_APP_HI_PATH,
+    lang: 'hi-IN',
+    translations: [{ lang: 'en-IN', path: EMI_LOCKER_APP_EN_PATH }],
+    title: 'EMI Locker ऐप: मोबाइल दुकानों के लिए फ़ोन लॉक | Kavach',
+    description: `किस्त पर बेचा फ़ोन, ग्राहक ने EMI नहीं भरी? Kavach EMI locker से फ़ोन लॉक करें, पैसे मिलते ही अनलॉक। हर फ़ोन ${KAVACH_FACTS.pricePerPhone}, पहले ${KAVACH_FACTS.freePhones} फ्री।`,
+    crumbs: [{ label: 'EMI locker ऐप', href: EMI_LOCKER_APP_HI_PATH }],
+    faqs: [
+      {
+        q: 'EMI locker ऐप क्या होता है?',
+        a: 'EMI locker ऐप से मोबाइल दुकानदार किस्त पर बेचा हुआ फ़ोन लॉक कर सकता है, जब ग्राहक किस्त देना बंद कर दे, और पैसे मिलने पर अनलॉक कर सकता है। लॉक फ़ोन से भी ग्राहक दुकान पर और इमरजेंसी नंबर पर कॉल कर सकता है।',
+      },
+      {
+        q: 'किस्त लेट होने पर क्या Kavach अपने आप फ़ोन लॉक कर देता है?',
+        a: 'नहीं। Kavach कभी टाइमर से फ़ोन लॉक नहीं करता। फ़ोन तभी लॉक होता है जब दुकानदार Kavach ऐप में lock दबाए या ऑफ़लाइन PIN वाला तरीका इस्तेमाल करे। इसलिए एक दिन लेट ग्राहक का फ़ोन अचानक लॉक नहीं होता।',
+      },
+      {
+        q: 'क्या ग्राहक factory reset करके EMI lock हटा सकता है?',
+        a: 'नहीं। Kavach फ़ोन के पहले सेटअप के समय Android Enterprise से लगता है, इसलिए factory reset, recovery mode, USB flashing tool या SIM बदलने से यह तब तक नहीं हटता जब तक दुकान फ़ोन release न करे।',
+      },
+      {
+        q: 'लॉक फ़ोन में इंटरनेट न हो, तो दुकानदार उसे कैसे खोले?',
+        a: 'ग्राहक लॉक स्क्रीन पर दिखा challenge कोड नॉर्मल फ़ोन कॉल पर आपको बताता है। Kavach ऐप आपको एक बार चलने वाला PIN देता है, ग्राहक उसे डालता है, और फ़ोन बिना इंटरनेट के खुल जाता है।',
+      },
+      {
+        q: 'क्या ग्राहक को Google Play Protect की warning दिखती है?',
+        a: 'नहीं। Kavach नए फ़ोन पर Android Enterprise के ऑफ़िशियल QR सेटअप से लगता है, इसलिए ग्राहक को Play Protect के warning पॉप-अप नहीं दिखते।',
+      },
+      {
+        q: 'क्या Kavach iPhone पर चलता है?',
+        a: `नहीं। Kavach सिर्फ़ Android के लिए है। यह ${KAVACH_FACTS.androidVersionsHi} पर ${KAVACH_FACTS.phoneModels} मॉडल पर चलता है, जैसे ${KAVACH_FACTS.brands.slice(0, 6).join(', ')}।`,
+      },
+      {
+        q: 'Kavach EMI locker का दाम कितना है?',
+        a: `पहले ${KAVACH_FACTS.freePhones} फ़ोन फ्री हैं। उसके बाद हर फ़ोन का ${KAVACH_FACTS.pricePerPhone}, पूरे लोन के लिए एक बार। न महीने की फ़ीस, न आपकी EMI पर कोई कमीशन।`,
+      },
+    ],
+    lastModified: LAST_MODIFIED,
+    render: EmiLockerAppHindiPage,
   },
   {
     path: '/best-emi-locker-app-india',

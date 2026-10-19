@@ -4,6 +4,7 @@ import {
   CardGrid,
   CompareTable,
   InlineLink,
+  LanguageLink,
   PageHero,
   PrimaryLink,
   Prose,
@@ -43,6 +44,11 @@ export function EmiLockerAppPage() {
           <PrimaryLink href="/#contact">Start free with 10 phones</PrimaryLink>
           <SecondaryLink href="/download">Download the app</SecondaryLink>
         </div>
+        <p className="text-sm">
+          <LanguageLink href="/hi/emi-locker-app" lang="hi-IN">
+            यह पेज हिंदी में पढ़ें
+          </LanguageLink>
+        </p>
       </PageHero>
 
       <Section title="What is an EMI locker?">
@@ -109,6 +115,112 @@ export function EmiLockerAppPage() {
             Comparing options? Read our honest{' '}
             <InlineLink href="/best-emi-locker-app-india">comparison of EMI locker apps in India</InlineLink> or see{' '}
             <InlineLink href="/emi-locker-price">what an EMI locker key costs</InlineLink>.
+          </p>
+        </Prose>
+      </Section>
+    </>
+  );
+}
+
+const SETUP_STEPS_HI = [
+  {
+    title: 'डिब्बा स्कैन करें',
+    body: 'फ़ोन के डिब्बे पर IMEI बारकोड स्कैन करें और Kavach retailer ऐप में ग्राहक का नाम और नंबर डालें।',
+  },
+  {
+    title: 'नए फ़ोन पर एक QR स्कैन करें',
+    body: `Welcome स्क्रीन पर छह बार टैप करें और QR कोड स्कैन करें। लगभग ${KAVACH_FACTS.averageSetupSeconds} सेकंड में सुरक्षा चालू। न कंप्यूटर चाहिए, न केबल।`,
+  },
+  {
+    title: 'लॉक तभी, जब आप चाहें',
+    body: 'ग्राहक किस्त न दे तो ऐप में lock दबाएँ। पैसे दे दे तो unlock दबाएँ। कोई टाइमर आपके पीछे से फ़ोन लॉक नहीं करता।',
+  },
+];
+
+export function EmiLockerAppHindiPage() {
+  return (
+    <>
+      <PageHero
+        eyebrow="emi locker app / हिंदी"
+        title="मोबाइल दुकान के लिए"
+        accent="EMI locker ऐप।"
+        intro={`ग्राहक ने किस्त नहीं भरी? Kavach से आप EMI पर बेचा हुआ फ़ोन लॉक कर सकते हैं, और पैसे मिलते ही अनलॉक। काउंटर पर सेटअप लगभग ${KAVACH_FACTS.averageSetupSeconds} सेकंड में होता है। हर फ़ोन का ${KAVACH_FACTS.pricePerPhone}, पहले ${KAVACH_FACTS.freePhones} फ़ोन फ्री।`}
+      >
+        <div className="flex flex-wrap gap-3 pt-2">
+          <PrimaryLink href="/#contact">{KAVACH_FACTS.freePhones} फ़ोन फ्री में शुरू करें</PrimaryLink>
+          <SecondaryLink href="/download">ऐप डाउनलोड करें</SecondaryLink>
+        </div>
+        <p className="text-sm">
+          <LanguageLink href="/emi-locker-app" lang="en-IN">
+            Read this page in English
+          </LanguageLink>
+        </p>
+      </PageHero>
+
+      <Section title="EMI locker क्या होता है?">
+        <Prose>
+          <p>
+            EMI locker एक सॉफ़्टवेयर है जो मोबाइल दुकानदार किस्त पर बेचे गए फ़ोन में डालता है। अगर ग्राहक किस्त देना
+            बंद कर दे, तो दुकानदार अपने ऐप से फ़ोन लॉक कर सकता है। लॉक फ़ोन से ग्राहक दुकान पर कॉल कर सकता है और
+            इमरजेंसी नंबर लगा सकता है, लेकिन बाकी फ़ोन तब तक नहीं चलेगा जब तक किस्त जमा न हो। पैसे मिलते ही आप फ़ोन
+            अनलॉक कर देते हैं और फ़ोन पहले जैसा चलने लगता है।
+          </p>
+          <p>
+            इसे लोग EMI lock ऐप, फ़ोन लॉक ऐप, finance lock ऐप या मोबाइल EMI locker भी कहते हैं। मतलब एक ही है: फ़ोन
+            किस्त पर बेचो, और ग्राहक गायब हो जाए तो भी पैसा न डूबे।
+          </p>
+          <p>
+            अच्छा EMI locker वही है जो factory reset से न हटे, आपकी दुकान के हर ब्रांड पर चले, और ग्राहक को डराने वाली
+            security warning न दिखाए। Kavach इन्हीं तीन बातों पर बना है।
+          </p>
+        </Prose>
+      </Section>
+
+      <Section id="how-it-works" title="काउंटर पर Kavach कैसे काम करता है">
+        <StepList steps={SETUP_STEPS_HI} />
+      </Section>
+
+      <Section title="दुकानदार Kavach क्यों चुनते हैं">
+        <CardGrid
+          items={[
+            {
+              title: 'हर लॉक का फ़ैसला आपका',
+              body: 'Kavach कभी भी टाइमर से अपने आप फ़ोन लॉक नहीं करता। पुराना भरोसेमंद ग्राहक दो दिन लेट हो जाए, तो भी उसका फ़ोन चलता रहेगा। ग्राहक से रिश्ता आपके हाथ में रहता है।',
+            },
+            {
+              title: 'Factory reset से नहीं हटता',
+              body: 'फ़ोन format करना, recovery mode, USB flashing tool या SIM बदलना, कुछ भी Kavach को तब तक नहीं हटा सकता जब तक आप फ़ोन release न करें।',
+            },
+            {
+              title: 'बिना इंटरनेट अनलॉक',
+              body: 'लॉक फ़ोन में डेटा नहीं है? ग्राहक स्क्रीन पर दिखा कोड नॉर्मल कॉल पर आपको बताए, और आप उसे एक बार चलने वाला PIN बता दें।',
+            },
+            {
+              title: 'Play Protect की warning नहीं',
+              body: 'Kavach Android Enterprise के ऑफ़िशियल तरीके से लगता है, इसलिए ग्राहक को नए फ़ोन पर डराने वाले security पॉप-अप नहीं दिखते।',
+            },
+            {
+              title: 'हर फ़ोन का एक दाम',
+              body: `${KAVACH_FACTS.pricePerPhone} में पूरा लोन कवर, चाहे किस्त 3 महीने की हो या 12 की। न महीने की फ़ीस, न आपकी EMI में कोई हिस्सा।`,
+            },
+            {
+              title: 'लॉक स्क्रीन पर आपकी दुकान',
+              body: 'लॉक फ़ोन पर आपकी दुकान का नाम और Call Shop बटन दिखता है, ताकि ग्राहक रिपेयर वाले के पास नहीं, सीधे आपके पास आए।',
+            },
+          ]}
+        />
+      </Section>
+
+      <Section title="जो फ़ोन आप बेचते हैं, उन पर चलता है">
+        <Prose>
+          <p>
+            Kavach {KAVACH_FACTS.androidVersionsHi} पर {KAVACH_FACTS.phoneModels} मॉडल पर चलता है, जिनमें {BRAND_LIST}{' '}
+            शामिल हैं। यह सिर्फ़ Android के लिए है, iPhone लॉक नहीं करता।
+          </p>
+          <p>
+            दूसरे ऐप से तुलना करनी है? पढ़ें{' '}
+            <InlineLink href="/best-emi-locker-app-india">भारत के EMI locker ऐप्स की तुलना</InlineLink> या देखें{' '}
+            <InlineLink href="/emi-locker-price">एक EMI locker key का दाम</InlineLink>। ये पेज अंग्रेज़ी में हैं।
           </p>
         </Prose>
       </Section>

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { Faq } from './types';
+import type { Faq, PageLang } from './types';
 import { CONTACT_EMAIL, RETAILER_APP_URL, KAVACH_FACTS } from './site';
 
 const NAV_LINKS = [
@@ -15,7 +15,30 @@ const FOOTER_GUIDES = [
   { label: 'Best EMI locker apps in India', href: '/best-emi-locker-app-india' },
   { label: 'EMI locker price and keys', href: '/emi-locker-price' },
   { label: 'Download the EMI locker APK', href: '/download' },
+  { label: 'EMI locker ऐप हिंदी में', href: '/hi/emi-locker-app' },
 ];
+
+// Page chrome that changes with the page language. Navigation and footer stay in
+// English on every page because they link to English pages.
+const CHROME_TEXT: Record<
+  PageLang,
+  { skipLink: string; faqHeading: string; ctaTitle: string; ctaBody: string; ctaButton: string }
+> = {
+  'en-IN': {
+    skipLink: 'Skip to content',
+    faqHeading: 'Common questions',
+    ctaTitle: `Protect your next ${KAVACH_FACTS.freePhones} phones free`,
+    ctaBody: `${KAVACH_FACTS.pricePerPhone} per phone after that. No monthly fee, no commission, and you decide every lock.`,
+    ctaButton: 'Start free',
+  },
+  'hi-IN': {
+    skipLink: 'सीधे मुख्य हिस्से पर जाएँ',
+    faqHeading: 'आम सवाल',
+    ctaTitle: `अगले ${KAVACH_FACTS.freePhones} फ़ोन फ्री में सुरक्षित करें`,
+    ctaBody: `उसके बाद हर फ़ोन का ${KAVACH_FACTS.pricePerPhone}। न महीने की फ़ीस, न कमीशन, और हर लॉक का फ़ैसला आपका।`,
+    ctaButton: 'फ्री में शुरू करें',
+  },
+};
 
 const FOOTER_COMPARE = [
   { label: 'All alternatives', href: '/alternatives' },
@@ -149,12 +172,12 @@ function SiteFooter() {
   );
 }
 
-export function FaqSection({ faqs }: { faqs: Faq[] }) {
+export function FaqSection({ faqs, heading }: { faqs: Faq[]; heading: string }) {
   if (faqs.length === 0) return null;
   return (
     <section aria-labelledby="faq-heading" className="py-12 border-t border-white/[0.07]">
       <h2 id="faq-heading" className="font-display font-semibold text-3xl text-[#F4F6F0] tracking-tight mb-6">
-        Common questions
+        {heading}
       </h2>
       <div className="divide-y divide-white/[0.07] rounded-2xl border border-white/[0.08] bg-[#0B0F0B]">
         {faqs.map((faq) => (
@@ -175,22 +198,21 @@ export function FaqSection({ faqs }: { faqs: Faq[] }) {
   );
 }
 
-function CtaBand() {
+function CtaBand({ lang }: { lang: PageLang }) {
+  const text = CHROME_TEXT[lang];
   return (
     <section className="my-12 rounded-3xl bg-[#C8FF2E] text-[#050705] p-8 sm:p-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
       <div className="space-y-2 max-w-xl">
         <h2 className="font-display font-bold text-3xl tracking-tight text-balance">
-          Protect your next {KAVACH_FACTS.freePhones} phones free
+          {text.ctaTitle}
         </h2>
-        <p className="text-base text-pretty">
-          {KAVACH_FACTS.pricePerPhone} per phone after that. No monthly fee, no commission, and you decide every lock.
-        </p>
+        <p className="text-base text-pretty">{text.ctaBody}</p>
       </div>
       <a
         href="/#contact"
         className="shrink-0 inline-block px-6 py-3 rounded-full bg-[#050705] text-[#F4F6F0] text-base font-semibold hover:bg-[#1F1F1F] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#050705]"
       >
-        Start free
+        {text.ctaButton}
       </a>
     </section>
   );
@@ -206,21 +228,24 @@ export function SeoLayout({
   crumbs,
   faqs,
   showCta = true,
+  lang = 'en-IN',
   children,
 }: {
   currentPath: string;
   crumbs: Crumb[];
   faqs: Faq[];
   showCta?: boolean;
+  lang?: PageLang;
   children?: ReactNode;
 }) {
+  const text = CHROME_TEXT[lang];
   return (
     <div className="min-h-screen flex flex-col bg-[#050705] text-[#F4F6F0] font-sans">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:rounded-full focus:bg-[#C8FF2E] focus:text-[#050705]"
       >
-        Skip to content
+        {text.skipLink}
       </a>
       <SiteHeader currentPath={currentPath} />
       <main id="main" className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6">
@@ -250,8 +275,8 @@ export function SeoLayout({
           </nav>
         )}
         {children}
-        <FaqSection faqs={faqs} />
-        {showCta && <CtaBand />}
+        <FaqSection faqs={faqs} heading={text.faqHeading} />
+        {showCta && <CtaBand lang={lang} />}
       </main>
       <SiteFooter />
     </div>

@@ -22,7 +22,7 @@ const preconnectTags = homeHtml.match(/<link[^>]+rel="preconnect"[^>]*>/g) ?? []
 
 function documentFor(page) {
   return `<!doctype html>
-<html lang="en-IN" class="dark">
+<html lang="${server.pageLang(page)}" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

@@ -13,6 +13,8 @@ export const COMPETITORS_CHECKED_LABEL = '19 October 2026';
 
 // Facts about Kavach that the SEO pages repeat. They must match the homepage copy.
 const PRICE_PER_PHONE_INR = 100;
+const ANDROID_MIN_VERSION = 10;
+const ANDROID_MAX_VERSION = 15;
 
 export const KAVACH_FACTS = {
   pricePerPhoneInr: PRICE_PER_PHONE_INR,
@@ -20,6 +22,7 @@ export const KAVACH_FACTS = {
   freePhones: 10,
   averageSetupSeconds: 48,
   phoneModels: '120+',
-  androidVersions: 'Android 10 to 15',
+  androidVersions: `Android ${ANDROID_MIN_VERSION} to ${ANDROID_MAX_VERSION}`,
+  androidVersionsHi: `Android ${ANDROID_MIN_VERSION} से ${ANDROID_MAX_VERSION}`,
   brands: ['Samsung', 'Xiaomi', 'Redmi', 'Vivo', 'Oppo', 'Realme', 'Motorola', 'OnePlus', 'iQOO'],
 } as const;

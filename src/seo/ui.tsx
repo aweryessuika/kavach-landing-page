@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { KAVACH_PROFILE, type ProductProfile } from './competitors';
 import { COMPETITORS_CHECKED_LABEL } from './site';
+import type { PageLang } from './types';
 
 export function PageHero({
   eyebrow,
@@ -76,6 +77,21 @@ export function SecondaryLink({ href, children }: { href: string; children: Reac
 export function InlineLink({ href, children }: { href: string; children: ReactNode }) {
   return (
     <a href={href} className="text-[#C8FF2E] underline underline-offset-4 hover:text-[#D5FF54]">
+      {children}
+    </a>
+  );
+}
+
+// Link to the same page in another language. hrefLang and lang tell browsers and
+// screen readers which language the link and its target are in.
+export function LanguageLink({ href, lang, children }: { href: string; lang: PageLang; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      hrefLang={lang}
+      lang={lang}
+      className="text-[#C8FF2E] underline underline-offset-4 hover:text-[#D5FF54] rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8FF2E]"
+    >
       {children}
     </a>
   );
