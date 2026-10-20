@@ -13,15 +13,29 @@ const LEAD_TIMEOUT_MS = 8000;
 
 type SubmitState = 'idle' | 'sending' | 'sent' | 'failed';
 
+/** Accepts a 10-digit Indian mobile (optionally with +91 or 0) or an email address. */
+function isValidContact(value: string): boolean {
+  const compact = value.replace(/[\s()-]/g, '');
+  if (/^(\+?91|0)?[6-9]\d{9}$/.test(compact)) return true;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+}
+
 export function FinalCtaSection() {
   const [contact, setContact] = useState('');
   const [state, setState] = useState<SubmitState>('idle');
+  const [inputError, setInputError] = useState('');
   const inputId = useId();
+  const errorId = useId();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = contact.trim();
     if (!trimmed || state === 'sending') return;
+    if (!isValidContact(trimmed)) {
+      setInputError('Enter your 10-digit mobile number (or an email address).');
+      return;
+    }
+    setInputError('');
 
     setState('sending');
     const controller = new AbortController();
@@ -107,7 +121,12 @@ export function FinalCtaSection() {
                   required
                   disabled={state === 'sending'}
                   value={contact}
-                  onChange={(e) => setContact(e.target.value)}
+                  onChange={(e) => {
+                    setContact(e.target.value);
+                    if (inputError) setInputError('');
+                  }}
+                  aria-invalid={inputError ? true : undefined}
+                  aria-describedby={inputError ? errorId : undefined}
                   placeholder="Your phone number"
                   className="w-full min-w-0 bg-transparent text-[#050705] placeholder:text-[#050705]/50 text-[15px] focus:outline-none disabled:opacity-60"
                 />
@@ -126,6 +145,11 @@ export function FinalCtaSection() {
                   )}
                 </button>
               </form>
+            )}
+            {inputError && state !== 'sent' && (
+              <p id={errorId} role="alert" className="pl-5 text-[13.5px] font-semibold text-[#050705]">
+                {inputError}
+              </p>
             )}
 
             <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-1 text-[14px]">

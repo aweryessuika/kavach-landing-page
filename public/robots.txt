@@ -20,5 +20,4 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 
-Host: https://kavachlock.tech
 Sitemap: https://kavachlock.tech/sitemap.xml

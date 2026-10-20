@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Lock, Unlock, KeyRound, PhoneCall, Check, QrCode, ScanBarcode } from 'lucide-react';
 
 interface SimulationModalProps {
@@ -10,13 +10,22 @@ export function SimulationModal({ isOpen, onClose }: SimulationModalProps) {
   const [mode, setMode] = useState<'control' | 'setup'>('control');
   const [phoneState, setPhoneState] = useState<'unlocked' | 'locked' | 'offline_pin'>('locked');
   const [setupStep, setSetupStep] = useState<number>(0);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
-    if (isOpen) window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    // Stop the page behind the dialog from scrolling, and start keyboard focus inside it.
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -49,8 +58,17 @@ export function SimulationModal({ isOpen, onClose }: SimulationModalProps) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#040604]/85 backdrop-blur-xl">
-      <div className="relative w-full max-w-3xl rounded-[26px] bg-[#0B0F0B] border border-white/[0.12] shadow-[0_35px_100px_rgba(0,0,0,0.95)] overflow-hidden">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Kavach demo: lock, unlock and QR setup"
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#040604]/85 backdrop-blur-xl"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-3xl max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-[26px] bg-[#0B0F0B] border border-white/[0.12] shadow-[0_35px_100px_rgba(0,0,0,0.95)]"
+      >
         {/* Top Bar with Mode Switcher */}
         <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-white/[0.08]">
           <div className="flex items-center gap-2">
@@ -79,6 +97,7 @@ export function SimulationModal({ isOpen, onClose }: SimulationModalProps) {
           </div>
 
           <button
+            ref={closeButtonRef}
             type="button"
             onClick={onClose}
             className="p-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-[#9CA698] hover:text-[#F4F6F0] transition-colors"
