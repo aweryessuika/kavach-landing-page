@@ -27,10 +27,10 @@ export const KAVACH_PROFILE: ProductProfile = {
   pricing: `Paid once per phone for the whole loan, at a price quoted for each shop on WhatsApp based on volume and brands. First ${KAVACH_FACTS.freePhones} phones free. No monthly fee.`,
   setup: `One Android Enterprise QR scan on a new phone, about ${KAVACH_FACTS.averageSetupSeconds} seconds at the counter. No PC or cable.`,
   lockControl: 'Always manual. A phone locks only when the shop owner taps lock. No automatic timers.',
-  offline: 'Yes. The customer reads a challenge code over a normal call and the shop gives a one time unlock PIN.',
+  offline: 'Yes. The customer reads a challenge code from another phone or at the counter, and the shop gives a one time unlock PIN.',
   resetProtection: 'Yes. Factory reset, recovery mode and USB flashing cannot remove it until the shop releases the phone.',
   platforms: `${KAVACH_FACTS.androidVersions}, ${KAVACH_FACTS.phoneModels} models. Android only.`,
-  extras: 'Lock screen shows the shop name, a Call Shop button and emergency 112 calling.',
+  extras: 'Lock screen shows the shop name and phone number; the rest of the phone stays fully locked.',
   bestFor: 'Shop owners who want full control over every lock and a per phone price set for their own shop.',
 };
 

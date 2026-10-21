@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Lock, Unlock, PhoneCall, KeyRound, ShieldCheck } from 'lucide-react';
+import { Lock, Unlock, KeyRound, ShieldCheck } from 'lucide-react';
 
 type PreviewState = 'locked' | 'offline_pin' | 'unlocked';
 
@@ -8,13 +8,13 @@ const STATES: { id: PreviewState; label: string; icon: typeof Lock; caption: str
     id: 'locked',
     label: 'Locked by you',
     icon: Lock,
-    caption: 'Your shop name and a Call shop button. Emergency calls always work.',
+    caption: 'Your shop name and number on a fully locked screen. Nothing else on the phone works until you unlock it.',
   },
   {
     id: 'offline_pin',
     label: 'No internet unlock',
     icon: KeyRound,
-    caption: 'The customer reads you the code on a normal call. You read back a one time PIN from your app.',
+    caption: 'The customer reads you the code from another phone or at your counter. You read back a one time PIN from your app.',
   },
   {
     id: 'unlocked',
@@ -92,15 +92,14 @@ export function SafetyIntelligenceSection() {
                     </p>
                   </div>
                   <div className="space-y-2 pt-2">
-                    <span className="w-full py-2.5 px-3 rounded-xl bg-[#C8FF2E] text-[#050705] text-[12.5px] font-semibold flex items-center justify-center gap-2">
-                      <PhoneCall className="w-3.5 h-3.5" aria-hidden="true" />
-                      Call shop
-                    </span>
+                    <div className="w-full py-2.5 px-3 rounded-xl bg-white/[0.06] border border-white/[0.1] text-[#D2D8CE] text-[11.5px] leading-snug">
+                      Contact the shop from another phone
+                      <span className="block font-mono text-[#C8FF2E] text-[13px] mt-0.5">98765 43210</span>
+                    </div>
                     <span className="block w-full py-2 px-3 rounded-xl bg-white/[0.06] border border-white/[0.1] text-[#D2D8CE] text-[11.5px]">
                       Enter unlock PIN
                     </span>
                   </div>
-                  <p className="text-[10.5px] font-mono text-[#6E786B] pt-1">Emergency 112 always works</p>
                 </div>
               )}
 

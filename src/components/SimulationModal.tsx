@@ -218,15 +218,12 @@ export function SimulationModal({ isOpen, onClose }: SimulationModalProps) {
                         Sharma Mobiles
                       </div>
                       <p className="text-[11.5px] text-[#9CA698] px-2">
-                        Installment of ₹2,400 is pending. Call the shop below to unlock your phone.
+                        Installment of ₹2,400 is pending. Contact the shop to unlock your phone.
                       </p>
                     </div>
-                    <div className="w-full py-2.5 px-3 rounded-xl bg-[#C8FF2E] text-[#050705] text-[12px] font-semibold flex items-center justify-center gap-1.5">
-                      <PhoneCall className="w-3.5 h-3.5" />
-                      <span>Call Shop Owner</span>
-                    </div>
-                    <div className="text-[10px] font-mono text-[#5E685B]">
-                      Emergency 112 calling always works
+                    <div className="w-full py-2.5 px-3 rounded-xl bg-white/[0.06] border border-white/[0.1] text-[#D2D8CE] text-[11px] leading-snug">
+                      Contact the shop from another phone
+                      <span className="block font-mono text-[#C8FF2E] text-[12.5px] mt-0.5">98765 43210</span>
                     </div>
                   </div>
                 )}
@@ -244,7 +241,7 @@ export function SimulationModal({ isOpen, onClose }: SimulationModalProps) {
                         Enter 6-Digit PIN
                       </div>
                       <p className="text-[11px] text-[#9CA698]">
-                        Customer enters the PIN you read to them over the phone call:
+                        Customer enters the one time PIN you give them:
                       </p>
                     </div>
                     <div className="flex justify-center gap-1.5 font-mono text-sm">

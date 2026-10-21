@@ -55,9 +55,9 @@ export function EmiLockerAppPage() {
         <Prose>
           <p>
             An EMI locker is software that a mobile shop installs on a phone it sells on instalments. If the customer
-            stops paying, the shop can lock the phone from its own app. The customer can still call the shop and dial
-            emergency numbers, but cannot use the phone until the EMI is paid. Once paid, the shop unlocks it and the
-            phone works normally again.
+            stops paying, the shop can lock the phone from its own app. The locked phone shows the shop's name and
+            number, and nothing else on it works until the EMI is paid. Once paid, the shop unlocks it and the phone
+            works normally again.
           </p>
           <p>
             Shops also call it an EMI lock app, mobile EMI locker, finance lock app or phone EMI locker. They all mean
@@ -87,7 +87,7 @@ export function EmiLockerAppPage() {
             },
             {
               title: 'Unlock without internet',
-              body: 'If a locked phone has no data, the customer reads a code to you over a normal call and you read back a one time PIN.',
+              body: 'If a locked phone has no data, the customer reads you a code from another phone or at your counter, and you read back a one time PIN.',
             },
             {
               title: 'No Play Protect warnings',
@@ -99,7 +99,7 @@ export function EmiLockerAppPage() {
             },
             {
               title: 'Your shop on the lock screen',
-              body: 'A locked phone shows your shop name and a Call Shop button, so the customer calls you instead of a repair shop.',
+              body: 'A locked phone shows your shop name and number, so the customer contacts you instead of going to a repair shop.',
             },
           ]}
         />
@@ -161,8 +161,8 @@ export function EmiLockerAppHindiPage() {
         <Prose>
           <p>
             EMI locker एक सॉफ़्टवेयर है जो मोबाइल दुकानदार किस्त पर बेचे गए फ़ोन में डालता है। अगर ग्राहक किस्त देना
-            बंद कर दे, तो दुकानदार अपने ऐप से फ़ोन लॉक कर सकता है। लॉक फ़ोन से ग्राहक दुकान पर कॉल कर सकता है और
-            इमरजेंसी नंबर लगा सकता है, लेकिन बाकी फ़ोन तब तक नहीं चलेगा जब तक किस्त जमा न हो। पैसे मिलते ही आप फ़ोन
+            बंद कर दे, तो दुकानदार अपने ऐप से फ़ोन लॉक कर सकता है। लॉक फ़ोन पर दुकान का नाम और नंबर दिखता है, और
+            किस्त जमा होने तक फ़ोन पर बाकी कुछ नहीं चलता। पैसे मिलते ही आप फ़ोन
             अनलॉक कर देते हैं और फ़ोन पहले जैसा चलने लगता है।
           </p>
           <p>
@@ -193,7 +193,7 @@ export function EmiLockerAppHindiPage() {
             },
             {
               title: 'बिना इंटरनेट अनलॉक',
-              body: 'लॉक फ़ोन में डेटा नहीं है? ग्राहक स्क्रीन पर दिखा कोड नॉर्मल कॉल पर आपको बताए, और आप उसे एक बार चलने वाला PIN बता दें।',
+              body: 'लॉक फ़ोन में डेटा नहीं है? ग्राहक स्क्रीन पर दिखा कोड किसी दूसरे फ़ोन से या दुकान पर आकर आपको बताए, और आप उसे एक बार चलने वाला PIN बता दें।',
             },
             {
               title: 'Play Protect की warning नहीं',
@@ -205,7 +205,7 @@ export function EmiLockerAppHindiPage() {
             },
             {
               title: 'लॉक स्क्रीन पर आपकी दुकान',
-              body: 'लॉक फ़ोन पर आपकी दुकान का नाम और Call Shop बटन दिखता है, ताकि ग्राहक रिपेयर वाले के पास नहीं, सीधे आपके पास आए।',
+              body: 'लॉक फ़ोन पर आपकी दुकान का नाम और नंबर दिखता है, ताकि ग्राहक रिपेयर वाले के पास नहीं, सीधे आपके पास आए।',
             },
           ]}
         />
@@ -251,7 +251,7 @@ export function BestEmiLockerPage() {
             },
             {
               title: 'Unlock without internet',
-              body: 'Locked phones often have no data. Check that you can unlock over a normal phone call.',
+              body: 'Locked phones often have no data. Check that the app can unlock a phone without internet, for example with a one time PIN.',
             },
             {
               title: 'Clear, published price',
@@ -338,7 +338,7 @@ export function EmiLockerPricePage() {
           <p>
             One payment protects one phone from the day you set it up until you release it at the end of the loan,
             whether the loan runs 3 months or 12. It includes the lock and unlock from your app, unlock without
-            internet over a phone call, and protection against factory reset and flashing.
+            internet using a one time PIN, and protection against factory reset and flashing.
           </p>
           <p>
             You never pay a monthly subscription, and Kavach never takes a share of your customer’s EMI. One phone

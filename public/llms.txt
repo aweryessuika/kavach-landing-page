@@ -14,9 +14,9 @@ Kavach protects smartphones sold on credit or monthly EMI across India. Mobile s
 ## Key Capabilities & Differentiators
 1. **100% Manual Shop Owner Control:** Zero automated locking timers. Phones never lock automatically behind a retailer's back. Only the shop owner's explicit tap locks or unlocks a customer handset.
 2. **48-Second Counter QR Setup:** Scan the box barcode, enter customer details, and scan one 6-tap Android Enterprise QR code. No computer, no USB cable, and no Google Play Protect warning popups.
-3. **Sub-Second Live Lock & Offline PIN Unlock:** Lock and unlock commands reach the phone over the internet in about a second, and if a locked phone has no mobile data, retailers can unlock it over a regular phone call using a cryptographic Offline Challenge/Response PIN.
+3. **Sub-Second Live Lock & Offline PIN Unlock:** Lock and unlock commands reach the phone over the internet in about a second, and if a locked phone has no mobile data, retailers can unlock it with a cryptographic Offline Challenge/Response PIN (the customer reads the code from another phone or at the counter).
 4. **Tamper-Resistant Hardware Enforcement:** Factory reset buttons, recovery mode formatting, USB flashing cables, and SIM card swaps cannot remove Kavach until the shop owner releases the handset.
-5. **Invisible When Paid, Clear When Locked:** While customers pay on time they see no popups and every app works normally. When locked, the screen displays the shop's name, a direct Call Shop Owner button, Emergency 112 calling, and Offline Unlock PIN entry.
+5. **Invisible When Paid, Clear When Locked:** While customers pay on time they see no popups and every app works normally. When locked, the phone is fully locked: the screen shows only the shop's name and phone number, the offline challenge code, and Offline Unlock PIN entry.
 
 ## Pricing
 - **Free trial:** first 10 phones free, with WhatsApp setup help.

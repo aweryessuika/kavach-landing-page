@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Lock, PhoneCall, Pause, Unlock } from 'lucide-react';
+import { Lock, Pause, Unlock } from 'lucide-react';
 
 type PhoneState = 'normal' | 'locked';
 
@@ -93,13 +93,12 @@ export function HeroCounterScene() {
                 <p className="text-[10.5px] font-mono uppercase tracking-wider text-[#C8FF2E]">Phone locked</p>
                 <p className="text-[15px] font-semibold text-[#F4F6F0]">Sharma Mobiles</p>
                 <p className="text-[11.5px] text-[#9CA698] leading-relaxed px-1">
-                  Your EMI is pending. Call the shop to unlock your phone.
+                  Your EMI is pending. Contact the shop to unlock your phone.
                 </p>
-                <span className="mt-auto w-full py-2.5 rounded-xl bg-[#C8FF2E] text-[#050705] text-[12px] font-semibold flex items-center justify-center gap-1.5">
-                  <PhoneCall className="w-3.5 h-3.5" aria-hidden="true" />
-                  Call shop
-                </span>
-                <p className="text-[10px] font-mono text-[#6E786B]">Emergency calls always work</p>
+                <div className="mt-auto w-full py-2.5 px-2 rounded-xl bg-white/[0.06] border border-white/[0.1] text-[#D2D8CE] text-[11px] leading-snug">
+                  Contact the shop from another phone
+                  <span className="block font-mono text-[#C8FF2E] text-[12.5px] mt-0.5">98765 43210</span>
+                </div>
               </div>
             ) : (
               <div key="normal" className="hero-screen-swap flex-1 flex flex-col gap-4 pt-2">

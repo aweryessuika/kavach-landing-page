@@ -40,7 +40,7 @@ const PRICE_FAQ: Faq = {
 
 const OFFLINE_FAQ: Faq = {
   q: 'How do I unlock a locked phone that has no internet?',
-  a: 'The customer reads the challenge code shown on the locked screen to you over a normal phone call. The Kavach app gives you a one time PIN, the customer types it in, and the phone unlocks without any internet.',
+  a: 'The customer reads you the challenge code shown on the locked screen, from another phone or at your counter. The Kavach app gives you a one time PIN, the customer types it in, and the phone unlocks without any internet.',
 };
 
 function alternativePage(slug: string): SeoPage {
@@ -79,7 +79,7 @@ export const SEO_PAGES: SeoPage[] = [
     faqs: [
       {
         q: 'What is an EMI locker app?',
-        a: 'An EMI locker app lets a mobile shop lock a phone it sold on instalments when the customer stops paying, and unlock it once they pay. The customer can still call the shop and emergency numbers while the phone is locked.',
+        a: 'An EMI locker app lets a mobile shop lock a phone it sold on instalments when the customer stops paying, and unlock it once they pay. The locked phone shows the shop’s name and number, and nothing else on it works until the EMI is paid.',
       },
       MANUAL_LOCK_FAQ,
       RESET_FAQ,
@@ -104,7 +104,7 @@ export const SEO_PAGES: SeoPage[] = [
     faqs: [
       {
         q: 'EMI locker ऐप क्या होता है?',
-        a: 'EMI locker ऐप से मोबाइल दुकानदार किस्त पर बेचा हुआ फ़ोन लॉक कर सकता है, जब ग्राहक किस्त देना बंद कर दे, और पैसे मिलने पर अनलॉक कर सकता है। लॉक फ़ोन से भी ग्राहक दुकान पर और इमरजेंसी नंबर पर कॉल कर सकता है।',
+        a: 'EMI locker ऐप से मोबाइल दुकानदार किस्त पर बेचा हुआ फ़ोन लॉक कर सकता है, जब ग्राहक किस्त देना बंद कर दे, और पैसे मिलने पर अनलॉक कर सकता है। लॉक फ़ोन पर दुकान का नाम और नंबर दिखता है, और किस्त जमा होने तक फ़ोन पर बाकी कुछ नहीं चलता।',
       },
       {
         q: 'किस्त लेट होने पर क्या Kavach अपने आप फ़ोन लॉक कर देता है?',
@@ -116,7 +116,7 @@ export const SEO_PAGES: SeoPage[] = [
       },
       {
         q: 'लॉक फ़ोन में इंटरनेट न हो, तो दुकानदार उसे कैसे खोले?',
-        a: 'ग्राहक लॉक स्क्रीन पर दिखा challenge कोड नॉर्मल फ़ोन कॉल पर आपको बताता है। Kavach ऐप आपको एक बार चलने वाला PIN देता है, ग्राहक उसे डालता है, और फ़ोन बिना इंटरनेट के खुल जाता है।',
+        a: 'ग्राहक लॉक स्क्रीन पर दिखा challenge कोड किसी दूसरे फ़ोन से या दुकान पर आकर आपको बताता है। Kavach ऐप आपको एक बार चलने वाला PIN देता है, ग्राहक उसे डालता है, और फ़ोन बिना इंटरनेट के खुल जाता है।',
       },
       {
         q: 'क्या ग्राहक को Google Play Protect की warning दिखती है?',
@@ -151,7 +151,7 @@ export const SEO_PAGES: SeoPage[] = [
       },
       {
         q: 'Do I need to tell the customer about the EMI locker?',
-        a: 'Yes. Tell the customer at the time of sale that the phone is protected by an EMI locker and include it in the sale agreement. Kavach shows the shop name and a Call Shop button on the lock screen and always allows emergency calls.',
+        a: 'Yes. Tell the customer at the time of sale that the phone is protected by an EMI locker and include it in the sale agreement. A locked phone shows only your shop’s name and number and cannot be used for anything else until you unlock it, so make sure the customer understands this before buying.',
       },
       MANUAL_LOCK_FAQ,
       IPHONE_FAQ,
